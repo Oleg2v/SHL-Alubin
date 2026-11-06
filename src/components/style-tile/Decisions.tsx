@@ -7,11 +7,11 @@ export const DECISIONS = [
   },
   {
     title: "Type set in lettering heights",
-    body: "The nine sizes are drawing-office lettering heights, from 2.5 mm dimension text to 40 mm numerals, and every dimension line on the sheet measures something real, live, in millimetres.",
+    body: "The nine sizes are drawing-office lettering heights, from 2.5 mm dimension text to 40 mm numerals, and every dimension line on the sheet measures something real, live, in millimetres.",
   },
   {
     title: "Scroll is the ram",
-    body: "No parallax. Scroll drives the press stroke 1:1: the visitor extrudes the profile, sees it morph through four real sections and cool from 480 °C to brushed silver. Long stories index like a rotary table: push, stop, hold.",
+    body: "No parallax. Scroll drives the press stroke 1:1: the visitor extrudes the profile, sees it morph through four real sections and cool from 480 °C to brushed silver. Long stories index like a rotary table: push, stop, hold.",
   },
   {
     title: "Line types carry state",
@@ -26,7 +26,7 @@ export const DECISIONS = [
 export const CLICHES = [
   {
     cliche: "Molten metal and orange everywhere",
-    instead: "Extrusion is a solid-state process and a 480 °C billet barely glows. Heat is a measured reading, on the billet only.",
+    instead: "Extrusion is a solid-state process and a 480 °C billet barely glows. Heat is a measured reading, on the billet only.",
   },
   {
     cliche: "Stock factory photography",
@@ -118,7 +118,7 @@ export function TitleBlock() {
         <div className="iso-scale">
           <span className="t-label text-fg-muted">Scale · grid</span>
           <bdi className="t-data" dir="ltr">
-            1:1 · 1 px = 0.2646 mm · 4 px · 80 ms
+            1:1 · 1 px = 0.2646 mm · 4 px · 80 ms
           </bdi>
         </div>
         <div className="iso-dwg">

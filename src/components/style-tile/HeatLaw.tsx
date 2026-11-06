@@ -27,7 +27,7 @@ export function HeatLaw() {
       <div ref={ref}>
       <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} className="block w-full overflow-visible" role="img" aria-labelledby="heat-law-t">
         <title id="heat-law-t">
-          {`Glow share against temperature: 480 °C is 1.00, 400 °C is ${wThr.toFixed(2)}, 300 °C is ${heatWeight(300).toFixed(2)}, 200 °C is ${heatWeight(200).toFixed(2)}. The flat interface renders Glow only at 400 °C and above.`}
+          {`Glow share against temperature: 480 °C is 1.00, 400 °C is ${wThr.toFixed(2)}, 300 °C is ${heatWeight(300).toFixed(2)}, 200 °C is ${heatWeight(200).toFixed(2)}. The flat interface renders Glow only at 400 °C and above.`}
         </title>
         {/* zones: HOT (Glow), WARM (reading only), COLD */}
         <rect x={x(thr)} y={P.t} width={x(480) - x(thr)} height={H - P.t - P.b} fill="color-mix(in oklab, var(--color-glow) 14%, transparent)" />
@@ -69,7 +69,7 @@ export function HeatLaw() {
       </svg>
       </div>
       <figcaption id="heat-law-cap" className="t-data text-fg-muted" dir="ltr">
-        w(T) = (T⁴ − T₂₀⁴) / (T₄₈₀⁴ − T₂₀⁴), T in kelvin · 400 °C → {wThr.toFixed(2)} · 300 °C → {heatWeight(300).toFixed(2)}
+        w(T) = (T⁴ − T₂₀⁴) / (T₄₈₀⁴ − T₂₀⁴), T in kelvin · 400 °C → {wThr.toFixed(2)} · 300 °C → {heatWeight(300).toFixed(2)}
       </figcaption>
     </figure>
   );

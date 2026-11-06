@@ -25,7 +25,7 @@ export function CoolingBand() {
             <DimH ticks>Q</DimH>
           </div>
           <div style={{ width: `${100 - QUENCH_END}%` }}>
-            <DimH>cold tail · 6,000 mm @ 20 °C</DimH>
+            <DimH>cold tail · 6,000 mm @ 20 °C</DimH>
           </div>
         </div>
 
@@ -38,10 +38,10 @@ export function CoolingBand() {
             <span className="hidden sm:inline">Die exit · </span>480 °C
           </span>
           <span style={{ insetInlineStart: `${HOT_END}%` }} className="cooling-q">
-            Q<span className="hidden sm:inline"> · 470 → 180 °C</span>
+            Q<span className="hidden sm:inline"> · 470 → 180 °C</span>
           </span>
           <span style={{ insetInlineStart: "60%" }} className="text-fg-muted hidden md:inline">
-            Cooling table · 60 °C
+            Cooling table · 60 °C
           </span>
           <span style={{ insetInlineEnd: 0 }} className="text-fg-muted">
             <span className="hidden sm:inline">Stretcher · </span>20 °C

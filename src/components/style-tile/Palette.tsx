@@ -53,7 +53,7 @@ const SWATCHES = [
     c: palette.glow,
     share: 2,
     span: "sm:col-span-8 lg:col-span-2",
-    role: "Heat only: metal at 400 °C or more, the active state, the primary CTA.",
+    role: "Heat only: metal at 400 °C or more, the active state, the primary CTA.",
     never: "Never text on the sheet (2.68:1). Never decoration. Never two CTAs in view.",
   },
 ] as const;
@@ -80,7 +80,7 @@ export function Palette() {
             {SWATCHES.map((s) => (
               <span key={s.c.hex} className="inline-flex items-center gap-2">
                 <span className="inline-block size-2" style={{ background: s.c.hex, boxShadow: "inset 0 0 0 1px var(--line-strong)" }} aria-hidden="true" />
-                {s.c.name} <bdi dir="ltr">{s.c === palette.glow ? "≤ 2 %" : `${s.share} %`}</bdi>
+                {s.c.name} <bdi dir="ltr">{s.c === palette.glow ? "≤ 2 %" : `${s.share}\u00a0%`}</bdi>
               </span>
             ))}
           </figcaption>
@@ -213,7 +213,7 @@ export function Palette() {
           <h3 className="t-title-s">Heat law</h3>
           <p className="t-small text-fg-muted mt-3 max-w-[36ch]">
             Glow follows radiance above ambient, which rises with T⁴. In 3D it varies continuously. The flat interface
-            uses a threshold: 400 °C or more renders in Glow, 150 to 399 °C shows a reading only, and below that the
+            uses a threshold: 400 °C or more renders in Glow, 150 to 399 °C shows a reading only, and below that the
             metal is cold.
           </p>
         </div>

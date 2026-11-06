@@ -22,7 +22,7 @@ export function FinishLab() {
         </div>
         <figcaption id="finish-cap" className="t-small text-fg-muted">
           WebGL: metals carry die lines and an anisotropic highlight across them; powder and PVDF are isotropic paint
-          films. Move the pointer to move the light; finishes dissolve in 400 ms. Screen approximation: order physical
+          films. Move the pointer to move the light; finishes dissolve in 400 ms. Screen approximation: order physical
           samples.
         </figcaption>
       </figure>

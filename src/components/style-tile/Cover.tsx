@@ -25,7 +25,7 @@ export function Cover() {
           />
           <figcaption id="cold-cap" className="mt-2 hidden justify-between t-data sm:flex">
             <span className="text-fg-muted">AL-40217 · 6063 T6</span>
-            <span dir="ltr">20 °C</span>
+            <span dir="ltr">20 °C</span>
           </figcaption>
         </figure>
 
@@ -43,7 +43,7 @@ export function Cover() {
         <div className="flex items-start justify-between gap-4 t-data">
           <span className="text-fg-muted">Billet · 6063 · Ø 254</span>
           <span className="text-accent-text" dir="ltr">
-            480 °C
+            480 °C
           </span>
         </div>
 
@@ -72,7 +72,7 @@ export function Cover() {
 
 export function Concept() {
   const lines = [
-    ["One story", "A 480 °C billet is pushed through the die and leaves as a cold, dimensioned profile; every page is a station on that line."],
+    ["One story", "A 480 °C billet is pushed through the die and leaves as a cold, dimensioned profile; every page is a station on that line."],
     ["Cold interface", "The drawing office: a 12-column sheet, ISO hairlines, lettering heights in millimetres, every spec in mono."],
     ["Hot process", "Heat is a reading, not a decoration: Billet Glow marks only the hot billet, the active state and the one primary action."],
   ] as const;
@@ -96,7 +96,7 @@ export function Concept() {
         <p className="col-span-4 sm:col-span-8 lg:col-start-4 lg:col-span-7 t-small text-fg-muted">
           <span className="t-label text-fg">Data · </span>
           Facts come from the brief: 6,000+ profile types, 1,000 to 1,200 tonnes a month, 50+ new dies a week, about
-          35 % exported, three presses, an own casthouse, two powder lines, a PVDF line and the first anodizing line
+          35 % exported, three presses, an own casthouse, two powder lines, a PVDF line and the first anodizing line
           approved by the Standards Institution of Israel. Every other value on this sheet (billet diameter,
           temperatures, tolerances, film thicknesses, ram stroke) is illustrative until SHL-Alubin&apos;s engineers
           confirm it.

@@ -5,7 +5,7 @@ import { GridDiagram } from "./GridDiagram";
 export function SpaceSection() {
   return (
     <section id="space" aria-labelledby="space-title" data-surface="sheet" className="st-section">
-      <SectionHead n="03" kicker="Space" id="space-title" title="A 4 px grid, a 12-column sheet, and a lot of air.">
+      <SectionHead n="03" kicker="Space" id="space-title" title="A 4 px grid, a 12-column sheet, and a lot of air.">
         Every gap, padding and size is a multiple of four. Margins and gutters step at each breakpoint instead of
         floating, so they stay on the grid; columns collapse from 12 to 8 to 4, never to an odd count.
       </SectionHead>
@@ -24,8 +24,8 @@ export function SpaceSection() {
             ))}
           </ol>
           <p className="t-small text-fg-muted mt-6 max-w-[44ch]">
-            Tailwind&apos;s <code className="t-mono">--spacing: 0.25rem</code> makes <code className="t-mono">p-4</code> 16 px,{" "}
-            <code className="t-mono">gap-12</code> 48 px. Arbitrary values are a review comment.
+            Tailwind&apos;s <code className="t-mono">--spacing: 0.25rem</code> makes <code className="t-mono">p-4</code> 16 px,{" "}
+            <code className="t-mono">gap-12</code> 48 px. Arbitrary values are a review comment.
           </p>
         </div>
 
@@ -38,7 +38,7 @@ export function SpaceSection() {
               ["Gutter", "12 · 16 · 20 · 24"],
               ["Breaks", "640 · 1024 · 1440"],
               ["Section", "80 · 96 · 112 · 128"],
-              ["Hairline", "1 px"],
+              ["Hairline", "1 px"],
             ].map(([k, v = ""]) => (
               <div key={k} className="border-b border-line py-4 pe-4">
                 <dt className="t-label text-fg-muted">{k}</dt>
@@ -92,7 +92,7 @@ export function FormSection() {
           ))}
         </ul>
         <p className="col-span-4 sm:col-span-8 lg:col-start-4 lg:col-span-9 t-small text-fg-muted">
-          Specimens drawn at 6:1 so the radius reads; real sizes are 0, 2, 4 px and full.
+          Specimens drawn at 6:1 so the radius reads; real sizes are 0, 2, 4 px and full.
         </p>
       </div>
 
@@ -107,11 +107,11 @@ export function FormSection() {
         </div>
         <ul className="col-span-4 sm:col-span-8 lg:col-span-9 grid gap-0 border-t border-line">
           {[
-            ["Outline", "1.25 px continuous", "Visible edges of a section", <line key="a" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="1.25" />],
-            ["Hairline", "1 px continuous, 14% Ink", "UI rules, borders, table rows", <line key="b" x1="0" y1="6" x2="100%" y2="6" stroke="var(--line)" strokeWidth="1" />],
+            ["Outline", "1.25 px continuous", "Visible edges of a section", <line key="a" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="1.25" />],
+            ["Hairline", "1 px continuous, 14% Ink", "UI rules, borders, table rows", <line key="b" x1="0" y1="6" x2="100%" y2="6" stroke="var(--line)" strokeWidth="1" />],
             [
               "Dimension",
-              "0.75 px + closed arrowheads",
+              "0.75 px + closed arrowheads",
               "Dimension and extension lines",
               <g key="c">
                 <line x1="0" y1="1" x2="0" y2="11" stroke="currentColor" strokeWidth="0.75" />
@@ -123,12 +123,12 @@ export function FormSection() {
                 </svg>
               </g>,
             ],
-            ["Centre", "0.75 px chain 14·3·2·3", "Axes of symmetry", <line key="d" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="0.75" strokeDasharray="14 3 2 3" />],
-            ["Hidden", "0.75 px dashed 6·3", "Hidden edges; unavailable states", <line key="e" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="0.75" strokeDasharray="6 3" />],
-            ["Phantom", "0.75 px long dash + two dots", "Loading: where a part will be", <line key="p" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="0.75" strokeDasharray="12 3 2 3 2 3" />],
+            ["Centre", "0.75 px chain 14·3·2·3", "Axes of symmetry", <line key="d" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="0.75" strokeDasharray="14 3 2 3" />],
+            ["Hidden", "0.75 px dashed 6·3", "Hidden edges; unavailable states", <line key="e" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="0.75" strokeDasharray="6 3" />],
+            ["Phantom", "0.75 px long dash + two dots", "Loading: where a part will be", <line key="p" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="0.75" strokeDasharray="12 3 2 3 2 3" />],
             [
               "Section hatching",
-              "45°, 1 px, 6 px pitch",
+              "45°, 1 px, 6 px pitch",
               "Cut faces of metal, and nothing else",
               <g key="h">
                 <defs>
@@ -139,7 +139,7 @@ export function FormSection() {
                 <rect x="0" y="0" width="100%" height="12" fill="url(#lines-hatch)" stroke="currentColor" strokeWidth="1" />
               </g>,
             ],
-            ["Active", "2 px Billet Glow", "Active row, selected tile, live state", <line key="f" x1="0" y1="6" x2="100%" y2="6" stroke="var(--color-glow)" strokeWidth="2" />],
+            ["Active", "2 px Billet Glow", "Active row, selected tile, live state", <line key="f" x1="0" y1="6" x2="100%" y2="6" stroke="var(--color-glow)" strokeWidth="2" />],
           ].map(([name, spec, use, line]) => (
             <li key={name as string} className="grid grid-cols-4 sm:grid-cols-9 gap-x-(--gutter) items-center border-b border-line py-4">
               <span className="col-span-2 sm:col-span-2 t-small">{name}</span>

@@ -121,10 +121,10 @@ export function HeatAudit() {
             Glow in view · primary action <bdi dir="ltr">{share.cta} / 1</bdi>
           </span>
           <span>
-            other interface <bdi dir="ltr">{share.ui.toFixed(1)} %</bdi> / 2 %
+            other interface <bdi dir="ltr">{share.ui.toFixed(1)} %</bdi> / 2 %
           </span>
           <span>
-            process <bdi dir="ltr">{share.process.toFixed(1)} %</bdi> / 12 %
+            process <bdi dir="ltr">{share.process.toFixed(1)} %</bdi> / 12 %
           </span>
           <span className={over ? "heat-audit-over" : "text-fg-muted"}>{over ? "over budget" : "within budget"}</span>
         </div>

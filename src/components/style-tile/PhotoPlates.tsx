@@ -107,7 +107,7 @@ export function PhotoPlates() {
           code="PL-01"
           title="Die face · 4:5"
           ratio="4 / 5"
-          grade="Hard light 28°, steel face, aperture in shadow. Duotone Ink → Alu White, 2 % grain."
+          grade="Hard light 28°, steel face, aperture in shadow. Duotone Ink → Alu White, 2 % grain."
           label="Placeholder plate rendered from geometry: the steel face of an extrusion die with a three-chamber window-frame aperture, under one hard light."
         >
           <svg viewBox={`0 0 ${W1} ${H1}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -131,7 +131,7 @@ export function PhotoPlates() {
           code="PL-02"
           title="Billet stack · thermal overlay"
           ratio="4 / 5"
-          grade="Heat only as a crisp Glow overlay on matter at 400 °C or more, always with its reading."
+          grade="Heat only as a crisp Glow overlay on matter at 400 °C or more, always with its reading."
           label="Placeholder plate rendered from geometry: sawn billet ends stacked in a rack; three billets carry a Billet Glow thermal overlay labelled about 480 degrees."
         >
           <svg viewBox={`0 0 ${W2} ${H2}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -153,7 +153,7 @@ export function PhotoPlates() {
             </g>
           </svg>
           <span className="plate-reading t-data" aria-hidden="true">
-            <bdi dir="ltr">≈ 480 °C</bdi>
+            <bdi dir="ltr">≈ 480 °C</bdi>
           </span>
         </Plate>
       </div>

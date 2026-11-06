@@ -6,8 +6,8 @@ import { SectionHead } from "./SectionHead";
 import { DimH } from "@/components/drawing/Dim";
 
 const SAMPLE: Record<string, string> = {
-  micro: "AL-40217 · 6063 T6 · 1.284 kg/m · ±0.20",
-  small: "Max width 120 mm · 42 profiles match",
+  micro: "AL-40217 · 6063 T6 · 1.284 kg/m · ±0.20",
+  small: "Max width 120 mm · 42 profiles match",
   body: "An own casthouse turns raw material and scrap into billets for three presses.",
   lead: "6,000+ profile types, 1,000 to 1,200 tonnes a month.",
   "title-s": "Window and door systems",
@@ -89,9 +89,9 @@ export function TypeSection() {
   return (
     <section id="type" aria-labelledby="type-title" data-surface="sheet" className="st-section">
       <SectionHead n="02" kicker="Type" id="type-title" title="Nine sizes, and every one is a lettering height from the drawing office.">
-        At 1600 px each step&apos;s cap height is a lettering height: the ISO 3098 series from 2.5 mm dimension text
-        to 40 mm numerals, plus 3 mm, the one ANSI step, because interface text needs a size between dimension text
-        and notes. Between a 360 px phone and that display the scale is fluid, in rem plus vw, so zoom and the
+        At 1600 px each step&apos;s cap height is a lettering height: the ISO 3098 series from 2.5 mm dimension text
+        to 40 mm numerals, plus 3 mm, the one ANSI step, because interface text needs a size between dimension text
+        and notes. Between a 360 px phone and that display the scale is fluid, in rem plus vw, so zoom and the
         reader&apos;s own font size still work.
       </SectionHead>
 
@@ -112,7 +112,7 @@ export function TypeSection() {
           <p className="t-title-m t-mono" aria-hidden="true" dir="ltr">
             Ø 254 ±0.20
             <br />
-            1.284 kg/m
+            1.284 kg/m
           </p>
           <p className="t-small text-fg-muted">
             The drawing-sheet voice: IDs, alloys, tempers, kg/m, every dimension. Always an isolated LTR run, also inside
@@ -220,7 +220,7 @@ export function TypeSection() {
             <figcaption className="t-label text-fg-muted">HE</figcaption>
             <p className="t-title-l">6,000 פרופילים. במרחק לחיצה.</p>
             <p className="t-small text-fg-muted">
-              סגסוגת <span dir="ltr">6063 T6</span>, משקל <span dir="ltr">1.284 kg/m</span>, סבולת לפי{" "}
+              סגסוגת <span dir="ltr">6063 T6</span>, משקל <span dir="ltr">1.284 kg/m</span>, סבולת לפי{" "}
               <span dir="ltr">EN 755-9</span>.
             </p>
           </figure>

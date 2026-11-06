@@ -28,11 +28,11 @@ export type Finish = {
 
 export const FINISHES: Finish[] = [
   { id: "mill", name: "Mill", note: "die lines · 6063-T6", hex: "#B7BCC1", rough: 0.42, metal: 1 },
-  { id: "anod-silver", name: "Anodized silver", note: "E6/EV1 · 20 µm", hex: "#C6CACE", rough: 0.68, metal: 0.92 },
-  { id: "anod-black", name: "Anodized black", note: "E6/C-35 · 20 µm", hex: "#2B2D31", rough: 0.62, metal: 0.92 },
-  { id: "ral-9016", name: "Powder RAL 9016", note: "30 GU · ≥ 60 µm", hex: "#EDEEE8", rough: 0.96, metal: 0.04 },
-  { id: "ral-7016", name: "Powder RAL 7016", note: "30 GU · ≥ 60 µm", hex: "#383E42", rough: 0.94, metal: 0.04 },
-  { id: "pvdf-bronze", name: "PVDF bronze", note: "3-coat · ~40 µm · mica", hex: "#5E4B3C", rough: 0.8, metal: 0.4 },
+  { id: "anod-silver", name: "Anodized silver", note: "E6/EV1 · 20 µm", hex: "#C6CACE", rough: 0.68, metal: 0.92 },
+  { id: "anod-black", name: "Anodized black", note: "E6/C-35 · 20 µm", hex: "#2B2D31", rough: 0.62, metal: 0.92 },
+  { id: "ral-9016", name: "Powder RAL 9016", note: "30 GU · ≥ 60 µm", hex: "#EDEEE8", rough: 0.96, metal: 0.04 },
+  { id: "ral-7016", name: "Powder RAL 7016", note: "30 GU · ≥ 60 µm", hex: "#383E42", rough: 0.94, metal: 0.04 },
+  { id: "pvdf-bronze", name: "PVDF bronze", note: "3-coat · ~40 µm · mica", hex: "#5E4B3C", rough: 0.8, metal: 0.4 },
 ];
 
 const VERT = `

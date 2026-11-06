@@ -10,7 +10,7 @@ import { Storyboard } from "./Storyboard";
 
 const CURVES = [
   { key: "out", name: "--ease-out", label: "House curve", use: "Entrances, settles, the magnet's return. The brief's cubic-bezier(0.22, 1, 0.36, 1).", e: easings.out, dur: durations.slow },
-  { key: "inOut", name: "--ease-in-out", label: "Stroke", use: "State to state: the 400 ms finish dissolve, morphs, toggles.", e: easings.inOut, dur: durations.dissolve },
+  { key: "inOut", name: "--ease-in-out", label: "Stroke", use: "State to state: the 400 ms finish dissolve, morphs, toggles.", e: easings.inOut, dur: durations.dissolve },
   { key: "in", name: "--ease-in", label: "Retract", use: "Exits only. Things leave faster than they arrive.", e: easings.in, dur: durations.base },
   { key: "linear", name: "linear", label: "Ram", use: "Scroll-scrubbed motion: the ram position is the scroll position.", e: [0, 0, 1, 1] as const, dur: durations.travel },
 ] as const;
@@ -123,7 +123,7 @@ function PreloaderSpecimen({ reduced }: { reduced: boolean }) {
       </div>
       <div className="flex items-center justify-between gap-4">
         <p className="t-data text-fg-muted" dir="ltr">
-          0 → 480 °C · 800 ms + resolve 320 ms = 1120 ms
+          0 → 480 °C · 800 ms + resolve 320 ms = 1120 ms
         </p>
         <button type="button" className="btn btn-secondary btn-sm" onClick={play}>
           <span className="btn-skin" aria-hidden="true" />
@@ -139,7 +139,7 @@ export function MotionSection() {
   const max = 1200;
   return (
     <section id="motion" aria-labelledby="motion-title" data-surface="sheet" className="st-section">
-      <SectionHead n="05" kicker="Motion" id="motion-title" title="Precise and mechanical. Time sits on an 80 ms grid.">
+      <SectionHead n="05" kicker="Motion" id="motion-title" title="Precise and mechanical. Time sits on an 80 ms grid.">
         Things move like a press: one axis at a time, at a constant purpose, settling without overshoot. No spring, no
         bounce, no wobble, ever.
       </SectionHead>
@@ -177,7 +177,7 @@ export function MotionSection() {
               </div>
             ))}
           </dl>
-          <figcaption className="t-data text-fg-muted mt-2">0 → 1200 ms · tick 80 ms · stagger 40 ms</figcaption>
+          <figcaption className="t-data text-fg-muted mt-2">0 → 1200 ms · tick 80 ms · stagger 40 ms</figcaption>
         </figure>
       </div>
 
@@ -217,7 +217,7 @@ export function MotionSection() {
             ["Never bouncy", "No curve leaves 0..1 on y. Overshoot is a defect."],
             ["One axis at a time", "Translate or fade, not both on different curves."],
             ["Scroll is the ram", "Scroll-bound motion is linear to progress; easing lives in the scene."],
-            ["Exits are faster", "Leave in 240 ms, arrive in 400 to 640 ms."],
+            ["Exits are faster", "Leave in 240 ms, arrive in 400 to 640 ms."],
             ["Reduced motion", "Crossfades only, the hero becomes a still frame, counters show final values."],
           ].map(([k, v]) => (
             <li key={k} className="border-b border-line py-4">

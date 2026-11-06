@@ -541,3 +541,13 @@
   flex: none;
   box-shadow: inset 0 0 0 1px var(--line-strong);
 }
+
+/* ------------------------------------------------------------ storyboard */
+.billet.billet-sm {
+  --d: min(28vw, 120px);
+  box-shadow:
+    0 0 0 1px rgb(255 90 31 / 0.6),
+    0 0 24px 2px rgb(255 90 31 / 0.45),
+    0 0 72px 12px rgb(255 90 31 / 0.2),
+    inset 0 0 20px 3px color-mix(in oklab, var(--color-glow) 40%, var(--color-ink));
+}

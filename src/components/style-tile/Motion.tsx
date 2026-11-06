@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { durations, easings, cssEase } from "@/design/tokens";
 import { SectionHead } from "./SectionHead";
 import { Wordmark } from "./Chrome";
+import { Storyboard } from "./Storyboard";
 
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false);
@@ -230,6 +231,20 @@ export function MotionSection() {
             Reduced motion is on: demos jump to their end state.
           </p>
         ) : null}
+      </div>
+
+      {/* Signature moment, storyboarded */}
+      <div className="swiss-grid mt-24 gap-y-10">
+        <div className="col-span-4 sm:col-span-8 lg:col-span-3">
+          <h3 className="t-title-s">Signature moment, storyboarded</h3>
+          <p className="t-small text-fg-muted mt-3 max-w-[36ch]">
+            Stage 1 in five frames. Scroll is the ram, linear to progress; the section morphs through four real profiles
+            and its colour follows the same T⁴ cooling curve as the heat ramp.
+          </p>
+        </div>
+        <div className="col-span-4 sm:col-span-8 lg:col-span-9">
+          <Storyboard />
+        </div>
       </div>
     </section>
   );

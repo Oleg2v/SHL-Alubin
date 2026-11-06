@@ -210,7 +210,11 @@ export function Palette() {
             {[480, 400, 300, 200, 100, 20].map((t) => {
               const at = (480 - t) / 460;
               return (
-                <span key={t} className="absolute top-0 whitespace-nowrap" style={{ left: `${at * 100}%`, translate: at === 0 ? "0" : at === 1 ? "-100%" : "-50%" }}>
+                <span
+                  key={t}
+                  className={`absolute top-0 whitespace-nowrap ${t === 400 || t === 100 ? "hidden sm:inline" : ""}`}
+                  style={{ left: `${at * 100}%`, translate: at === 0 ? "0" : at === 1 ? "-100%" : "-50%" }}
+                >
                   {t} °C
                 </span>
               );

@@ -131,3 +131,64 @@ export function tSlotRail(size: number, slot: number, lip: number, depth: number
   });
   return { outer: pts, holes: [hole] };
 }
+
+const circle = (cx: number, cy: number, r: number, n = 28): Contour =>
+  Array.from({ length: n }, (_, i) => {
+    const a = (i / n) * Math.PI * 2;
+    return [cx + Math.cos(a) * r, cy + Math.sin(a) * r] as Pt;
+  });
+
+/**
+ * Solar mounting rail: a C-strut with in-turned lips (top slot for T-bolts and clamps).
+ * One closed contour; the channel connects to the outside through the slot.
+ */
+export function solarRail(width = 40, height = 40, t = 2.5, slot = 14, lip = 8): ProfileShape {
+  const a = (width - slot) / 2; // x of the left lip edge
+  const b = a + slot; // x of the right lip edge
+  const outer: Pt[] = [
+    [0, 0],
+    [a, 0],
+    [a, lip],
+    [a - t, lip],
+    [a - t, t],
+    [t, t],
+    [t, height - t],
+    [width - t, height - t],
+    [width - t, t],
+    [b + t, t],
+    [b + t, lip],
+    [b, lip],
+    [b, 0],
+    [width, 0],
+    [width, height],
+    [0, height],
+  ];
+  return { outer, holes: [] };
+}
+
+/**
+ * Curtain-wall mullion (stick system): a deep two-chamber tube with a screw-spline nose on the
+ * exterior face for the pressure plate.
+ */
+export function mullion(width = 52, depth = 140, t = 2.6): ProfileShape {
+  const c = width / 2;
+  const outer: Pt[] = [
+    [0, 0],
+    [width, 0],
+    [width, depth],
+    [c + 9, depth],
+    [c + 9, depth + 11],
+    [c + 5, depth + 14],
+    [c - 5, depth + 14],
+    [c - 9, depth + 11],
+    [c - 9, depth],
+    [0, depth],
+  ];
+  const split = depth * 0.72;
+  const holes: Contour[] = [
+    rect(t, t, width - 2 * t, split - t),
+    rect(t, split + t, width - 2 * t, depth - split - 2 * t),
+    circle(c, depth + 7, 3.2),
+  ];
+  return { outer, holes };
+}

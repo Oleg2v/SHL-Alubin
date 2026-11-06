@@ -46,8 +46,8 @@ export function Callout({ children, className = "" }: { children: ReactNode; cla
     <span aria-hidden="true" className={`callout ${className}`}>
       <span className="callout-dot" />
       <span className="callout-leader" />
-      <span className="callout-label" dir="ltr">
-        {children}
+      <span className="callout-label">
+        <bdi dir="ltr">{children}</bdi>
       </span>
     </span>
   );

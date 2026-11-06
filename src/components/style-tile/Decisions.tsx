@@ -3,32 +3,47 @@ import { SectionHead } from "./SectionHead";
 export const DECISIONS = [
   {
     title: "Colour is temperature",
-    body: "Billet Glow is not a brand accent, it is a thermometer: it appears only where something is hot, live or the one primary action, and never covers more than 2% of a screen.",
+    body: "Billet Glow is a reading, not an accent. It appears only where something is hot, live or the one primary action, every hot element carries its °C, and it never covers more than 2% of a screen.",
   },
   {
-    title: "The page is a drawing sheet",
-    body: "Section numbers, title blocks, ISO hatching and dimension lines annotate the interface itself; even the giant numerals carry their own measured width in mm.",
+    title: "Type set in lettering heights",
+    body: "The nine sizes are the drawing office's ISO 3098 lettering heights, from 2.5 mm dimension text to 40 mm numerals, and every annotation measures something real, live, in millimetres.",
   },
   {
     title: "Scroll is the ram",
-    body: "In the hero, scroll drives the press stroke 1:1, with no free-floating parallax: the visitor extrudes the profile, sees it morph through four real sections and cool from 480 °C to silver.",
+    body: "No parallax. Scroll drives the press stroke 1:1: the visitor extrudes the profile, sees it morph through four real sections and cool from 480 °C to brushed silver. Long stories index like a rotary table: push, stop, hold.",
   },
   {
-    title: "Facts set as giant numerals",
-    body: "6,000 / 1,200 t / 50 / 35% set at up to 232 px with tabular figures and mono units: the numbers are the hero copy, not the adjectives.",
+    title: "Hatching is the state language",
+    body: "Unavailable, loading and non-conforming states wear ISO 128 section hatching: never 40% opacity, never a shimmer, never red, so no state depends on colour alone.",
   },
   {
     title: "Hebrew is a mirror, not a translation",
-    body: "True RTL from the first component: layout, timelines and arrows mirror; drawings, part IDs and every number stay left to right, exactly as Israeli engineering documents do.",
+    body: "True RTL from the first component. Layout, arrows and timelines mirror; drawings, part IDs and every number stay left to right, as on Israeli engineering drawings. Text reveals by line, never by letter.",
   },
 ] as const;
 
 export const CLICHES = [
-  { cliche: "Stock factory photography", instead: "Monochrome macro on die, billet and surface, or an honest placeholder." },
-  { cliche: "Corporate blue and glassmorphism", instead: "Four cold neutrals and one rationed heat colour; no blur, no gradients but the cooling ramp." },
-  { cliche: "Fade-up on everything", instead: "Motion only where the process moves: the ram, the cooling, a dimension being drawn." },
-  { cliche: "“Innovative solutions” copy", instead: "Tonnes, dies, alloys, tolerances and ports: facts that only SHL-Alubin can say." },
-  { cliche: "Bouncy springs and cursor blobs", instead: "One house curve, no overshoot, and a crosshair that tells you where you are in mm." },
+  {
+    cliche: "Molten metal and orange everywhere",
+    instead: "Extrusion is a solid-state process and a 480 °C billet barely glows. Heat is a measured reading, on the billet only.",
+  },
+  {
+    cliche: "Stock factory photography",
+    instead: "No hard hats, handshakes or blue tint: monochrome macro on die, billet and surface, or an honest placeholder.",
+  },
+  {
+    cliche: "The fake blueprint",
+    instead: "No white-on-blue grids or decorative dimensions with invented numbers: ISO 128 lines, and values that are measured or come from data.",
+  },
+  {
+    cliche: "Bouncy springs, blob cursors, parallax",
+    instead: "One damped house curve, the system crosshair with a live mm readout, and depth only inside the WebGL hero.",
+  },
+  {
+    cliche: "\u201CInnovative solutions\u201D, marquees, carousels",
+    instead: "Tonnes, dies, alloys, tolerances and ports: facts only SHL-Alubin can state, set large and left still.",
+  },
 ] as const;
 
 export function DecisionsSection() {

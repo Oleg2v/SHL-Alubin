@@ -44,7 +44,8 @@ function CrosshairField() {
         </span>
       </div>
       <figcaption className="t-label text-fg-muted">
-        Desktop cursor: a crosshair with live X/Y in mm. Touch and reduced motion keep the system cursor.
+        Desktop: the system crosshair plus drafting guides and a live X/Y readout in CSS mm (96 px = 25.4 mm), no
+        smoothing, no lag. Touch keeps the native cursor.
       </figcaption>
     </figure>
   );

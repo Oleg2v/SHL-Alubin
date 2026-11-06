@@ -76,6 +76,19 @@
     inset 1px 0 0 rgb(255 90 31 / 0.35),
     inset -1px 0 0 rgb(255 90 31 / 0.35);
 }
+.grid-overlay .col {
+  position: relative;
+}
+.grid-overlay .col-n {
+  position: absolute;
+  top: 64px;
+  inset-inline-start: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  opacity: 0.7;
+}
 .grid-overlay .col:nth-child(n + 5) {
   display: none;
 }
@@ -137,6 +150,14 @@
 @media (min-width: 64rem) {
   .st-cover-half {
     min-height: 0;
+  }
+  /* Snap both halves to the 12-column grid: the split sits in the middle of the gutter between
+     columns 6 and 7, so each half pads the outside by the margin and the inside by half a gutter. */
+  .st-cover-half:first-child {
+    padding-inline: var(--margin) calc(var(--gutter) / 2);
+  }
+  .st-cover-half:last-child {
+    padding-inline: calc(var(--gutter) / 2) var(--margin);
   }
 }
 
@@ -377,7 +398,8 @@
   position: relative;
   height: 360px;
   overflow: hidden;
-  cursor: none;
+  /* The system crosshair, never cursor: none: zero lag, and it keeps the user's pointer size. */
+  cursor: crosshair;
   background:
     linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 40px 40px,
     linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 40px 40px,
@@ -386,6 +408,13 @@
 @media (hover: none), (pointer: coarse) {
   .crosshair-field {
     cursor: auto;
+  }
+}
+@media (forced-colors: active) {
+  .crosshair-h,
+  .crosshair-v,
+  .crosshair-read {
+    display: none;
   }
 }
 .crosshair-h,

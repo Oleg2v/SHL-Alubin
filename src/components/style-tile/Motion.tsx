@@ -73,8 +73,11 @@ function RamDemo({ e, dur, label, reduced }: { e: readonly number[]; dur: number
           aria-hidden="true"
         />
       </div>
-      <button type="button" className="btn btn-secondary btn-sm justify-self-start" onClick={() => setRun((r) => !r)} aria-label={`Run the ${label} curve`}>
-        <span className="btn-label">{run ? "Return" : "Run"} · <span dir="ltr">{dur} ms</span></span>
+      <button type="button" className="btn btn-secondary btn-sm justify-self-start" onClick={() => setRun((r) => !r)}>
+        <span className="btn-label">
+          {run ? "Return" : "Run"}
+          <span className="sr-only"> {label}</span> · <span dir="ltr">{dur} ms</span>
+        </span>
       </button>
     </div>
   );

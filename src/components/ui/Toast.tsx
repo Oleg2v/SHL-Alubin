@@ -75,11 +75,44 @@ function ToastView({ item, onDismiss, closeLabel }: { item: ToastItem; onDismiss
   useEffect(() => {
     if (!life || item.leaving) return;
     const el = ref.current;
-    const bar = el?.querySelector<HTMLElement>(".toast-life");
-    // The CSS life bar is the clock: when its animation ends, the toast leaves.
-    const done = () => onDismiss(item.id);
-    bar?.addEventListener("animationend", done);
-    return () => bar?.removeEventListener("animationend", done);
+    if (!el) return;
+    // A JS clock (not the CSS bar), so reduced motion cannot shorten it. It pauses while the toast
+    // is hovered or holds focus (WCAG 2.2.1), exactly when the CSS life bar pauses.
+    let remaining = life;
+    let started = performance.now();
+    let timer = window.setTimeout(() => onDismiss(item.id), remaining);
+    let hover = false;
+    let focus = false;
+    const set = (h: boolean, f: boolean) => {
+      const was = hover || focus;
+      hover = h;
+      focus = f;
+      const now = hover || focus;
+      if (!was && now) {
+        window.clearTimeout(timer);
+        remaining -= performance.now() - started;
+      } else if (was && !now) {
+        started = performance.now();
+        timer = window.setTimeout(() => onDismiss(item.id), Math.max(800, remaining));
+      }
+    };
+    const enter = () => set(true, focus);
+    const leave = () => set(false, focus);
+    const fin = () => set(hover, true);
+    const fout = (e: FocusEvent) => {
+      if (!el.contains(e.relatedTarget as Node | null)) set(hover, false);
+    };
+    el.addEventListener("pointerenter", enter);
+    el.addEventListener("pointerleave", leave);
+    el.addEventListener("focusin", fin);
+    el.addEventListener("focusout", fout);
+    return () => {
+      window.clearTimeout(timer);
+      el.removeEventListener("pointerenter", enter);
+      el.removeEventListener("pointerleave", leave);
+      el.removeEventListener("focusin", fin);
+      el.removeEventListener("focusout", fout);
+    };
   }, [item.id, item.leaving, life, onDismiss]);
 
   return <ToastCard ref={ref} item={item} life={life} onDismiss={() => onDismiss(item.id)} closeLabel={closeLabel} />;

@@ -17,7 +17,14 @@ type Props = {
   selected?: boolean;
   /** Slot for the compare toggle; sits above the stretched link. */
   action?: ReactNode;
-  labels?: { kgm: string; drawingOf: (id: string) => string; dims: (w: string, h: string, wall: string) => string };
+  labels?: {
+    kgm: string;
+    drawingOf: (id: string) => string;
+    dims: (w: string, h: string, wall: string) => string;
+    /** Locale number formatting, e.g. de-DE decimal comma. */
+    formatKgm?: (v: number) => string;
+    formatDims?: (w: number, h: number) => string;
+  };
   className?: string;
 };
 
@@ -43,9 +50,9 @@ export function ProfileCard({ profile, href, selected, action, labels = EN, clas
       <header className="pcard-head">
         <span className="flex items-center gap-2">
           <span className="pcard-temp" aria-hidden="true" />
-          <span className="pcard-id" dir="ltr">
+          <bdi className="pcard-id" dir="ltr">
             {profile.id}
-          </span>
+          </bdi>
         </span>
         <span className="pcard-family">{profile.family}</span>
       </header>
@@ -60,15 +67,18 @@ export function ProfileCard({ profile, href, selected, action, labels = EN, clas
       </div>
       <footer className="pcard-foot">
         <p className="pcard-specs">
-          <span dir="ltr">
-            <strong>{kgm.toFixed(3)}</strong> {labels.kgm}
+          <span>
+            <bdi dir="ltr">
+              <strong>{labels.formatKgm ? labels.formatKgm(kgm) : kgm.toFixed(3)}</strong>
+            </bdi>{" "}
+            {labels.kgm}
           </span>
-          <span dir="ltr">
+          <bdi dir="ltr">
             {profile.alloy} {profile.temper}
-          </span>
-          <span dir="ltr">
-            {w} × {h}
-          </span>
+          </bdi>
+          <bdi dir="ltr">
+            {labels.formatDims ? labels.formatDims(b.width, b.height) : `${w} × ${h}`}
+          </bdi>
         </p>
         {action ? <div className="pcard-compare">{action}</div> : null}
       </footer>

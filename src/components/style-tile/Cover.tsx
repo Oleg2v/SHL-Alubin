@@ -1,6 +1,7 @@
 import { ProfileDrawing } from "@/components/drawing/ProfileDrawing";
 import { DimH } from "@/components/drawing/Dim";
 import { chamberFrame } from "@/lib/geometry/profile";
+import { SectionHead } from "./SectionHead";
 
 const frame = chamberFrame(64, 46, 1.8, 3, 9);
 
@@ -71,21 +72,13 @@ export function Cover() {
 
 export function Concept() {
   const lines = [
-    ["One story", "A 480 °C billet becomes a cold, exact profile, and every page tells part of that journey."],
-    ["Cold interface", "Swiss grid, hairlines, mono specs and drawing-sheet dimensions; heat appears only where the process is hot."],
-    ["A working tool", "Find a profile, read its drawing, request a quote: in English, German and true right-to-left Hebrew."],
+    ["One story", "A 480 °C billet is pushed through the die and leaves as a cold, dimensioned profile; every page is a station on that line."],
+    ["Cold interface", "The drawing office: a 12-column sheet, ISO hairlines, lettering heights in millimetres, every spec in mono."],
+    ["Hot process", "Heat is a reading, not a decoration: Billet Glow marks only the hot billet, the active state and the one primary action."],
   ] as const;
   return (
     <section id="concept" aria-labelledby="concept-title" data-surface="sheet" className="st-section">
-      <div className="swiss-grid st-section-head">
-        <p className="col-span-4 sm:col-span-2 lg:col-span-3 t-label text-fg-muted st-index">
-          <span>§ 00</span>
-          <span>Concept</span>
-        </p>
-        <h2 id="concept-title" className="col-span-4 sm:col-span-6 lg:col-span-9 t-title-m max-w-[24ch]">
-          Cold metal. Hot process. In three lines.
-        </h2>
-      </div>
+      <SectionHead n="00" kicker="Concept" id="concept-title" title="Cold metal. Hot process. In three lines." />
       <ol className="swiss-grid">
         {lines.map(([k, v], i) => (
           <li key={k} className="col-span-4 sm:col-span-8 lg:col-start-4 lg:col-span-9 grid grid-cols-subgrid border-t border-line py-6 lg:py-8">

@@ -145,18 +145,18 @@ export function ComponentsLab() {
               <fieldset className="grid gap-3">
                 <legend className="t-label text-fg-muted mb-3">{c.alloy}</legend>
                 <div className="flex flex-wrap gap-2">
-                  <ToggleChip label="6060" count={18} />
-                  <ToggleChip label="6063" count={42} defaultPressed />
-                  <ToggleChip label="6082" count={9} />
-                  <ToggleChip label="6005A" count={0} />
+                  <ToggleChip label="6060" count={18} countLabel={c.profiles} />
+                  <ToggleChip label="6063" count={42} countLabel={c.profiles} defaultPressed />
+                  <ToggleChip label="6082" count={9} countLabel={c.profiles} />
+                  <ToggleChip label="6005A" count={0} countLabel={c.profiles} />
                 </div>
               </fieldset>
               <fieldset className="grid gap-3">
                 <legend className="t-label text-fg-muted mb-3">{c.temper}</legend>
                 <div className="flex flex-wrap gap-2">
-                  <ToggleChip label="T5" count={23} />
-                  <ToggleChip label="T6" count={51} defaultPressed />
-                  <ToggleChip label="T66" count={7} />
+                  <ToggleChip label="T5" count={23} countLabel={c.profiles} />
+                  <ToggleChip label="T6" count={51} countLabel={c.profiles} defaultPressed />
+                  <ToggleChip label="T66" count={7} countLabel={c.profiles} />
                 </div>
               </fieldset>
               <div className="flex flex-wrap gap-2 border-t border-line pt-4">
@@ -188,7 +188,13 @@ export function ComponentsLab() {
                       profile={{ ...p, family: fam[p.family] ?? p.family }}
                       href="#components"
                       selected={on}
-                      labels={{ kgm: c.kgm, drawingOf: c.drawingOf, dims: (w, h, wall) => c.dims(nf(+w, 1), nf(+h, 1), nf(+wall, 1)) }}
+                      labels={{
+                        kgm: c.kgm,
+                        drawingOf: c.drawingOf,
+                        dims: (w, h, wall) => c.dims(nf(+w, 1), nf(+h, 1), nf(+wall, 1)),
+                        formatKgm: (v) => nf(v, 3),
+                        formatDims: (w, h) => `${nf(w, 1)} × ${nf(h, 1)}`,
+                      }}
                       action={
                         <button
                           type="button"
@@ -213,7 +219,7 @@ export function ComponentsLab() {
 
           {/* C-05 Table row */}
           <Cell code="C-05" title="Table row" className="col-span-4 sm:col-span-8 lg:col-span-7">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto" role="region" aria-label={c.specCaption} tabIndex={0}>
               <SpecTable caption={c.specCaption} rows={rows} activeKey="width" headers={c.headers} className="min-w-[520px]" />
             </div>
           </Cell>

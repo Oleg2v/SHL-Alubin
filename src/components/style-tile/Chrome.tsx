@@ -102,7 +102,9 @@ export function TopBar() {
         <div className="grid-overlay-baseline" />
         <div className="swiss-grid">
           {Array.from({ length: 12 }, (_, i) => (
-            <div key={i} className="col" />
+            <div key={i} className="col">
+              <span className="col-n">{String(i + 1).padStart(2, "0")}</span>
+            </div>
           ))}
         </div>
       </div>

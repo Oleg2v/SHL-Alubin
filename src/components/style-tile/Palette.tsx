@@ -143,7 +143,7 @@ export function Palette() {
             </p>
           </div>
         </div>
-        <div className="col-span-4 sm:col-span-8 lg:col-span-9 overflow-x-auto">
+        <div className="col-span-4 sm:col-span-8 lg:col-span-9 overflow-x-auto" role="region" aria-label="Contrast matrix, scrolls sideways" tabIndex={0}>
           <table className="matrix min-w-[640px]">
             <caption className="sr-only">Contrast ratio of each foreground colour (rows) on each background colour (columns)</caption>
             <thead>

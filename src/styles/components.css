@@ -619,13 +619,10 @@
     font-family: var(--font-sans);
     color: var(--fg-muted);
   }
+  /* Numbers align to the logical end (right in LTR, left in RTL) so value and unit meet in the
+     middle in both directions; the value itself is an isolated LTR run (bdi). */
   .spec .num {
     text-align: end;
-    unicode-bidi: isolate;
-    direction: ltr;
-  }
-  [dir="rtl"] .spec .num {
-    text-align: left;
   }
   .spec tbody tr {
     transition: background-color var(--dur-fast) var(--ease-out);
@@ -648,10 +645,11 @@
   }
 
   /* =========================================================== Toast */
+  /* Toasts stack above the demo badge in the same corner, like revision rows above a title block. */
   .toast-region {
     position: fixed;
-    inset-inline-start: 12px;
-    bottom: 12px;
+    inset-inline-end: 12px;
+    bottom: calc(12px + var(--badge-h) + 8px);
     z-index: var(--z-toast);
     display: grid;
     gap: 8px;
@@ -761,6 +759,11 @@
   .toast:focus-within .toast-life,
   .toast[data-paused="true"] .toast-life {
     animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .toast-life {
+      display: none;
+    }
   }
   .toast[data-tone="success"] .toast-glyph {
     border-color: var(--color-glow);

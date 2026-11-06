@@ -23,14 +23,18 @@ export function DemoBadge({
         <span className="demo-badge-dot" aria-hidden="true" />
         <span>{text}</span>
       </span>
-      <span className="demo-badge-cell demo-badge-meta" dir="ltr">
-        <span className="demo-badge-key">DWG</span> {dwg}
+      <span className="demo-badge-cell demo-badge-meta">
+        <bdi dir="ltr">
+          <span className="demo-badge-key">DWG</span> {dwg}
+        </bdi>
       </span>
-      <span className="demo-badge-cell demo-badge-meta" dir="ltr">
-        <span className="demo-badge-key">REV</span> {rev}
+      <span className="demo-badge-cell demo-badge-meta">
+        <bdi dir="ltr">
+          <span className="demo-badge-key">REV</span> {rev}
+        </bdi>
       </span>
-      <span className="demo-badge-cell demo-badge-meta" dir="ltr">
-        {lang}
+      <span className="demo-badge-cell demo-badge-meta">
+        <bdi dir="ltr">{lang}</bdi>
       </span>
     </aside>
   );

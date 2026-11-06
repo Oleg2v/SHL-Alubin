@@ -28,7 +28,11 @@ export function TextField({ label, aux, hint, error, unit, className, id, disabl
     <div className={`field ${className ?? ""}`} data-invalid={error ? "true" : undefined} data-disabled={disabled ? "true" : undefined}>
       <label className="field-label" htmlFor={inputId}>
         <span>{label}</span>
-        {aux ? <span className="field-label-aux">{aux}</span> : null}
+        {aux ? (
+          <span className="field-label-aux">
+            <bdi dir="ltr">{aux}</bdi>
+          </span>
+        ) : null}
       </label>
       <div className="field-control">
         <input
@@ -40,8 +44,8 @@ export function TextField({ label, aux, hint, error, unit, className, id, disabl
           {...input}
         />
         {unit ? (
-          <span id={unitId} className="field-unit" dir="ltr">
-            {unit}
+          <span id={unitId} className="field-unit">
+            <bdi dir="ltr">{unit}</bdi>
           </span>
         ) : null}
       </div>
@@ -81,8 +85,10 @@ export function RangeField({ label, min, max, step = 1, defaultValue, unit = "mm
     <div className={`field ${className ?? ""}`}>
       <label className="field-label" htmlFor={id}>
         <span>{label}</span>
-        <output htmlFor={id} className="field-label-aux" dir="ltr" aria-live="off">
-          {"≤"} {shown} {unit}
+        <output htmlFor={id} className="field-label-aux" aria-live="off">
+          <bdi dir="ltr">
+            {"≤"} {shown} {unit}
+          </bdi>
         </output>
       </label>
       <div className="range-wrap">
@@ -100,8 +106,8 @@ export function RangeField({ label, min, max, step = 1, defaultValue, unit = "mm
         />
       </div>
       <div className="flex justify-between t-label text-fg-muted" aria-hidden="true">
-        <span dir="ltr">{min}</span>
-        <span dir="ltr">{max}</span>
+        <bdi dir="ltr">{min}</bdi>
+        <bdi dir="ltr">{max}</bdi>
       </div>
     </div>
   );

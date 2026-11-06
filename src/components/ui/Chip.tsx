@@ -6,6 +6,8 @@ import { Close } from "@/components/icons/Icons";
 type ToggleChipProps = {
   label: string;
   count?: number;
+  /** Spoken after the count, e.g. "profiles". */
+  countLabel?: string;
   defaultPressed?: boolean;
   pressed?: boolean;
   onPressedChange?: (v: boolean) => void;
@@ -16,7 +18,7 @@ type ToggleChipProps = {
  * screen reader hears "6063, 42 profiles, toggle button, pressed". A zero count disables the
  * chip and says why instead of hiding the option.
  */
-export function ToggleChip({ label, count, defaultPressed = false, pressed, onPressedChange, disabled, ...rest }: ToggleChipProps) {
+export function ToggleChip({ label, count, countLabel = "profiles", defaultPressed = false, pressed, onPressedChange, disabled, ...rest }: ToggleChipProps) {
   const [inner, setInner] = useState(defaultPressed);
   const on = pressed ?? inner;
   const empty = count === 0;
@@ -37,10 +39,10 @@ export function ToggleChip({ label, count, defaultPressed = false, pressed, onPr
       <span className="chip-dot" aria-hidden="true" />
       <span>{label}</span>
       {typeof count === "number" ? (
-        <span className="chip-count" dir="ltr">
+        <span className="chip-count">
           <span className="sr-only">, </span>
-          {count}
-          <span className="sr-only"> profiles</span>
+          <bdi dir="ltr">{count}</bdi>
+          <span className="sr-only"> {countLabel}</span>
         </span>
       ) : null}
     </button>

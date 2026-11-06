@@ -452,7 +452,7 @@
     }
   }
   html {
-    scroll-padding-block: 72px calc(var(--badge-h) + 32px);
+    scroll-padding-block: 72px calc(var(--badge-h) + 32px + var(--toast-h, 0px));
   }
 
   /* ---------- Hairline helpers ---------- */

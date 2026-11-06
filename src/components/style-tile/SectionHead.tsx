@@ -9,7 +9,7 @@ export function SectionHead({ n, kicker, id, title, children }: { n: string; kic
         <span aria-hidden="true">§ {n}</span>
         <span>{kicker}</span>
       </p>
-      <div className="col-span-4 sm:col-span-6 lg:col-span-9 grid gap-6">
+      <div className="col-span-4 sm:col-span-6 lg:col-span-9 grid grid-cols-[minmax(0,1fr)] gap-6">
         <MeasuredTitle id={id} className="t-title-m max-w-[24ch] text-balance">
           {title}
         </MeasuredTitle>

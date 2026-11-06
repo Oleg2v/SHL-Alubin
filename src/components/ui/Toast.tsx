@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Alert, Check, Close } from "@/components/icons/Icons";
 import { durations } from "@/design/tokens";
 
@@ -51,22 +52,65 @@ export function ToastProvider({
   dir?: "ltr" | "rtl";
 }) {
   const [items, setItems] = useState<ToastItem[]>([]);
+  const [host, setHost] = useState<HTMLElement | null>(null);
+  const region = useRef<HTMLDivElement>(null);
   const seq = useRef(0);
+
+  // The region lives on <body>: a contained or transformed ancestor (content-visibility, a page
+  // transition) would otherwise become its containing block and clip a "fixed" stack.
+  useEffect(() => setHost(document.body), []);
+
+  // Leaving toasts play their exit, then go: one clock per toast, whichever way it leaves.
+  const exits = useRef(new Map<number, number>());
+  useEffect(() => {
+    for (const x of items) {
+      if (!x.leaving || exits.current.has(x.id)) continue;
+      const t = window.setTimeout(() => {
+        exits.current.delete(x.id);
+        setItems((xs) => xs.filter((y) => y.id !== x.id));
+      }, LEAVE_MS);
+      exits.current.set(x.id, t);
+    }
+  }, [items]);
+  useEffect(() => {
+    const timers = exits.current;
+    return () => timers.forEach((t) => window.clearTimeout(t));
+  }, []);
+
+  // The stack's height, for scroll padding: keyboard focus is never scrolled in behind a toast.
+  useEffect(() => {
+    const el = region.current;
+    if (!el) return;
+    const root = document.documentElement;
+    const ro = new ResizeObserver(() => {
+      const h = el.querySelector(".toast") ? el.getBoundingClientRect().height + 8 : 0;
+      root.style.setProperty("--toast-h", `${Math.round(h)}px`);
+    });
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      root.style.removeProperty("--toast-h");
+    };
+  }, [host]);
 
   const dismiss = useCallback((id: number) => {
     setItems((xs) => xs.map((x) => (x.id === id ? { ...x, leaving: true } : x)));
-    window.setTimeout(() => setItems((xs) => xs.filter((x) => x.id !== id)), LEAVE_MS);
   }, []);
 
   const push = useCallback((t: ToastInput) => {
     const id = ++seq.current;
+    const same = (x: ToastItem) => !x.leaving && x.tone === t.tone && x.title === t.title && x.meta === t.meta;
     setItems((xs) => {
-      const next = [...xs, { ...t, id }];
-      // over the cap, drop the oldest auto-dismissing toast only: an error or an Undo is never lost
-      while (next.length > MAX_VISIBLE) {
-        const i = next.findIndex((x) => !persistent(x));
-        if (i < 0) break;
-        next.splice(i, 1);
+      // a repeat replaces its twin (announced again, timer restarted) instead of stacking up
+      const next = [...xs.map((x) => (same(x) ? { ...x, leaving: true } : x)), { ...t, id }];
+      // Never more than three on screen. Over the cap the oldest auto-dismissing toast goes first,
+      // then the oldest superseded Undo or Retry; errors go last. No timer ever removes an action.
+      const live = () => next.filter((x) => !x.leaving);
+      while (live().length > MAX_VISIBLE) {
+        const l = live();
+        const victim = l.find((x) => !persistent(x)) ?? l.find((x) => x.tone !== "error") ?? l[0];
+        if (!victim) break;
+        next[next.indexOf(victim)] = { ...victim, leaving: true };
       }
       return next;
     });
@@ -75,25 +119,27 @@ export function ToastProvider({
 
   const value = useMemo(() => ({ push, dismiss }), [push, dismiss]);
 
+  const stack = (errors: boolean) =>
+    items
+      .filter((t) => (t.tone === "error") === errors)
+      .map((t) => <ToastView key={t.id} item={t} onDismiss={dismiss} closeLabel={closeLabel} />);
+
   return (
     <ToastCtx.Provider value={value}>
       {children}
-      <div className="toast-region" role="region" aria-label={regionLabel} lang={lang} dir={dir}>
-        <div role="status" aria-live="polite" aria-atomic="false" className="toast-stack">
-          {items
-            .filter((t) => t.tone !== "error")
-            .map((t) => (
-              <ToastView key={t.id} item={t} onDismiss={dismiss} closeLabel={closeLabel} />
-            ))}
-        </div>
-        <div role="alert" aria-live="assertive" className="toast-stack">
-          {items
-            .filter((t) => t.tone === "error")
-            .map((t) => (
-              <ToastView key={t.id} item={t} onDismiss={dismiss} closeLabel={closeLabel} />
-            ))}
-        </div>
-      </div>
+      {host
+        ? createPortal(
+            <div ref={region} className="toast-region" role="region" aria-label={regionLabel} lang={lang} dir={dir}>
+              <div role="status" aria-live="polite" aria-atomic="false" className="toast-stack">
+                {stack(false)}
+              </div>
+              <div role="alert" aria-live="assertive" className="toast-stack">
+                {stack(true)}
+              </div>
+            </div>,
+            host,
+          )
+        : null}
     </ToastCtx.Provider>
   );
 }
@@ -146,7 +192,10 @@ function ToastView({ item, onDismiss, closeLabel }: { item: ToastItem; onDismiss
     };
   }, [item.id, item.leaving, life, onDismiss]);
 
-  return <ToastCard ref={ref} item={item} life={life} onDismiss={() => onDismiss(item.id)} closeLabel={closeLabel} />;
+  // Undo / Retry does its work, then the toast has served its purpose and leaves.
+  const act = item.action;
+  const live = act ? { ...item, action: { label: act.label, onAction: () => (act.onAction(), onDismiss(item.id)) } } : item;
+  return <ToastCard ref={ref} item={live} life={life} onDismiss={() => onDismiss(item.id)} closeLabel={closeLabel} />;
 }
 
 type CardProps = {

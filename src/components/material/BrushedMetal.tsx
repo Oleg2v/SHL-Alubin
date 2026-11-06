@@ -177,6 +177,8 @@ export function BrushedMetal({ finish, className = "" }: { finish: Finish; class
     let visible = false;
     let running = false;
     let pointerActive = false;
+    let lastInput = performance.now();
+    const IDLE_MS = 6000; // the light drifts for a moment, then settles: no endless render loop
     const s = state.current;
 
     const resize = () => {
@@ -222,7 +224,8 @@ export function BrushedMetal({ finish, className = "" }: { finish: Finish; class
         s.dirty = false;
       }
       if (p >= 1) s.from = s.to;
-      if (!reduced || moved || p < 1) schedule();
+      const idle = !pointerActive && now - lastInput > IDLE_MS;
+      if ((!reduced && !idle) || moved || p < 1) schedule();
     };
     const schedule = () => {
       if (running || !visible) return;
@@ -234,11 +237,13 @@ export function BrushedMetal({ finish, className = "" }: { finish: Finish; class
     const onMove = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
       pointerActive = true;
+      lastInput = performance.now();
       s.target = [(e.clientX - r.left) / r.width, 1 - (e.clientY - r.top) / r.height];
       schedule();
     };
     const onLeave = () => {
       pointerActive = false;
+      lastInput = performance.now();
       schedule();
     };
     el.addEventListener("pointermove", onMove);
@@ -248,6 +253,7 @@ export function BrushedMetal({ finish, className = "" }: { finish: Finish; class
       visible = !!entry?.isIntersecting;
       if (visible) {
         s.dirty = true;
+        lastInput = performance.now();
         schedule();
       }
     });

@@ -830,6 +830,11 @@
     display: grid;
     gap: 8px;
     width: min(400px, calc(100vw - 24px));
+    /* three toasts at most; on a short landscape phone the stack scrolls instead of leaving the screen */
+    max-block-size: calc(100dvh - 12px - var(--badge-h) - 8px - 12px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
     pointer-events: none;
   }
   .toast-stack {

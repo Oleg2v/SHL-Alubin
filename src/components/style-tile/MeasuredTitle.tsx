@@ -28,7 +28,9 @@ export function MeasuredTitle({ id, children, className = "" }: { id: string; ch
     return () => ro.disconnect();
   }, []);
   return (
-    <div className="grid gap-3">
+    // one minmax(0, 1fr) track: the measured dimension can never widen its own column, so the title
+    // shrinks with the viewport and is measured again (an auto track would hold the stale width)
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-3">
       <h2 id={id} className={className}>
         <span ref={ref}>{children}</span>
       </h2>

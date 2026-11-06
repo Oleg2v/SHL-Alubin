@@ -45,14 +45,16 @@ export function HeatAudit() {
     const out: Hit[] = [];
     let ui = 0;
     let proc = 0;
-    const els = document.querySelectorAll("main *, header *, footer *");
+    // everything on the page: content, chrome, the badge and the toast stack
+    const els = document.querySelectorAll("body *");
     for (const el of els) {
-      // never count the audit's own overlay (it renders inside the header)
+      // never count the audit's own overlay
       if (el.closest(".heat-audit-layer, .heat-audit-meter")) continue;
       const r = el.getBoundingClientRect();
       if (r.width < 1 || r.height < 1 || r.bottom < 0 || r.top > vh || r.right < 0 || r.left > vw) continue;
+      // invisible paint is not heat: hidden, or inside a faded-out layer (the grid overlay at rest)
+      if (!el.checkVisibility({ opacityProperty: true, visibilityProperty: true })) continue;
       const cs = getComputedStyle(el);
-      if (cs.visibility === "hidden" || cs.display === "none") continue;
       const reason = reasonFor(el, cs, GLOW);
       if (!reason) continue;
       const x = Math.max(0, r.left);

@@ -67,4 +67,6 @@ and German, design-system integrity), and every finding was checked by a skeptic
   WebM fallback, still frame for reduced motion); the CSS-only preloader (`@property` counter).
 - Stage 2: hot-saw page transitions (a 2 px Billet Glow cut, top to bottom, 480 ms, direction-neutral
   for RTL); crosshair part coordinates with vertex snap over drawings; 1:1 calibrated drawing mode.
+- Stage 3: bake the photo plates (SVG lighting) to AVIF at build time; subset Geist / Geist Mono to
+  Latin + symbols (about 29 + 22 KB instead of 67 + 69 KB).
 - Native review of Hebrew and German copy before launch. Dutch (NL) on hold.

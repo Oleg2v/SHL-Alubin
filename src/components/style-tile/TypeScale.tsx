@@ -181,16 +181,16 @@ export function TypeSection() {
         <div className="col-span-4 sm:col-span-8 lg:col-span-12">
           <h3 className="t-title-s">Giant numerals carry the facts, and the type is dimensioned like a part.</h3>
         </div>
-        <div className="col-span-4 sm:col-span-4 lg:col-span-6">
+        <div className="col-span-4 sm:col-span-8 md:col-span-4 lg:col-span-6">
           <DimensionedNumeral value="6,000" qualifier="≥" label="Profile types in the library" />
         </div>
-        <div className="col-span-4 sm:col-span-4 lg:col-span-6">
+        <div className="col-span-4 sm:col-span-8 md:col-span-4 lg:col-span-6">
           <DimensionedNumeral value="1,200" unit="t" deviation={["+0", "−200"]} label="Tonnes of profiles a month: 1,000 to 1,200" />
         </div>
-        <div className="col-span-4 sm:col-span-4 lg:col-span-6">
+        <div className="col-span-4 sm:col-span-8 md:col-span-4 lg:col-span-6">
           <DimensionedNumeral value="50" qualifier="≥" label="New dies a week from the die shop" />
         </div>
-        <div className="col-span-4 sm:col-span-4 lg:col-span-6">
+        <div className="col-span-4 sm:col-span-8 md:col-span-4 lg:col-span-6">
           <DimensionedNumeral value="35" unit="%" qualifier="≈" label="Exported, Rotterdam to New York" />
         </div>
       </div>

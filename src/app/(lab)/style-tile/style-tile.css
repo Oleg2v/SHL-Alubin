@@ -1,0 +1,514 @@
+/* Style tile only. Everything here is composition; the system lives in src/styles. */
+
+/* ------------------------------------------------------------ chrome */
+.st-bar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  border-bottom: 1px solid var(--line);
+}
+.st-bar-row {
+  height: 56px;
+  align-items: center;
+}
+.st-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding-inline: 8px;
+  border-radius: var(--radius-xs);
+  text-decoration: none;
+  color: var(--fg-muted);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.st-nav a:hover {
+  color: var(--fg);
+}
+.st-nav a[aria-current="true"] {
+  color: var(--fg);
+}
+.st-nav a[aria-current="true"] .st-nav-dot {
+  background: var(--color-glow);
+  box-shadow: 0 0 6px 1px rgb(255 90 31 / 0.6);
+}
+.st-nav-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: var(--radius-full);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.wordmark-mark {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+/* Grid overlay (press G). Active = heat, so the columns are tinted with the glow. */
+.grid-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.grid-overlay[data-on="true"] {
+  opacity: 1;
+}
+.grid-overlay .swiss-grid {
+  height: 100%;
+}
+.grid-overlay .col {
+  background: rgb(255 90 31 / 0.06);
+  box-shadow:
+    inset 1px 0 0 rgb(255 90 31 / 0.35),
+    inset -1px 0 0 rgb(255 90 31 / 0.35);
+}
+.grid-overlay .col:nth-child(n + 5) {
+  display: none;
+}
+@media (min-width: 40rem) {
+  .grid-overlay .col:nth-child(n + 5) {
+    display: block;
+  }
+  .grid-overlay .col:nth-child(n + 9) {
+    display: none;
+  }
+}
+@media (min-width: 64rem) {
+  .grid-overlay .col:nth-child(n + 9) {
+    display: block;
+  }
+}
+.grid-overlay-baseline {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(to bottom, rgb(255 90 31 / 0.08) 0 1px, transparent 1px 8px);
+}
+
+/* ------------------------------------------------------------ section frame */
+.st-section {
+  padding-block: var(--section);
+  border-top: 1px solid var(--line);
+}
+.st-section-head {
+  row-gap: 16px;
+  margin-bottom: clamp(48px, 5vw, 80px);
+}
+.st-index {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+/* ------------------------------------------------------------ cover */
+.st-cover {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: calc(100svh - 56px);
+}
+@media (min-width: 64rem) {
+  .st-cover {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.st-cover-half {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+  min-height: 56svh;
+  padding: 24px var(--margin) max(var(--margin), 64px);
+  overflow: hidden;
+}
+@media (min-width: 64rem) {
+  .st-cover-half {
+    min-height: 0;
+  }
+}
+
+/* The billet: an end face, sawn, at 480 C. Colours are derived from Billet Glow only. */
+.billet {
+  --d: min(64vw, 400px);
+  position: relative;
+  width: var(--d);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    repeating-linear-gradient(
+      102deg,
+      transparent 0 3px,
+      color-mix(in oklab, var(--color-glow) 70%, var(--color-ink)) 3px 4px
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      color-mix(in oklab, var(--color-glow) 30%, white) 0%,
+      color-mix(in oklab, var(--color-glow) 72%, white) 26%,
+      var(--color-glow) 52%,
+      color-mix(in oklab, var(--color-glow) 62%, var(--color-ink)) 86%,
+      color-mix(in oklab, var(--color-glow) 34%, var(--color-ink)) 100%
+    );
+  background-blend-mode: soft-light, normal;
+  box-shadow:
+    0 0 0 1px rgb(255 90 31 / 0.6),
+    0 0 48px 4px rgb(255 90 31 / 0.45),
+    0 0 160px 24px rgb(255 90 31 / 0.22),
+    inset 0 0 40px 6px color-mix(in oklab, var(--color-glow) 40%, var(--color-ink));
+  animation: var(--animate-flicker);
+}
+.billet::after {
+  /* heat noise */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .9 0 0 0 0 .8 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+}
+.billet-axis {
+  position: absolute;
+  inset: -28px;
+  pointer-events: none;
+  color: var(--fg-muted);
+}
+
+/* ------------------------------------------------------------ palette */
+.usage-bar {
+  display: flex;
+  height: 96px;
+  border: 1px solid var(--line);
+}
+.usage-bar > div {
+  position: relative;
+}
+.usage-bar > div + div {
+  border-inline-start: 1px solid var(--line);
+}
+.swatch {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border: 1px solid var(--line);
+  min-width: 0;
+}
+.swatch-chip {
+  aspect-ratio: 4 / 3;
+  border-bottom: 1px solid var(--line);
+}
+.grade {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 20px;
+  padding-inline: 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+.grade[data-fail="true"] {
+  border-style: dashed;
+  background: repeating-linear-gradient(-45deg, transparent 0 4px, var(--line) 4px 5px);
+}
+.matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+}
+.matrix th,
+.matrix td {
+  height: 56px;
+  border: 1px solid var(--line);
+  padding: 0 12px;
+  text-align: start;
+  font-weight: 400;
+}
+.matrix thead th {
+  height: 40px;
+}
+.matrix .cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.heat-ramp {
+  height: 48px;
+  /* Radiance above ambient, T^4 (Stefan-Boltzmann), mixed from Billet Glow to Alu Mid in OKLab.
+     Stops are linear in temperature: 480 C at the die exit to 20 C ambient. */
+  background: linear-gradient(
+    90deg,
+    var(--color-glow) 0%,
+    color-mix(in oklab, var(--color-glow) 71.1%, var(--color-alu-mid)) 13%,
+    color-mix(in oklab, var(--color-glow) 48.8%, var(--color-alu-mid)) 26.1%,
+    color-mix(in oklab, var(--color-glow) 32%, var(--color-alu-mid)) 39.1%,
+    color-mix(in oklab, var(--color-glow) 19.7%, var(--color-alu-mid)) 52.2%,
+    color-mix(in oklab, var(--color-glow) 8.8%, var(--color-alu-mid)) 69.6%,
+    color-mix(in oklab, var(--color-glow) 2.6%, var(--color-alu-mid)) 87%,
+    var(--color-alu-mid) 100%
+  );
+  border: 1px solid var(--line);
+}
+[dir="rtl"] .heat-ramp {
+  transform: scaleX(-1);
+}
+
+/* ------------------------------------------------------------ type */
+.scale-row {
+  align-items: baseline;
+  padding-block: 20px;
+  border-bottom: 1px solid var(--line);
+}
+.scale-sample {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: clip;
+}
+
+/* ------------------------------------------------------------ space */
+.space-bar {
+  height: 12px;
+  background: var(--fg);
+}
+.space-bar[data-major="true"] {
+  background: var(--fg);
+}
+
+/* ------------------------------------------------------------ form */
+.radius-specimen {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1.5px solid var(--fg);
+}
+.focus-demo {
+  box-shadow:
+    0 0 0 2px var(--focus-inner),
+    0 0 0 4px var(--focus-outer);
+}
+
+/* ------------------------------------------------------------ motion */
+.ram-track {
+  position: relative;
+  height: 40px;
+  border-block: 1px solid var(--line);
+  background: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 10%);
+}
+.ram-head {
+  position: absolute;
+  top: 7px;
+  inset-inline-start: 0;
+  width: 24px;
+  height: 24px;
+  background: var(--fg);
+  translate: 0 0;
+}
+.ram-track[data-run="true"] .ram-head {
+  translate: calc(var(--track-w, 300px) - 24px) 0;
+}
+[dir="rtl"] .ram-track[data-run="true"] .ram-head {
+  translate: calc((var(--track-w, 300px) - 24px) * -1) 0;
+}
+
+/* ------------------------------------------------------------ components lab */
+.lab-cell {
+  border: 1px solid var(--line);
+  min-width: 0;
+}
+.lab-cell-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 40px;
+  padding-inline: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-xs);
+  padding: 2px;
+  gap: 2px;
+}
+.segmented button {
+  height: 28px;
+  min-width: 44px;
+  padding-inline: 10px;
+  border: 0;
+  border-radius: 1px;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  color: var(--fg-muted);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.segmented button:hover {
+  color: var(--fg);
+}
+.segmented button[aria-pressed="true"] {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* ------------------------------------------------------------ motif */
+.crosshair-field {
+  position: relative;
+  height: 360px;
+  overflow: hidden;
+  cursor: none;
+  background:
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 40px 40px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 40px 40px,
+    var(--bg);
+}
+@media (hover: none), (pointer: coarse) {
+  .crosshair-field {
+    cursor: auto;
+  }
+}
+.crosshair-h,
+.crosshair-v {
+  position: absolute;
+  background: var(--fg);
+  pointer-events: none;
+}
+.crosshair-h {
+  left: 0;
+  right: 0;
+  height: 1px;
+}
+.crosshair-v {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+.crosshair-read {
+  position: absolute;
+  pointer-events: none;
+  padding: 4px 8px;
+  background: var(--fg);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.brushed {
+  position: relative;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgb(255 255 255 / 0.05) 0 1px,
+      rgb(0 0 0 / 0.05) 1px 2px,
+      rgb(255 255 255 / 0.03) 2px 4px
+    ),
+    linear-gradient(
+      100deg,
+      color-mix(in oklab, var(--finish) 72%, var(--color-ink)) 0%,
+      color-mix(in oklab, var(--finish) 90%, white) 34%,
+      var(--finish) 46%,
+      color-mix(in oklab, var(--finish) 78%, var(--color-ink)) 64%,
+      color-mix(in oklab, var(--finish) 92%, white) 82%,
+      color-mix(in oklab, var(--finish) 70%, var(--color-ink)) 100%
+    );
+}
+.brushed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='120'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.9' numOctaves='3' seed='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='120' filter='url(%23b)' opacity='.55'/%3E%3C/svg%3E");
+  background-size: 400px 120px;
+  mix-blend-mode: overlay;
+  opacity: var(--grain, 0.7);
+}
+.brushed[data-matte="true"]::after {
+  opacity: 0.18;
+}
+
+.cliche {
+  position: relative;
+}
+.cliche-strike {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--fg-muted);
+}
+
+/* ------------------------------------------------------------ title block */
+.title-block {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-inline-start: 1px solid var(--line);
+}
+@media (min-width: 64rem) {
+  .title-block {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+.title-block > div {
+  display: grid;
+  gap: 4px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  border-inline-end: 1px solid var(--line);
+  min-width: 0;
+}
+
+/* ------------------------------------------------------------ finish lab */
+.finish-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--fg);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+.finish-option:hover {
+  border-color: var(--line-strong);
+}
+.finish-option[aria-pressed="true"] {
+  border-color: var(--fg);
+  background: color-mix(in oklab, var(--fg) 4%, transparent);
+}
+.finish-option[aria-pressed="true"] .chip-dot {
+  background: var(--color-glow);
+  box-shadow: 0 0 8px 1px rgb(255 90 31 / 0.6);
+}
+.finish-swatch {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}

@@ -1,0 +1,3 @@
+# Concept demo by Kikkey - not the official SHL-Alubin website. Do not index.
+User-agent: *
+Disallow: /

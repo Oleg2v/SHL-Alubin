@@ -1,0 +1,385 @@
+/* Base layer: element defaults, focus, selection, reduced motion, RTL type adjustments. */
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-optical-sizing: auto;
+  }
+
+  body {
+    min-height: 100dvh;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    letter-spacing: var(--text-body--letter-spacing);
+    background: var(--bg);
+    color: var(--fg);
+  }
+
+  /* Every surface paints its own background and colour. */
+  [data-surface] {
+    background: var(--bg);
+    color: var(--fg);
+  }
+
+  /* Numbers that change or align always use tabular figures. */
+  table,
+  output,
+  [data-numeric],
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Hebrew: no negative tracking (it breaks letterforms), a touch more leading,
+     and Plex Hebrew carries the glyphs (see --font-sans). */
+  :lang(he) {
+    letter-spacing: 0 !important;
+  }
+  :lang(he) :is(h1, h2, h3, .t-headline, .t-display, .t-title-l, .t-title-m) {
+    line-height: 1.08;
+  }
+
+  ::selection {
+    background: var(--color-glow);
+    color: var(--color-ink);
+  }
+
+  /* Focus: a double ring, Ink inside and Billet Glow outside, so it passes 3:1 on both the
+     Alu White sheet (Ink 16.7:1) and the Ink stage (Glow 6.2:1). Transparent outline keeps
+     it visible in Windows forced-colours mode. */
+  :focus-visible {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow:
+      0 0 0 2px var(--focus-inner),
+      0 0 0 4px var(--focus-outer);
+  }
+  @media (forced-colors: active) {
+    :focus-visible {
+      outline: 2px solid CanvasText;
+    }
+  }
+
+  a {
+    color: inherit;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    display: block;
+    max-width: 100%;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+  }
+
+  /* Long German compounds: hyphenate body copy, never headlines mid-syllable on small screens
+     without a soft-hyphen opportunity. */
+  :lang(de) p,
+  :lang(de) li,
+  :lang(de) dd {
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+  :lang(de) :is(h1, h2, h3) {
+    overflow-wrap: break-word;
+    hyphens: manual;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 1ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* ---------- Typographic roles (utility shorthands that also set weight) ---------- */
+  .t-display {
+    font-size: var(--text-display);
+    line-height: var(--text-display--line-height);
+    letter-spacing: var(--text-display--letter-spacing);
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+  }
+  .t-headline {
+    font-size: var(--text-headline);
+    line-height: var(--text-headline--line-height);
+    letter-spacing: var(--text-headline--letter-spacing);
+    font-weight: 500;
+  }
+  .t-title-l {
+    font-size: var(--text-title-l);
+    line-height: var(--text-title-l--line-height);
+    letter-spacing: var(--text-title-l--letter-spacing);
+    font-weight: 500;
+  }
+  .t-title-m {
+    font-size: var(--text-title-m);
+    line-height: var(--text-title-m--line-height);
+    letter-spacing: var(--text-title-m--letter-spacing);
+    font-weight: 500;
+  }
+  .t-title-s {
+    font-size: var(--text-title-s);
+    line-height: var(--text-title-s--line-height);
+    letter-spacing: var(--text-title-s--letter-spacing);
+    font-weight: 500;
+  }
+  .t-lead {
+    font-size: var(--text-lead);
+    line-height: var(--text-lead--line-height);
+    letter-spacing: var(--text-lead--letter-spacing);
+    font-weight: 400;
+  }
+  .t-body {
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    letter-spacing: var(--text-body--letter-spacing);
+  }
+  .t-small {
+    font-size: var(--text-small);
+    line-height: var(--text-small--line-height);
+  }
+  /* Mono label: section numbers, specs, annotations. */
+  .t-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    line-height: var(--text-micro--line-height);
+    letter-spacing: var(--text-micro--letter-spacing);
+    font-weight: 500;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+  }
+  .t-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+  }
+
+  /* ---------- Skip link ---------- */
+  .skip-link {
+    position: fixed;
+    inset-inline-start: var(--margin);
+    top: 12px;
+    z-index: calc(var(--z-badge) + 1);
+    padding: 12px 16px;
+    background: var(--color-ink);
+    color: var(--color-alu-white);
+    border-radius: var(--radius-xs);
+    transform: translateY(-160%);
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .skip-link:focus-visible {
+    transform: none;
+  }
+
+  /* ---------- Dimension lines (UI annotation motif) ---------- */
+  .dim {
+    --dim-arrow: 8px;
+    --dim-arrow-w: 2.5px;
+    display: flex;
+    align-items: center;
+    color: var(--fg-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+    user-select: none;
+  }
+  .dim-h {
+    width: 100%;
+    height: 16px;
+  }
+  .dim-v {
+    flex-direction: column;
+    width: 16px;
+    height: 100%;
+  }
+  .dim-line {
+    position: relative;
+    flex: 1 1 auto;
+  }
+  .dim-h .dim-line {
+    height: 1px;
+    background: currentColor;
+  }
+  .dim-v .dim-line {
+    width: 1px;
+    background: currentColor;
+  }
+  .dim-label {
+    flex: none;
+    padding-inline: 8px;
+    color: var(--fg);
+    white-space: nowrap;
+    unicode-bidi: isolate;
+  }
+  .dim-v .dim-label {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    padding-inline: 0;
+    padding-block: 8px;
+  }
+  /* Closed arrowheads, drawn with clip-path so they inherit currentColor. */
+  .dim-line::before {
+    content: "";
+    position: absolute;
+    background: currentColor;
+  }
+  .dim-h .dim-line:first-child::before {
+    inset-inline-start: 0;
+    top: 50%;
+    width: var(--dim-arrow);
+    height: calc(var(--dim-arrow-w) * 2 + 1px);
+    translate: 0 -50%;
+    clip-path: polygon(0 50%, 100% 0, 100% 100%);
+  }
+  .dim-h .dim-line:last-child::before {
+    inset-inline-end: 0;
+    top: 50%;
+    width: var(--dim-arrow);
+    height: calc(var(--dim-arrow-w) * 2 + 1px);
+    translate: 0 -50%;
+    clip-path: polygon(100% 50%, 0 0, 0 100%);
+  }
+  [dir="rtl"] .dim-h .dim-line:first-child::before {
+    clip-path: polygon(100% 50%, 0 0, 0 100%);
+  }
+  [dir="rtl"] .dim-h .dim-line:last-child::before {
+    clip-path: polygon(0 50%, 100% 0, 100% 100%);
+  }
+  .dim-v .dim-line:first-child::before {
+    top: 0;
+    left: 50%;
+    height: var(--dim-arrow);
+    width: calc(var(--dim-arrow-w) * 2 + 1px);
+    translate: -50% 0;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  }
+  .dim-v .dim-line:last-child::before {
+    bottom: 0;
+    left: 50%;
+    height: var(--dim-arrow);
+    width: calc(var(--dim-arrow-w) * 2 + 1px);
+    translate: -50% 0;
+    clip-path: polygon(50% 100%, 100% 0, 0 0);
+  }
+  /* Extension ticks at both ends. */
+  .dim-ticks.dim-h {
+    border-inline: 1px solid currentColor;
+  }
+  .dim-ticks.dim-v {
+    border-block: 1px solid currentColor;
+  }
+
+  /* ---------- Callout (leader + label) ---------- */
+  .callout {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    color: var(--fg-muted);
+  }
+  .callout-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: var(--radius-full);
+    background: currentColor;
+  }
+  .callout-leader {
+    width: 32px;
+    height: 1px;
+    background: currentColor;
+  }
+  .callout-label {
+    padding-inline-start: 8px;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--fg);
+    unicode-bidi: isolate;
+  }
+
+  /* ---------- Demo badge (always on): an ISO 7200 title-block strip ---------- */
+  .demo-badge {
+    position: fixed;
+    inset-inline-end: 12px;
+    bottom: 12px;
+    z-index: var(--z-badge);
+    display: flex;
+    align-items: stretch;
+    max-width: calc(100vw - 24px);
+    border: 1px solid rgb(236 238 240 / 0.24);
+    border-radius: 0;
+    background: var(--color-ink);
+    color: var(--color-alu-white);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    pointer-events: none;
+  }
+  .demo-badge-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    white-space: nowrap;
+  }
+  .demo-badge-cell + .demo-badge-cell {
+    border-inline-start: 1px solid rgb(236 238 240 / 0.24);
+  }
+  .demo-badge-status {
+    white-space: normal;
+    min-width: 0;
+  }
+  .demo-badge-key {
+    color: var(--color-alu-mid);
+  }
+  .demo-badge-dot {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-full);
+    background: var(--color-alu-mid);
+  }
+  @media (max-width: 47.99rem) {
+    .demo-badge-meta {
+      display: none;
+    }
+  }
+  /* Keep focused elements clear of the badge. */
+  html {
+    scroll-padding-block-end: 64px;
+  }
+
+  /* ---------- Hairline helpers ---------- */
+  .rule {
+    height: 1px;
+    background: var(--line);
+    border: 0;
+  }
+}

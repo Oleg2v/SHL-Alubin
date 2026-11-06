@@ -107,7 +107,9 @@ export function ComponentsLab() {
           {/* C-01 Button */}
           <Cell code="C-01" title="Button" className="col-span-4 sm:col-span-8 lg:col-span-7">
             <div className="grid gap-6">
-              <p className="t-small text-fg-muted" lang="en">
+              {/* an English note inside a specimen that can turn RTL: its own direction, or the full
+                  stop jumps to the start of the line */}
+              <p className="t-small text-fg-muted" lang="en" dir="ltr">
                 One primary action per screen, this specimen included: the press row shows the cold variants, and a
                 busy button hands its heat to the ram.
               </p>

@@ -17,14 +17,15 @@ Live specimen: `/style-tile/` (run `npm run dev`, or open `out/style-tile/index.
 1. **Colour is temperature.** Billet Glow is a reading, not an accent. It appears only where something is
    hot, live or the one primary action, every hot element carries its °C, and it never covers more than
    2% of a screen.
-2. **Type set in lettering heights.** The nine sizes are the drawing office's ISO 3098 lettering heights,
-   from 2.5 mm dimension text to 40 mm numerals (cap height at 1600 px), and every annotation measures
-   something real, live, in millimetres.
+2. **Type set in lettering heights.** The nine sizes are drawing-office lettering heights, from 2.5 mm
+   dimension text to 40 mm numerals (cap height at 1600 px; the ISO 3098 series plus one 3 mm ANSI step),
+   and every dimension line on the sheet measures something real, live, in millimetres.
 3. **Scroll is the ram.** No parallax. Scroll drives the press stroke 1:1: the visitor extrudes the
    profile, sees it morph through four real sections and cool from 480 °C to brushed silver. Long stories
    index like a rotary table: push, stop, hold.
-4. **Hatching is the state language.** Unavailable, loading and non-conforming states wear ISO 128 section
-   hatching: never 40% opacity, never a shimmer, never red, so no state depends on colour alone.
+4. **Line types carry state.** Interface states borrow ISO 128 line types: a dashed hidden line for
+   unavailable, a phantom line for loading, a wide line and a note for an error. Never 40% opacity, never a
+   shimmer, never red. Hatching is kept for cut metal.
 5. **Hebrew is a mirror, not a translation.** True RTL from the first component. Layout, arrows and
    timelines mirror; drawings, part IDs and every number stay left to right, as on Israeli engineering
    drawings. Text reveals by line, never by letter.

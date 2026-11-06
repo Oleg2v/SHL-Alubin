@@ -29,14 +29,9 @@ export function HeatLaw() {
         <title id="heat-law-t">
           {`Glow share against temperature: 480 °C is 1.00, 400 °C is ${wThr.toFixed(2)}, 300 °C is ${heatWeight(300).toFixed(2)}, 200 °C is ${heatWeight(200).toFixed(2)}. The flat interface renders Glow only at 400 °C and above.`}
         </title>
-        <defs>
-          <pattern id="warm-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <line x1="0" y1="0" x2="0" y2="6" stroke="var(--line)" strokeWidth="1" />
-          </pattern>
-        </defs>
-        {/* zones: HOT (Glow), WARM (reading only, hatched), COLD */}
+        {/* zones: HOT (Glow), WARM (reading only), COLD */}
         <rect x={x(thr)} y={P.t} width={x(480) - x(thr)} height={H - P.t - P.b} fill="rgb(255 90 31 / 0.14)" />
-        <rect x={x(150)} y={P.t} width={x(thr) - x(150)} height={H - P.t - P.b} fill="url(#warm-hatch)" />
+        <rect x={x(150)} y={P.t} width={x(thr) - x(150)} height={H - P.t - P.b} fill="rgb(236 238 240 / 0.05)" />
         <g stroke="var(--line-strong)" strokeWidth="1">
           <line x1={P.l} y1={H - P.b} x2={W - P.r} y2={H - P.b} />
           <line x1={P.l} y1={P.t} x2={P.l} y2={H - P.b} />

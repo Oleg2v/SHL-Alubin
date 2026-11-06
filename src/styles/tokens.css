@@ -29,7 +29,7 @@
   /* Plex Hebrew is first on purpose: its @font-face is limited to the Hebrew unicode-range,
      so it renders Hebrew glyphs only and Latin falls through to Geist. */
   --font-sans: var(--font-plex-hebrew), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), var(--font-plex-hebrew), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-mono: var(--font-plex-hebrew), var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
 
   /* ---------- Fluid type scale: 9 steps on the ISO 3098 lettering heights ----------
      Cap height at 1600 px = 2.5 · 3 · 3.5 · 5 · 7 · 10 · 14 · 20 · 40 mm (font-size = cap / 0.710).
@@ -90,7 +90,9 @@
   --animate-flicker: flicker 2.4s steps(1, end) infinite;
   --animate-spin: spin 1.2s linear infinite;
 
-  /* ---------- Breakpoints (defaults kept): 4 cols < 40rem, 8 cols < 64rem, 12 cols >= 64rem ---------- */
+  /* ---------- Breakpoints: defaults kept (4 cols < 40rem, 8 < 64rem, 12 from 64rem) plus the
+     1440 sheet width where margins reach 48 px ---------- */
+  --breakpoint-hd: 90rem;
 }
 
 /* Durations are plain custom properties: transition: opacity var(--dur-fast) var(--ease-out). */
@@ -165,7 +167,6 @@
   --accent-text: var(--color-ink); /* Glow can't be text on light (2.68:1) */
   --focus-inner: var(--color-ink);
   --focus-outer: var(--color-glow);
-  --hatch: rgb(11 13 15 / 0.5);
   color-scheme: light;
 }
 
@@ -184,7 +185,6 @@
   --accent-text: var(--color-glow); /* 6.24:1 on Ink, 5.66:1 on Graphite */
   --focus-inner: var(--color-ink);
   --focus-outer: var(--color-glow);
-  --hatch: rgb(236 238 240 / 0.5);
   color-scheme: dark;
 }
 
@@ -194,17 +194,29 @@
 }
 
 /* Semantic colours as Tailwind utilities: bg-bg, text-fg, border-line, bg-accent ... */
-/* Hebrew: no negative tracking (it breaks letterforms). Set through the tokens, never !important,
-   so a user's own text-spacing stylesheet still wins (WCAG 1.4.12). */
+/* Hebrew. Unlayered, so these beat every @layer rule without !important and a user's own
+   text-spacing stylesheet still wins (WCAG 1.4.12):
+   no negative tracking (it breaks letterforms), labels never below 14 px (Plex letters are 0.61 em),
+   and more leading for the lamed ascender and the final-form descenders. */
 :lang(he) {
+  letter-spacing: 0;
+  --text-micro: clamp(0.875rem, 0.8569rem + 0.0806vw, 0.9375rem);
   --text-micro--letter-spacing: 0;
+  --text-small--letter-spacing: 0;
+  --text-body--letter-spacing: 0;
   --text-lead--letter-spacing: 0;
   --text-title-s--letter-spacing: 0;
   --text-title-m--letter-spacing: 0;
   --text-title-l--letter-spacing: 0;
   --text-headline--letter-spacing: 0;
   --text-display--letter-spacing: 0;
-  --text-body--letter-spacing: 0;
+  --text-title-m--line-height: 1.12;
+  --text-title-l--line-height: 1.08;
+  --text-headline--line-height: 1.04;
+  --text-display--line-height: 0.96;
+}
+:lang(he) :is(.t-label, .field-label, .pcard-family, .spec caption, .spec thead th, .chip, .callout-label) {
+  letter-spacing: 0;
 }
 
 @theme inline {

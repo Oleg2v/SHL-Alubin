@@ -40,7 +40,7 @@ export function SpecTable({ caption, rows, activeKey, headers = EN, className }:
               <bdi dir="ltr">{r.value}</bdi>
             </td>
             <td>{r.unit ? <bdi dir="ltr">{r.unit}</bdi> : null}</td>
-            <td className="note">{r.note ? <bdi dir="ltr">{r.note}</bdi> : null}</td>
+            <td className="note">{r.note ? <bdi>{r.note}</bdi> : null}</td>
           </tr>
         ))}
       </tbody>

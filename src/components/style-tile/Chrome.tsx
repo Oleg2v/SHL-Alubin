@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { HeatAudit } from "./HeatAudit";
 
 export const SECTIONS = [
   { id: "concept", n: "00", label: "Concept" },
@@ -70,7 +71,7 @@ export function TopBar() {
             <Wordmark />
             <span className="t-label text-fg-muted hidden sm:inline lg:hidden">Style tile · Sheet 00</span>
           </div>
-          <nav aria-label="Style tile sections" className="st-nav hidden lg:flex col-span-9 items-center justify-between t-label">
+          <nav aria-label="Style tile sections" className="st-nav hidden hd:flex col-span-8 items-center justify-between t-label">
             {SECTIONS.map((s) => (
               <a key={s.id} href={`#${s.id}`} aria-current={current === s.id ? "true" : undefined}>
                 <span className="st-nav-dot" aria-hidden="true" />
@@ -81,7 +82,10 @@ export function TopBar() {
               </a>
             ))}
           </nav>
-          <div className="col-span-1 sm:col-span-2 lg:col-span-1 flex justify-end">
+          <div className="col-span-1 sm:col-span-2 lg:col-span-10 hd:col-span-2 flex justify-end gap-2">
+            <span className="hidden sm:inline-flex">
+              <HeatAudit />
+            </span>
             <button
               type="button"
               className="chip"

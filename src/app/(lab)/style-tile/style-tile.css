@@ -664,8 +664,15 @@
     );
   box-shadow: 0 -10px 24px -14px rgb(255 90 31 / 0.55) inset;
 }
-.cooling-bar::before {
-  content: "";
+.cooling-bar {
+  position: relative;
+}
+/* the hot zone, tagged for the heat audit (0 to the middle of the quench) */
+.cooling-hot {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 18%;
 }
 .cooling-reads {
   position: relative;
@@ -724,5 +731,47 @@
   bottom: 28px;
   padding: 2px 6px;
   background: var(--color-ink);
+  color: var(--color-glow);
+}
+
+/* ------------------------------------------------------------ heat audit */
+.heat-audit-layer {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-overlay) + 1);
+  pointer-events: none;
+}
+.heat-audit-box {
+  position: fixed;
+  outline: 1px dashed var(--color-glow);
+  outline-offset: 2px;
+}
+.heat-audit-tag {
+  position: absolute;
+  top: -22px;
+  inset-inline-start: -3px;
+  padding: 1px 6px;
+  background: var(--color-glow);
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+.heat-audit-meter {
+  position: fixed;
+  top: 64px;
+  inset-inline-end: var(--margin);
+  z-index: calc(var(--z-overlay) + 2);
+  display: grid;
+  gap: 2px;
+  padding: 8px 12px;
+  background: var(--color-ink);
+  color: var(--color-alu-white);
+  box-shadow: 0 0 0 1px rgb(236 238 240 / 0.2);
+}
+.heat-audit-over {
   color: var(--color-glow);
 }

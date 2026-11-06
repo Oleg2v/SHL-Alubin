@@ -27,6 +27,8 @@ type Props = {
   /** Text alternative carrying the dimensions, e.g. "60.0 by 42.0 mm, three chambers". */
   description?: string;
   decimals?: number;
+  /** Locale formatting for the dimension values (de-DE decimal comma per DIN EN ISO 129-1). */
+  format?: (n: number) => string;
   className?: string;
 };
 
@@ -67,8 +69,10 @@ export function ProfileDrawing({
   title,
   description,
   decimals = 1,
+  format,
   className,
 }: Props) {
+  const fmt = format ?? ((n: number) => n.toFixed(decimals));
   const uid = useId().replace(/:/g, "");
   const b = bounds(shape);
   const inner = box - margin * 2;
@@ -136,7 +140,7 @@ export function ProfileDrawing({
             unicodeBidi="isolate"
             style={{ font: "500 11px var(--font-mono)", letterSpacing: "0.02em" }}
           >
-            {b.width.toFixed(decimals)}
+            {fmt(b.width)}
           </text>
 
           {/* overall height, end side */}
@@ -155,7 +159,7 @@ export function ProfileDrawing({
             transform={`rotate(-90 ${f(dimX - 5)} ${f(cy)})`}
             style={{ font: "500 11px var(--font-mono)", letterSpacing: "0.02em" }}
           >
-            {b.height.toFixed(decimals)}
+            {fmt(b.height)}
           </text>
         </g>
       ) : null}

@@ -37,15 +37,7 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Hebrew: tracking is zeroed in tokens.css; here a touch more leading for the lamed ascender,
-     and labels never below 14 px (12 px gives Hebrew a 7 px letter). */
-  :lang(he) :is(h1, h2, h3, .t-headline, .t-display, .t-title-l, .t-title-m) {
-    line-height: 1.08;
-  }
-  :lang(he) :is(.t-label, .field-label, .pcard-family, .spec caption, .spec thead th) {
-    font-size: max(var(--text-micro), 0.875rem);
-    letter-spacing: 0;
-  }
+  /* Hebrew type overrides live unlayered in tokens.css (:lang(he)), so they beat these layers. */
 
   /* Geist Mono's default zero is slashed and reads like the diameter sign. ss09 is its plain zero,
      as ISO 3098 lettering has it; Ø stays the only slashed glyph. Never set on Geist Sans. */
@@ -280,6 +272,18 @@
   .dim-h {
     width: 100%;
     height: 16px;
+    container-type: inline-size;
+    position: relative;
+  }
+  /* Drawing practice for short spans: the value moves outside the extension line. */
+  @container (max-width: 112px) {
+    .dim-h .dim-label {
+      position: absolute;
+      inset-inline-start: calc(100% + 4px);
+      top: 50%;
+      translate: 0 -50%;
+      padding-inline: 4px 0;
+    }
   }
   .dim-v {
     flex-direction: column;

@@ -34,11 +34,13 @@ const LEAVE_MS = 240; // --dur-base
 export function ToastProvider({
   children,
   closeLabel = "Dismiss notification",
+  regionLabel = "Notifications",
   lang,
   dir,
 }: {
   children: ReactNode;
   closeLabel?: string;
+  regionLabel?: string;
   /** Language and direction of the toasts' text (they render outside the content's own container). */
   lang?: string;
   dir?: "ltr" | "rtl";
@@ -62,15 +64,15 @@ export function ToastProvider({
   return (
     <ToastCtx.Provider value={value}>
       {children}
-      <div className="toast-region" role="region" aria-label="Notifications">
-        <div role="status" aria-live="polite" aria-atomic="false" className="toast-stack" lang={lang} dir={dir}>
+      <div className="toast-region" role="region" aria-label={regionLabel} lang={lang} dir={dir}>
+        <div role="status" aria-live="polite" aria-atomic="false" className="toast-stack">
           {items
             .filter((t) => t.tone !== "error")
             .map((t) => (
               <ToastView key={t.id} item={t} onDismiss={dismiss} closeLabel={closeLabel} />
             ))}
         </div>
-        <div role="alert" aria-live="assertive" className="toast-stack" lang={lang} dir={dir}>
+        <div role="alert" aria-live="assertive" className="toast-stack">
           {items
             .filter((t) => t.tone === "error")
             .map((t) => (
@@ -160,8 +162,13 @@ export function ToastCard({ item, life, onDismiss, closeLabel, staticSpecimen, r
       <div className="min-w-0">
         <p className="toast-title">{item.title}</p>
         {item.meta ? (
-          <p className="toast-meta" dir="auto" data-data={item.metaIsData ? "true" : undefined}>
-            {item.meta}
+          <p className="toast-meta" data-data={item.metaIsData ? "true" : undefined}>
+            {item.meta.split(" · ").map((part, i, all) => (
+              <span key={i}>
+                <bdi className="whitespace-nowrap">{part}</bdi>
+                {i < all.length - 1 ? " · " : ""}
+              </span>
+            ))}
           </p>
         ) : null}
       </div>

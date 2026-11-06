@@ -71,12 +71,14 @@ type RangeProps = {
   step?: number;
   defaultValue: number;
   unit?: string;
+  /** Spoken unit for assistive tech, e.g. "millimetres" / "Millimeter" / "מילימטר". */
+  unitName?: string;
   format?: (v: number) => string;
   className?: string;
 };
 
 /** A single-thumb mm slider. Native range input: arrow keys, Page Up/Down, Home/End all work. */
-export function RangeField({ label, min, max, step = 1, defaultValue, unit = "mm", format, className }: RangeProps) {
+export function RangeField({ label, min, max, step = 1, defaultValue, unit = "mm", unitName, format, className }: RangeProps) {
   const id = useId();
   const [value, setValue] = useState(defaultValue);
   const pct = ((value - min) / (max - min)) * 100;
@@ -100,7 +102,7 @@ export function RangeField({ label, min, max, step = 1, defaultValue, unit = "mm
           max={max}
           step={step}
           value={value}
-          aria-valuetext={`${shown} ${unit}`}
+          aria-valuetext={`${shown} ${unitName ?? unit}`}
           onChange={(e) => setValue(Number(e.currentTarget.value))}
           style={{ ["--range-pct" as string]: `${pct}%` }}
         />

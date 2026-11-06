@@ -60,7 +60,7 @@
     -webkit-tap-highlight-color: transparent;
     transition:
       color var(--dur-fast) var(--ease-out),
-      scale var(--dur-tick) var(--ease-out);
+      translate var(--dur-tick) var(--ease-out);
   }
   .btn-skin {
     position: absolute;
@@ -102,8 +102,9 @@
   .btn[data-magnet="active"] .btn-label {
     transition: translate var(--dur-fast) linear;
   }
+  /* Press feedback: the control strokes 1 px along the block axis, like a ram. No scale, ever. */
   .btn:active:not(:disabled, [aria-disabled="true"]) {
-    scale: 0.98;
+    translate: 0 1px;
   }
 
   /* Primary: the one place Billet Glow is a fill. Ink label, 6.24:1. */
@@ -149,17 +150,18 @@
     scale: 1 1;
   }
 
-  /* Unavailable: the ISO hidden line (dashed) and hatching, never 40 % opacity. */
+  /* Unavailable: the ISO 128 hidden line (dashed). Never 40 % opacity, never hatching:
+     on this site hatching means cut metal and nothing else. */
   .btn:disabled,
   .btn[aria-disabled="true"] {
-    --btn-bg: var(--hatch-fill);
-    --btn-border: var(--line-strong);
+    --btn-bg: transparent;
+    --btn-border: transparent;
     --btn-fg: var(--fg-disabled);
     cursor: not-allowed;
   }
   .btn:disabled .btn-skin,
   .btn[aria-disabled="true"] .btn-skin {
-    background: var(--hatch-fill);
+    background: transparent;
     box-shadow: none;
     outline: 1px dashed var(--line-strong);
     outline-offset: -1px;
@@ -238,6 +240,9 @@
     text-transform: uppercase;
     color: var(--fg);
   }
+  .field-label :where(bdi, [data-unit]) {
+    text-transform: none;
+  }
   .field-label-aux {
     font-family: var(--font-mono);
     color: var(--fg-muted);
@@ -297,14 +302,11 @@
     line-height: var(--text-small--line-height);
     color: var(--fg-muted);
   }
-  /* Error: no red in this palette and colour alone is never the signal (WCAG 1.4.1).
-     A non-conformance hatch, a 2 px border, an icon and the word "Error". */
+  /* Error: an out-of-tolerance reading. The ISO wide line (2 px) on the field and a note with the
+     limit; no red and no colour-only signal (WCAG 1.4.1). */
   .field[data-invalid="true"] .field-control {
     border-width: 2px;
     border-color: var(--fg);
-    background:
-      repeating-linear-gradient(-45deg, transparent 0 6px, color-mix(in oklab, var(--fg) 9%, transparent) 6px 7px),
-      var(--bg-raised);
   }
   .field-error {
     display: flex;
@@ -408,13 +410,13 @@
       background-color var(--dur-fast) var(--ease-out),
       border-color var(--dur-fast) var(--ease-out),
       color var(--dur-fast) var(--ease-out),
-      scale var(--dur-tick) var(--ease-out);
+      translate var(--dur-tick) var(--ease-out);
   }
   .chip:hover {
     border-color: var(--fg);
   }
-  .chip:active {
-    scale: 0.97;
+  .chip:active:not([aria-disabled="true"]) {
+    translate: 0 1px;
   }
   .chip-count {
     color: var(--fg-muted);
@@ -457,7 +459,6 @@
     border-style: dashed;
     border-color: var(--line-strong);
     color: var(--fg-disabled);
-    background: var(--hatch-fill);
   }
   .chip-remove {
     display: inline-grid;
@@ -513,15 +514,30 @@
       linear-gradient(to left, rgb(11 13 15 / 0.16), transparent) right / 12px 100% no-repeat scroll;
   }
 
-  /* =========================================================== Hatching: the state language
-     ISO 128 section hatching (45 deg, 1 px, 6 px pitch) marks what is not finished:
-     unavailable, loading, non-conforming. Never opacity, never a shimmer. */
-  :root,
-  [data-surface] {
-    --hatch-fill: repeating-linear-gradient(-45deg, transparent 0 5px, var(--line) 5px 6px);
+  /* =========================================================== Line types carry state
+     ISO 128: continuous = present, dashed (hidden line) = unavailable, long dash + two dots
+     (phantom line) = loading, where a part will be. Section hatching is reserved for cut metal. */
+  .phantom {
+    position: relative;
+    display: block;
+    color: var(--line-strong);
   }
-  .hatched {
-    background: var(--hatch-fill);
+  .phantom > svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    overflow: visible;
+  }
+  .cell-cancel {
+    background: linear-gradient(
+      to top right,
+      transparent calc(50% - 0.5px),
+      var(--line-strong) calc(50% - 0.5px),
+      var(--line-strong) calc(50% + 0.5px),
+      transparent calc(50% + 0.5px)
+    );
   }
 
   /* =========================================================== Profile card (Finder tile) */
@@ -624,13 +640,7 @@
     box-shadow: 0 0 0 1px var(--color-glow);
   }
   .pcard[aria-busy="true"] .pcard-figure {
-    background: var(--hatch-fill);
-  }
-  .pcard-skel {
-    display: block;
-    height: 12px;
-    background: var(--hatch-fill);
-    box-shadow: inset 0 0 0 1px var(--line);
+    background: none;
   }
   .pcard[aria-busy="true"]::before {
     content: "";
@@ -642,6 +652,9 @@
     background-size: 40% 100%;
     background-repeat: no-repeat;
     animation: ram-sweep var(--dur-travel) var(--ease-in-out) infinite;
+  }
+  [dir="rtl"] .pcard[aria-busy="true"]::before {
+    animation-direction: reverse;
   }
   .pcard-link {
     position: absolute;
@@ -702,6 +715,11 @@
   .spec .num {
     text-align: end;
   }
+  .spec td.num > bdi {
+    display: inline-block;
+    min-inline-size: 7ch;
+    text-align: end;
+  }
   .spec tbody tr {
     transition: background-color var(--dur-fast) var(--ease-out);
   }
@@ -709,19 +727,25 @@
     background: color-mix(in oklab, var(--fg) 4%, transparent);
   }
   /* Linked highlight from the drawing: the row is "active", so it gets the heat marker. */
+  .spec :is(th, td):first-child {
+    padding-inline-start: 12px;
+    border-inline-start: 4px solid transparent;
+  }
   .spec tbody tr[data-active="true"] {
     background: color-mix(in oklab, var(--fg) 6%, transparent);
-    box-shadow:
-      inset 2px 0 0 var(--fg),
-      inset 4px 0 0 var(--color-glow);
   }
-  .spec tbody tr[data-active="true"] th {
+  /* a logical border mirrors by itself: Ink edge for 3:1, Glow for heat */
+  .spec tbody tr[data-active="true"] > :first-child {
+    border-inline-start-color: var(--color-glow);
+    box-shadow: inset 0 0 0 0 transparent;
     color: var(--fg);
+    background-image: linear-gradient(var(--fg), var(--fg));
+    background-size: 2px 100%;
+    background-repeat: no-repeat;
+    background-position: left;
   }
-  [dir="rtl"] .spec tbody tr[data-active="true"] {
-    box-shadow:
-      inset -2px 0 0 var(--fg),
-      inset -4px 0 0 var(--color-glow);
+  [dir="rtl"] .spec tbody tr[data-active="true"] > :first-child {
+    background-position: right;
   }
   .spec td:nth-child(3) {
     padding-inline-start: 8px;
@@ -748,13 +772,19 @@
     display: grid;
     gap: 8px;
   }
+  /* glyph | message | close, with the text action under the message: long German labels never
+     squeeze the message column. */
   .toast {
     --toast-life: 6000ms;
     position: relative;
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 24px minmax(0, 1fr) 32px;
+    grid-template-areas:
+      "glyph body close"
+      "glyph act .";
     align-items: start;
-    gap: 12px;
+    column-gap: 12px;
+    row-gap: 8px;
     padding: 16px;
     border-radius: var(--radius-sm);
     background: var(--color-graphite);
@@ -793,10 +823,21 @@
     font-size: var(--text-micro);
     letter-spacing: 0.02em;
   }
+  .toast-glyph {
+    grid-area: glyph;
+  }
+  .toast > .min-w-0 {
+    grid-area: body;
+  }
   .toast-actions {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+    display: contents;
+  }
+  .toast-action {
+    grid-area: act;
+    justify-self: start;
+  }
+  .toast-close {
+    grid-area: close;
     margin-block: -4px;
   }
   .toast-action {

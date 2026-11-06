@@ -140,8 +140,8 @@ export function Palette() {
         <div className="col-span-4 sm:col-span-8 lg:col-span-3">
           <h3 className="t-title-s">Contrast matrix</h3>
           <p className="t-small text-fg-muted mt-3 max-w-[36ch]">
-            Text needs 4.5:1 (WCAG 2.0 AA, IS 5568). Hatched cells are pairs the system forbids for text. Derived
-            Alu Deep exists for one reason: secondary text on the sheet.
+            Text needs 4.5:1 (WCAG 2.0 AA, IS 5568). Crossed-out cells are pairs the system forbids for text.
+            Derived Alu Deep exists for one reason: secondary text on the sheet.
           </p>
           <div className="mt-6 flex items-center gap-3">
             <span className="inline-block h-10 w-16 border border-line" style={{ background: palette.aluDeep.hex }} aria-hidden="true" />
@@ -190,7 +190,7 @@ export function Palette() {
                     const r = contrast(f.hex, b.hex);
                     const g = grade(r);
                     return (
-                      <td key={b.hex} style={g === "FAIL" || g === "AA·L" ? { background: "var(--hatch-fill)" } : undefined}>
+                      <td key={b.hex} className={g === "FAIL" || g === "AA·L" ? "cell-cancel" : undefined}>
                         <span className="cell">
                           <bdi dir="ltr">{r.toFixed(2)}</bdi>
                           <span className="grade" data-fail={g === "FAIL" || undefined}>

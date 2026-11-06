@@ -1,6 +1,7 @@
 import { ProfileDrawing } from "@/components/drawing/ProfileDrawing";
 import { bounds, kgPerMetre, type ProfileShape } from "@/lib/geometry/profile";
 import type { ReactNode } from "react";
+import { Phantom } from "@/components/drawing/Phantom";
 
 export type ProfileCardData = {
   id: string;
@@ -24,6 +25,7 @@ type Props = {
     /** Locale number formatting, e.g. de-DE decimal comma. */
     formatKgm?: (v: number) => string;
     formatDims?: (w: number, h: number) => string;
+    formatDim?: (v: number) => string;
   };
   className?: string;
 };
@@ -63,6 +65,7 @@ export function ProfileCard({ profile, href, selected, action, labels = EN, clas
           description={labels.dims(w, h, wall)}
           box={280}
           margin={40}
+          format={labels.formatDim}
         />
       </div>
       <footer className="pcard-foot">
@@ -91,19 +94,21 @@ export function ProfileCard({ profile, href, selected, action, labels = EN, clas
   );
 }
 
-/** Loading state: the same anatomy, hatched. Announced once by the result list, not per tile. */
+/** Loading state: the same anatomy drawn in phantom lines. Announced once by the result list. */
 export function ProfileCardSkeleton({ label = "Loading profile" }: { label?: string }) {
   return (
     <article data-surface="press" className="pcard" aria-busy="true">
       <span className="sr-only">{label}</span>
       <header className="pcard-head" aria-hidden="true">
-        <span className="pcard-skel w-24" />
-        <span className="pcard-skel w-16" />
+        <Phantom className="h-3 w-24" />
+        <Phantom className="h-3 w-16" />
       </header>
-      <div className="pcard-figure min-h-60" aria-hidden="true" />
+      <div className="pcard-figure min-h-60" aria-hidden="true">
+        <Phantom className="aspect-[4/3] w-1/2" />
+      </div>
       <footer className="pcard-foot" aria-hidden="true">
-        <span className="pcard-skel w-40" />
-        <span className="pcard-skel h-8! w-20" />
+        <Phantom className="h-3 w-40" />
+        <Phantom className="h-8 w-20" />
       </footer>
     </article>
   );

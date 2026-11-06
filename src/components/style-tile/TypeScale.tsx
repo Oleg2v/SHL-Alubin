@@ -35,7 +35,21 @@ function useLiveSizes() {
 }
 
 /** A numeral that carries its own dimension line, measured live in millimetres. */
-function DimensionedNumeral({ value, unit, label }: { value: string; unit?: string; label: string }) {
+function DimensionedNumeral({
+  value,
+  unit,
+  label,
+  qualifier,
+  deviation,
+}: {
+  value: string;
+  unit?: string;
+  label: string;
+  /** Datasheet qualifier: ≥ for "6,000+", ≈ for "about 35 %". */
+  qualifier?: string;
+  /** Stacked limit deviations, e.g. ["+0", "−200"] for 1,000 to 1,200 t. */
+  deviation?: [string, string];
+}) {
   const ref = useRef<HTMLSpanElement>(null);
   const [mm, setMm] = useState<string>("—");
   useEffect(() => {
@@ -50,9 +64,16 @@ function DimensionedNumeral({ value, unit, label }: { value: string; unit?: stri
   return (
     <figure className="grid content-start gap-3 min-w-0">
       <div className="inline-grid w-fit max-w-full gap-3" dir="ltr">
-        <span ref={ref} className="t-display inline-block whitespace-nowrap">
+        <span ref={ref} className="t-display inline-flex items-start whitespace-nowrap">
+          {qualifier ? <span className="t-title-l me-2 translate-y-[0.18em] text-fg-muted">{qualifier}</span> : null}
           {value}
-          {unit ? <span className="t-title-l align-top ms-2 inline-block translate-y-[0.18em]">{unit}</span> : null}
+          {deviation ? (
+            <span className="ms-2 inline-grid translate-y-[0.3em] gap-1 t-data text-fg-muted" style={{ fontSize: "var(--text-small)" }}>
+              <span>{deviation[0]}</span>
+              <span>{deviation[1]}</span>
+            </span>
+          ) : null}
+          {unit ? <span className="t-title-l ms-2 inline-block translate-y-[0.18em]">{unit}</span> : null}
         </span>
         <DimH ticks>
           <span>{mm} mm</span>
@@ -68,9 +89,10 @@ export function TypeSection() {
   return (
     <section id="type" aria-labelledby="type-title" data-surface="sheet" className="st-section">
       <SectionHead n="02" kicker="Type" id="type-title" title="Nine sizes, and every one is a lettering height from the drawing office.">
-        At 1600 px each step&apos;s cap height is an ISO 3098 lettering height, from 2.5 mm dimension text to 40 mm
-        numerals. Between a 360 px phone and that display the scale is fluid, written in rem plus vw so zoom and
-        the reader&apos;s own font size still work.
+        At 1600 px each step&apos;s cap height is a lettering height: the ISO 3098 series from 2.5 mm dimension text
+        to 40 mm numerals, plus 3 mm, the one ANSI step, because interface text needs a size between dimension text
+        and notes. Between a 360 px phone and that display the scale is fluid, in rem plus vw, so zoom and the
+        reader&apos;s own font size still work.
       </SectionHead>
 
       {/* Families */}
@@ -100,7 +122,9 @@ export function TypeSection() {
         <article lang="he" dir="rtl" className="col-span-4 sm:col-span-4 lg:col-span-4 border border-line p-6 grid gap-6 content-between min-h-[320px]">
           <p className="t-label text-fg-muted">IBM Plex Sans Hebrew · עברית</p>
           <p className="t-title-l" aria-hidden="true">
-            אבג <span dir="ltr">6,000</span>
+            מתכת קרה.
+            <br />
+            תהליך חם. <bdi dir="ltr">6,000</bdi>
           </p>
           <p className="t-small text-fg-muted">
             אותיות עבריות בלבד; הספרות והלטינית נשארות ב־Geist. בלי ריווח שלילי, עם מעט יותר מרווח שורות.
@@ -158,16 +182,16 @@ export function TypeSection() {
           <h3 className="t-title-s">Giant numerals carry the facts, and the type is dimensioned like a part.</h3>
         </div>
         <div className="col-span-4 sm:col-span-4 lg:col-span-6">
-          <DimensionedNumeral value="6,000" label="Profile types in the library" />
+          <DimensionedNumeral value="6,000" qualifier="≥" label="Profile types in the library" />
         </div>
         <div className="col-span-4 sm:col-span-4 lg:col-span-6">
-          <DimensionedNumeral value="1,200" unit="t" label="Tonnes of profiles a month" />
+          <DimensionedNumeral value="1,200" unit="t" deviation={["+0", "−200"]} label="Tonnes of profiles a month: 1,000 to 1,200" />
         </div>
         <div className="col-span-4 sm:col-span-4 lg:col-span-6">
-          <DimensionedNumeral value="50" label="New dies a week from our die shop" />
+          <DimensionedNumeral value="50" qualifier="≥" label="New dies a week from the die shop" />
         </div>
         <div className="col-span-4 sm:col-span-4 lg:col-span-6">
-          <DimensionedNumeral value="35" unit="%" label="Exported, Rotterdam to New York" />
+          <DimensionedNumeral value="35" unit="%" qualifier="≈" label="Exported, Rotterdam to New York" />
         </div>
       </div>
 

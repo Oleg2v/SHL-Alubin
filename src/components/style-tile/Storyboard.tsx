@@ -64,7 +64,7 @@ export function Storyboard() {
                   />
                 </div>
               ) : (
-                <div className="billet billet-sm" aria-hidden="true" />
+                <div className="billet billet-sm" aria-hidden="true" data-heat="process" data-heat-temp="480" />
               )}
             </div>
             <div className="grid gap-1 border-t border-line px-3 py-3">

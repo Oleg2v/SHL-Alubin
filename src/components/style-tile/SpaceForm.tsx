@@ -98,7 +98,13 @@ export function FormSection() {
 
       {/* Lines */}
       <div className="swiss-grid mt-24 gap-y-10">
-        <h3 className="col-span-4 sm:col-span-8 lg:col-span-3 t-title-s">Lines (after ISO 128)</h3>
+        <div className="col-span-4 sm:col-span-8 lg:col-span-3">
+          <h3 className="t-title-s">Lines (after ISO 128)</h3>
+          <p className="t-small text-fg-muted mt-3 max-w-[36ch]">
+            Line types carry state the way a drawing does: dashed is unavailable, phantom is loading, wide is active
+            or in error. Hatching is kept for cut metal.
+          </p>
+        </div>
         <ul className="col-span-4 sm:col-span-8 lg:col-span-9 grid gap-0 border-t border-line">
           {[
             ["Outline", "1.25 px continuous", "Visible edges of a section", <line key="a" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="1.25" />],
@@ -118,7 +124,21 @@ export function FormSection() {
               </g>,
             ],
             ["Centre", "0.75 px chain 14·3·2·3", "Axes of symmetry", <line key="d" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="0.75" strokeDasharray="14 3 2 3" />],
-            ["Hidden", "0.75 px dashed 6·3", "Edges behind the section plane", <line key="e" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="0.75" strokeDasharray="6 3" />],
+            ["Hidden", "0.75 px dashed 6·3", "Hidden edges; unavailable states", <line key="e" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="0.75" strokeDasharray="6 3" />],
+            ["Phantom", "0.75 px long dash + two dots", "Loading: where a part will be", <line key="p" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="0.75" strokeDasharray="12 3 2 3 2 3" />],
+            [
+              "Section hatching",
+              "45°, 1 px, 6 px pitch",
+              "Cut faces of metal, and nothing else",
+              <g key="h">
+                <defs>
+                  <pattern id="lines-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                    <line x1="0" y1="0" x2="0" y2="6" stroke="currentColor" strokeWidth="1" opacity="0.6" />
+                  </pattern>
+                </defs>
+                <rect x="0" y="0" width="100%" height="12" fill="url(#lines-hatch)" stroke="currentColor" strokeWidth="1" />
+              </g>,
+            ],
             ["Active", "2 px Billet Glow", "Active row, selected tile, live state", <line key="f" x1="0" y1="6" x2="100%" y2="6" stroke="var(--color-glow)" strokeWidth="2" />],
           ].map(([name, spec, use, line]) => (
             <li key={name as string} className="grid grid-cols-4 sm:grid-cols-9 gap-x-(--gutter) items-center border-b border-line py-4">

@@ -7,15 +7,15 @@ export const DECISIONS = [
   },
   {
     title: "Type set in lettering heights",
-    body: "The nine sizes are the drawing office's ISO 3098 lettering heights, from 2.5 mm dimension text to 40 mm numerals, and every annotation measures something real, live, in millimetres.",
+    body: "The nine sizes are drawing-office lettering heights, from 2.5 mm dimension text to 40 mm numerals, and every dimension line on the sheet measures something real, live, in millimetres.",
   },
   {
     title: "Scroll is the ram",
     body: "No parallax. Scroll drives the press stroke 1:1: the visitor extrudes the profile, sees it morph through four real sections and cool from 480 °C to brushed silver. Long stories index like a rotary table: push, stop, hold.",
   },
   {
-    title: "Hatching is the state language",
-    body: "Unavailable, loading and non-conforming states wear ISO 128 section hatching: never 40% opacity, never a shimmer, never red, so no state depends on colour alone.",
+    title: "Line types carry state",
+    body: "Interface states borrow ISO 128 line types: a dashed hidden line for unavailable, a phantom line for loading, a wide line and a note for an error. Never 40% opacity, never a shimmer, never red. Hatching is kept for cut metal.",
   },
   {
     title: "Hebrew is a mirror, not a translation",
@@ -102,12 +102,12 @@ export function TitleBlock() {
           <span className="t-small">Website · EN · DE · HE</span>
         </div>
         <div className="iso-c3">
-          <span className="t-label text-fg-muted">Drawn</span>
-          <span className="t-small">Kikkey</span>
+          <span className="t-label text-fg-muted">Drawn · standards</span>
+          <span className="t-small">Kikkey · WCAG 2.0 AA, IS 5568, ISO 128 / 129 / 3098</span>
         </div>
         <div className="iso-c4">
-          <span className="t-label text-fg-muted">Standards</span>
-          <span className="t-small">WCAG 2.0 AA · IS 5568 · ISO 128 / 129 / 3098</span>
+          <span className="t-label text-fg-muted">Data</span>
+          <span className="t-small">Facts per the brief; every other value illustrative</span>
         </div>
         <div className="iso-rev">
           <span className="t-label text-fg-muted">Rev · description · date</span>

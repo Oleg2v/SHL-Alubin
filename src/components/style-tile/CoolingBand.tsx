@@ -29,7 +29,9 @@ export function CoolingBand() {
           </div>
         </div>
 
-        <div className="cooling-bar" aria-hidden="true" />
+        <div className="cooling-bar" aria-hidden="true">
+          <span className="cooling-hot" data-heat="process" data-heat-temp="480" />
+        </div>
 
         <div className="cooling-reads t-data" aria-hidden="true" dir="ltr">
           <span style={{ insetInlineStart: 0 }} className="text-accent-text">

@@ -45,7 +45,7 @@ function ToastTrigger({ lang }: { lang: Lang }) {
         push({
           tone: "success",
           title: c.added,
-          meta: `AL-40217 · ${nf(6, 1)} m · ${nf(2.4, 1)} t`,
+          meta: `AL-40217 · ${nf(6, 1)}\u00a0m · ${nf(2.4, 1)}\u00a0t`,
           metaIsData: true,
           action: { label: c.undo, onAction: () => undefined },
         })
@@ -104,7 +104,7 @@ export function ComponentsLab() {
         </div>
       </div>
 
-      <ToastProvider closeLabel={c.dismiss} lang={lang} dir={dir}>
+      <ToastProvider closeLabel={c.dismiss} regionLabel={c.notifications} lang={lang} dir={dir}>
         <div lang={lang} dir={dir} className="swiss-grid gap-y-(--gutter)">
           {/* C-01 Button */}
           <Cell code="C-01" title="Button" className="col-span-4 sm:col-span-8 lg:col-span-7">
@@ -163,6 +163,14 @@ export function ComponentsLab() {
                   <ToggleChip label="T66" count={7} countLabel={c.profiles} />
                 </div>
               </fieldset>
+              <fieldset className="grid gap-3">
+                <legend className="t-label text-fg-muted mb-3">{c.finish}</legend>
+                <div className="flex flex-wrap gap-2">
+                  <ToggleChip label={c.mill} count={31} countLabel={c.profiles} />
+                  <ToggleChip label={c.anodized} count={26} countLabel={c.profiles} defaultPressed />
+                  <ToggleChip label={c.powder} count={44} countLabel={c.profiles} />
+                </div>
+              </fieldset>
               <div className="flex flex-wrap gap-2 border-t border-line pt-4">
                 <RemovableChip label={c.anodized} removeLabel={c.remove(c.anodized)} />
                 <RemovableChip label="6063" removeLabel={c.remove("6063")} />
@@ -176,8 +184,8 @@ export function ComponentsLab() {
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               <TextField label={c.maxWidth} unit="mm" inputMode="decimal" defaultValue={nf(120, 1)} hint={c.widthHint} aux={`≤ ${nf(250, 0)} mm`} />
               <TextField label={c.wall} unit="mm" inputMode="decimal" defaultValue={nf(0.6, 1)} error={c.wallError} hint={c.wallHint} />
-              <RangeField label={c.maxHeight} min={0} max={200} defaultValue={80} format={(v) => nf(v, 0)} />
-              <TextField label="kg/m" unit="kg/m" inputMode="decimal" defaultValue={nf(1.284, 3)} disabled hint={c.unavailable} />
+              <RangeField label={c.maxHeight} min={0} max={200} defaultValue={80} unitName={c.mmName} format={(v) => nf(v, 0)} />
+              <TextField label={c.rows.weight} unit="kg/m" inputMode="decimal" defaultValue={nf(1.284, 3)} disabled hint={c.unavailable} />
             </div>
           </Cell>
 
@@ -198,6 +206,7 @@ export function ComponentsLab() {
                         dims: (w, h, wall) => c.dims(nf(+w, 1), nf(+h, 1), nf(+wall, 1)),
                         formatKgm: (v) => nf(v, 3),
                         formatDims: (w, h) => `${nf(w, 1)} × ${nf(h, 1)}`,
+                        formatDim: (v) => nf(v, 1),
                       }}
                       action={
                         <button
@@ -223,7 +232,7 @@ export function ComponentsLab() {
 
           {/* C-05 Table row */}
           <Cell code="C-05" title="Table row" className="col-span-4 sm:col-span-8 lg:col-span-7">
-            <div className="overflow-x-auto" role="region" aria-label={c.specCaption} tabIndex={0}>
+            <div className="scroll-x" role="region" aria-label={c.specCaption} tabIndex={0}>
               <SpecTable caption={c.specCaption} rows={rows} activeKey="width" headers={c.headers} className="min-w-[520px]" />
             </div>
           </Cell>
@@ -235,7 +244,7 @@ export function ComponentsLab() {
                 staticSpecimen
                 life={6000}
                 closeLabel={c.dismiss}
-                item={{ tone: "success", title: c.added, meta: `AL-40217 · ${nf(6, 1)} m · ${nf(2.4, 1)} t`, metaIsData: true, action: { label: c.undo, onAction: () => undefined } }}
+                item={{ tone: "success", title: c.added, meta: `AL-40217 · ${nf(6, 1)}\u00a0m · ${nf(2.4, 1)}\u00a0t`, metaIsData: true, action: { label: c.undo, onAction: () => undefined } }}
               />
               <ToastCard
                 staticSpecimen

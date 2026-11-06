@@ -49,7 +49,7 @@ export function Cover() {
 
         <div className="grid place-items-center gap-6 lg:py-6" aria-hidden="true">
           <div className="billet-wrap">
-            <div className="billet" />
+            <div className="billet" data-heat="process" data-heat-temp="480" />
             {/* chain centre lines through the billet's true centre */}
             <svg className="billet-axis" viewBox="0 0 100 100" preserveAspectRatio="none">
               <line x1="0" y1="50" x2="100" y2="50" stroke="currentColor" strokeWidth="1" strokeDasharray="14 3 2 3" vectorEffect="non-scaling-stroke" />
@@ -92,6 +92,16 @@ export function Concept() {
           </li>
         ))}
       </ol>
+      <div className="swiss-grid mt-12">
+        <p className="col-span-4 sm:col-span-8 lg:col-start-4 lg:col-span-7 t-small text-fg-muted">
+          <span className="t-label text-fg">Data · </span>
+          Facts come from the brief: 6,000+ profile types, 1,000 to 1,200 tonnes a month, 50+ new dies a week, about
+          35 % exported, three presses, an own casthouse, two powder lines, a PVDF line and the first anodizing line
+          approved by the Standards Institution of Israel. Every other value on this sheet (billet diameter,
+          temperatures, tolerances, film thicknesses, ram stroke) is illustrative until SHL-Alubin&apos;s engineers
+          confirm it.
+        </p>
+      </div>
     </section>
   );
 }

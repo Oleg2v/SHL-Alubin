@@ -11,12 +11,14 @@
   height: 56px;
   align-items: center;
 }
+/* each nav item sits in its own grid column, its pilot light on the column edge */
 .st-nav a {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   height: 32px;
-  padding-inline: 8px;
+  padding-inline: 0 4px;
+  white-space: nowrap;
   border-radius: var(--radius-xs);
   text-decoration: none;
   color: var(--fg-muted);
@@ -33,9 +35,9 @@
   box-shadow: 0 0 6px 1px rgb(255 90 31 / 0.6);
 }
 .st-nav-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: var(--radius-full);
+  width: 6px;
+  height: 6px;
+  border-radius: 0;
   box-shadow: inset 0 0 0 1px var(--line-strong);
 }
 
@@ -118,7 +120,22 @@
 }
 .st-section-head {
   row-gap: 16px;
-  margin-bottom: clamp(48px, 5vw, 80px);
+  margin-bottom: 48px;
+}
+@media (min-width: 40rem) {
+  .st-section-head {
+    margin-bottom: 56px;
+  }
+}
+@media (min-width: 64rem) {
+  .st-section-head {
+    margin-bottom: 64px;
+  }
+}
+@media (min-width: 90rem) {
+  .st-section-head {
+    margin-bottom: 72px;
+  }
 }
 .st-index {
   display: flex;
@@ -161,7 +178,9 @@
   }
 }
 
-/* The billet: an end face, sawn, at 480 C. Colours are derived from Billet Glow only. */
+/* The billet: a sawn end face at 480 C, not a sun. Flat emissive face (no white-hot core: 480 C is
+   below the Draper point), visible saw kerfs, a chamfer ring and one tight halo. Static: heat changes
+   only when the temperature changes, never on a timer. All colours derive from Billet Glow. */
 .billet {
   --d: min(64vw, 400px);
   position: relative;
@@ -169,42 +188,46 @@
   aspect-ratio: 1;
   border-radius: 50%;
   background:
-    repeating-linear-gradient(
-      102deg,
-      transparent 0 3px,
-      color-mix(in oklab, var(--color-glow) 70%, var(--color-ink)) 3px 4px
-    ),
-    radial-gradient(
-      circle at 50% 50%,
-      color-mix(in oklab, var(--color-glow) 30%, white) 0%,
-      color-mix(in oklab, var(--color-glow) 72%, white) 26%,
-      var(--color-glow) 52%,
-      color-mix(in oklab, var(--color-glow) 62%, var(--color-ink)) 86%,
-      color-mix(in oklab, var(--color-glow) 34%, var(--color-ink)) 100%
-    );
-  background-blend-mode: soft-light, normal;
+    repeating-linear-gradient(102deg, transparent 0 2px, rgb(11 13 15 / 0.22) 2px 3px),
+    radial-gradient(circle, var(--color-glow) 0 58%, color-mix(in oklab, var(--color-glow) 72%, var(--color-ink)) 100%);
   box-shadow:
-    0 0 0 1px rgb(255 90 31 / 0.6),
-    0 0 48px 4px rgb(255 90 31 / 0.45),
-    0 0 160px 24px rgb(255 90 31 / 0.22),
-    inset 0 0 40px 6px color-mix(in oklab, var(--color-glow) 40%, var(--color-ink));
-  animation: var(--animate-flicker);
+    inset 0 0 0 6px color-mix(in oklab, var(--color-glow) 55%, var(--color-ink)),
+    0 0 0 1px rgb(255 90 31 / 0.5),
+    0 0 32px rgb(255 90 31 / 0.3);
 }
-.billet::after {
-  /* heat noise */
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .9 0 0 0 0 .8 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
-  opacity: 0.5;
+.billet-wrap {
+  position: relative;
+  width: max-content;
 }
+/* centre lines: the SVG is sized explicitly (img/svg max-width:100% would clamp it) */
 .billet-axis {
   position: absolute;
   inset: -28px;
+  width: calc(100% + 56px);
+  height: calc(100% + 56px);
+  max-width: none;
   pointer-events: none;
   color: var(--fg-muted);
+}
+
+/* Phones: cold and hot share the first screen, like the desktop split. */
+@media (max-width: 63.99rem) {
+  .st-cover {
+    height: calc(100svh - 56px);
+    min-height: 600px;
+    grid-template-rows: 1fr 1fr;
+  }
+  .st-cover-half {
+    min-height: 0;
+    padding-block: 16px 20px;
+    gap: 12px;
+  }
+  .st-cover-half:last-child {
+    padding-block-end: calc(var(--badge-h) + 24px);
+  }
+  .billet {
+    --d: min(36vw, 160px);
+  }
 }
 
 /* ------------------------------------------------------------ palette */
@@ -221,13 +244,28 @@
 }
 .swatch {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto 1fr;
   border: 1px solid var(--line);
   min-width: 0;
 }
 .swatch-chip {
-  aspect-ratio: 4 / 3;
+  height: 120px;
   border-bottom: 1px solid var(--line);
+}
+/* Billet Glow's own chip is rationed: an Ink field with a glowing square of 2 % of its area. */
+.swatch-chip-rationed {
+  position: relative;
+  background: var(--color-ink);
+}
+.swatch-chip-rationed span {
+  position: absolute;
+  inset-inline-start: 16px;
+  bottom: 16px;
+  width: 24px;
+  height: 24px;
+  background: var(--color-glow);
+  box-shadow: 0 0 16px rgb(255 90 31 / 0.45);
 }
 .grade {
   display: inline-flex;
@@ -239,8 +277,8 @@
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-xs);
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
+  font-size: var(--text-micro);
+  letter-spacing: 0.02em;
 }
 .grade[data-fail="true"] {
   border-style: dashed;
@@ -270,27 +308,6 @@
   gap: 8px;
 }
 
-.heat-ramp {
-  height: 48px;
-  /* Radiance above ambient, T^4 (Stefan-Boltzmann), mixed from Billet Glow to Alu Mid in OKLab.
-     Stops are linear in temperature: 480 C at the die exit to 20 C ambient. */
-  background: linear-gradient(
-    90deg,
-    var(--color-glow) 0%,
-    color-mix(in oklab, var(--color-glow) 71.1%, var(--color-alu-mid)) 13%,
-    color-mix(in oklab, var(--color-glow) 48.8%, var(--color-alu-mid)) 26.1%,
-    color-mix(in oklab, var(--color-glow) 32%, var(--color-alu-mid)) 39.1%,
-    color-mix(in oklab, var(--color-glow) 19.7%, var(--color-alu-mid)) 52.2%,
-    color-mix(in oklab, var(--color-glow) 8.8%, var(--color-alu-mid)) 69.6%,
-    color-mix(in oklab, var(--color-glow) 2.6%, var(--color-alu-mid)) 87%,
-    var(--color-alu-mid) 100%
-  );
-  border: 1px solid var(--line);
-}
-[dir="rtl"] .heat-ramp {
-  transform: scaleX(-1);
-}
-
 /* ------------------------------------------------------------ type */
 .scale-row {
   align-items: baseline;
@@ -302,6 +319,13 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: clip;
+}
+@media (max-width: 63.99rem) {
+  .scale-sample {
+    white-space: normal;
+    overflow: visible;
+    text-wrap: balance;
+  }
 }
 
 /* ------------------------------------------------------------ space */
@@ -392,11 +416,24 @@
   background: var(--fg);
   color: var(--bg);
 }
+@media (forced-colors: active) {
+  .segmented button[aria-pressed="true"] {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+}
+/* very short viewports (400 % zoom): let the bar scroll away to free space */
+@media (max-height: 32rem) {
+  .st-bar {
+    position: relative;
+  }
+}
 
 /* ------------------------------------------------------------ motif */
 .crosshair-field {
   position: relative;
-  height: 360px;
+  height: 280px;
   overflow: hidden;
   /* The system crosshair, never cursor: none: zero lag, and it keeps the user's pointer size. */
   cursor: crosshair;
@@ -440,8 +477,8 @@
   background: var(--fg);
   color: var(--bg);
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
+  font-size: var(--text-micro);
+  letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
@@ -487,26 +524,50 @@
   text-decoration-color: var(--fg-muted);
 }
 
-/* ------------------------------------------------------------ title block */
-.title-block {
+/* ------------------------------------------------------------ title block (ISO 7200) */
+.iso-block {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  border-top: 1px solid var(--line);
-  border-inline-start: 1px solid var(--line);
+  grid-template-areas:
+    "title title"
+    "c1 c2"
+    "c3 c4"
+    "rev rev"
+    "scale scale"
+    "dwg sheet";
+  border: 1.5px solid var(--fg);
 }
 @media (min-width: 64rem) {
-  .title-block {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+  .iso-block {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-areas:
+      "title title title title title title c1 c1 c1 c2 c2 c2"
+      "title title title title title title c3 c3 c3 c4 c4 c4"
+      "rev rev rev rev scale scale scale dwg dwg dwg sheet sheet";
   }
 }
-.title-block > div {
+.iso-block > div {
   display: grid;
+  align-content: start;
   gap: 4px;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--line);
-  border-inline-end: 1px solid var(--line);
   min-width: 0;
+  padding: 12px 16px;
+  border-inline-end: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
 }
+.iso-title {
+  grid-area: title;
+  gap: 8px !important;
+  padding-block: 16px 20px !important;
+}
+.iso-c1 { grid-area: c1; }
+.iso-c2 { grid-area: c2; }
+.iso-c3 { grid-area: c3; }
+.iso-c4 { grid-area: c4; }
+.iso-rev { grid-area: rev; }
+.iso-scale { grid-area: scale; }
+.iso-dwg { grid-area: dwg; }
+.iso-sheet { grid-area: sheet; }
 
 /* ------------------------------------------------------------ finish lab */
 .finish-option {
@@ -535,10 +596,24 @@
   background: var(--color-glow);
   box-shadow: 0 0 8px 1px rgb(255 90 31 / 0.6);
 }
-.finish-swatch {
-  width: 32px;
-  height: 32px;
+/* A sample coupon at 1:4 of 80 x 40 mm: R3 corners, a 6 mm hang hole, a keyline. */
+.finish-coupon {
+  position: relative;
+  width: 76px;
+  height: 38px;
   flex: none;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+.finish-coupon-hole {
+  position: absolute;
+  inset-inline-end: 6px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  translate: 0 -50%;
+  border-radius: var(--radius-full);
+  background: var(--bg);
   box-shadow: inset 0 0 0 1px var(--line-strong);
 }
 
@@ -550,4 +625,104 @@
     0 0 24px 2px rgb(255 90 31 / 0.45),
     0 0 72px 12px rgb(255 90 31 / 0.2),
     inset 0 0 20px 3px color-mix(in oklab, var(--color-glow) 40%, var(--color-ink));
+}
+
+/* ------------------------------------------------------------ cooling band (cover seam) */
+.cooling-band {
+  padding: 32px var(--margin) 28px;
+  border-top: 1px solid var(--line);
+  overflow-x: clip;
+}
+.cooling-inner {
+  position: relative;
+  display: grid;
+  gap: 12px;
+}
+.cooling-chain {
+  gap: 0;
+}
+.cooling-chain > div {
+  min-width: 0;
+}
+.cooling-chain .dim-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* the profile seen from the side: hot zone, quench, cold tail with die lines */
+.cooling-bar {
+  height: 24px;
+  background:
+    repeating-linear-gradient(0deg, rgb(236 238 240 / 0.07) 0 1px, transparent 1px 4px),
+    linear-gradient(
+      90deg,
+      var(--color-glow) 0%,
+      color-mix(in oklab, var(--color-glow) 95%, var(--color-alu-mid)) 15%,
+      color-mix(in oklab, var(--color-glow) 40%, var(--color-alu-mid)) 17%,
+      color-mix(in oklab, var(--color-glow) 11%, var(--color-alu-mid)) 21%,
+      var(--color-alu-mid) 30%,
+      color-mix(in oklab, var(--color-alu-mid) 80%, var(--color-alu-white)) 100%
+    );
+  box-shadow: 0 -10px 24px -14px rgb(255 90 31 / 0.55) inset;
+}
+.cooling-bar::before {
+  content: "";
+}
+.cooling-reads {
+  position: relative;
+  height: 20px;
+}
+.cooling-reads > span:last-child {
+  text-align: end;
+}
+.cooling-reads > span {
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
+}
+.cooling-q {
+  color: var(--fg);
+}
+
+
+/* ------------------------------------------------------------ photo plates */
+.plate {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-graphite);
+}
+.plate > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+.plate-crop {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--color-alu-white);
+  border-style: solid;
+  border-width: 0;
+  opacity: 0.85;
+}
+.plate-crop-tl { top: 10px; left: 10px; border-top-width: 1px; border-left-width: 1px; }
+.plate-crop-tr { top: 10px; right: 10px; border-top-width: 1px; border-right-width: 1px; }
+.plate-crop-bl { bottom: 10px; left: 10px; border-bottom-width: 1px; border-left-width: 1px; }
+.plate-crop-br { bottom: 10px; right: 10px; border-bottom-width: 1px; border-right-width: 1px; }
+.plate-tag {
+  position: absolute;
+  top: 12px;
+  inset-inline-start: 32px;
+  padding: 2px 6px;
+  background: var(--color-ink);
+  color: var(--color-alu-mid);
+}
+.plate-reading {
+  position: absolute;
+  inset-inline-end: 32px;
+  bottom: 28px;
+  padding: 2px 6px;
+  background: var(--color-ink);
+  color: var(--color-glow);
 }

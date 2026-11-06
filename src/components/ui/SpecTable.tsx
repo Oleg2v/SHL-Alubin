@@ -34,7 +34,7 @@ export function SpecTable({ caption, rows, activeKey, headers = EN, className }:
       </thead>
       <tbody>
         {rows.map((r) => (
-          <tr key={r.key} data-active={activeKey === r.key ? "true" : undefined}>
+          <tr key={r.key} data-active={activeKey === r.key ? "true" : undefined} aria-current={activeKey === r.key ? "true" : undefined}>
             <th scope="row">{r.label}</th>
             <td className="num">
               <bdi dir="ltr">{r.value}</bdi>

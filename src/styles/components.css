@@ -27,21 +27,28 @@
     }
   }
 
-  /* =========================================================== Button */
+  /* =========================================================== Button
+     Three layers: a static hit box (.btn, never moves, so focus and hit area stay put), a skin
+     (.btn-skin: fill and border, the only thing the magnet moves, on one axis) and the label. */
   .btn {
     --btn-h: 48px;
     --btn-px: 20px;
+    --btn-bg: transparent;
+    --btn-border: transparent;
+    --btn-fg: var(--fg);
     --mx: 0px;
-    --my: 0px;
     position: relative;
+    isolation: isolate;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
     height: var(--btn-h);
     padding-inline: var(--btn-px);
-    border: 1px solid transparent;
+    border: 0;
     border-radius: var(--radius-xs);
+    background: transparent;
+    color: var(--btn-fg);
     font-size: var(--text-small);
     font-weight: 500;
     line-height: 1;
@@ -51,22 +58,28 @@
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
-    translate: var(--mx) var(--my);
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      scale var(--dur-tick) var(--ease-out);
+  }
+  .btn-skin {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--btn-bg);
+    box-shadow: inset 0 0 0 1px var(--btn-border);
+    translate: var(--mx) 0;
     transition:
       translate var(--dur-slow) var(--ease-out),
       background-color var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out),
-      color var(--dur-fast) var(--ease-out),
-      box-shadow var(--dur-base) var(--ease-out),
-      scale var(--dur-tick) var(--ease-out);
+      box-shadow var(--dur-base) var(--ease-out);
   }
-  .btn[data-magnet="active"] {
+  .btn[data-magnet="active"] .btn-skin {
     transition:
       translate var(--dur-fast) linear,
       background-color var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out),
-      box-shadow var(--dur-base) var(--ease-out),
-      scale var(--dur-tick) var(--ease-out);
+      box-shadow var(--dur-base) var(--ease-out);
   }
   .btn-sm {
     --btn-h: 40px;
@@ -83,7 +96,7 @@
     display: inline-flex;
     align-items: center;
     gap: inherit;
-    translate: calc(var(--mx) * 0.35) calc(var(--my) * 0.35);
+    translate: calc(var(--mx) * 1.25) 0;
     transition: translate var(--dur-slow) var(--ease-out);
   }
   .btn[data-magnet="active"] .btn-label {
@@ -95,22 +108,20 @@
 
   /* Primary: the one place Billet Glow is a fill. Ink label, 6.24:1. */
   .btn-primary {
-    background: var(--accent);
-    color: var(--on-accent);
+    --btn-bg: var(--accent);
+    --btn-fg: var(--on-accent);
   }
-  .btn-primary:hover:not(:disabled, [aria-disabled="true"]) {
+  .btn-primary:hover:not(:disabled, [aria-disabled="true"]) .btn-skin {
     box-shadow: var(--shadow-heat);
   }
 
   /* Secondary: hairline, cold. */
   .btn-secondary {
-    background: transparent;
-    border-color: var(--line-strong);
-    color: var(--fg);
+    --btn-border: var(--line-strong);
   }
   .btn-secondary:hover:not(:disabled, [aria-disabled="true"]) {
-    border-color: var(--fg);
-    background: color-mix(in oklab, var(--fg) 5%, transparent);
+    --btn-border: var(--fg);
+    --btn-bg: color-mix(in oklab, var(--fg) 5%, transparent);
   }
 
   /* Ghost: a link-weight action with a drawn underline. */
@@ -118,8 +129,6 @@
     --btn-px: 0px;
     height: auto;
     min-height: 44px;
-    background: transparent;
-    color: var(--fg);
   }
   .btn-ghost .btn-label::after {
     content: "";
@@ -140,33 +149,47 @@
     scale: 1 1;
   }
 
+  /* Unavailable: the ISO hidden line (dashed) and hatching, never 40 % opacity. */
   .btn:disabled,
   .btn[aria-disabled="true"] {
+    --btn-bg: var(--hatch-fill);
+    --btn-border: var(--line-strong);
+    --btn-fg: var(--fg-disabled);
     cursor: not-allowed;
-    background: transparent;
-    border-color: var(--line);
-    color: var(--fg-disabled);
-    box-shadow: none;
   }
-  .btn-primary:disabled,
-  .btn-primary[aria-disabled="true"] {
-    background: color-mix(in oklab, var(--fg) 8%, transparent);
-    border-color: transparent;
+  .btn:disabled .btn-skin,
+  .btn[aria-disabled="true"] .btn-skin {
+    background: var(--hatch-fill);
+    box-shadow: none;
+    outline: 1px dashed var(--line-strong);
+    outline-offset: -1px;
   }
 
   .btn[aria-busy="true"] {
     cursor: progress;
   }
+  /* Busy: a 2 px track with a solid ram that strokes out and back, linear, like the press. */
+  .btn[aria-busy="true"]::before,
   .btn[aria-busy="true"]::after {
     content: "";
     position: absolute;
-    inset-inline: 0;
-    bottom: 0;
+    bottom: 4px;
     height: 2px;
-    background: linear-gradient(90deg, transparent, currentColor 40%, currentColor 60%, transparent);
-    background-size: 40% 100%;
-    background-repeat: no-repeat;
-    animation: ram-sweep 960ms var(--ease-in-out) infinite;
+  }
+  .btn[aria-busy="true"]::before {
+    inset-inline: 4px;
+    background: color-mix(in oklab, currentColor 22%, transparent);
+  }
+  .btn[aria-busy="true"]::after {
+    inset-inline-start: 4px;
+    width: 24%;
+    background: currentColor;
+    animation: ram-stroke var(--dur-travel) linear infinite alternate;
+  }
+  @keyframes ram-stroke {
+    to {
+      inset-inline-start: calc(100% - 24% - 4px);
+    }
   }
 
   .btn-icon {
@@ -184,6 +207,16 @@
   [dir="rtl"] .btn:hover .btn-icon[data-nudge] {
     translate: -4px 0;
   }
+  @media (forced-colors: active) {
+    .btn-skin {
+      forced-color-adjust: none;
+      background: ButtonFace;
+      box-shadow: inset 0 0 0 2px ButtonText;
+    }
+    .btn {
+      color: ButtonText;
+    }
+  }
 
   /* =========================================================== Field */
   .field {
@@ -197,7 +230,7 @@
     align-items: baseline;
     justify-content: space-between;
     gap: 12px;
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: var(--text-micro);
     line-height: var(--text-micro--line-height);
     letter-spacing: var(--text-micro--letter-spacing);
@@ -206,8 +239,10 @@
     color: var(--fg);
   }
   .field-label-aux {
+    font-family: var(--font-mono);
     color: var(--fg-muted);
-    letter-spacing: 0.04em;
+    letter-spacing: 0.02em;
+    text-transform: none;
   }
   .field-control {
     position: relative;
@@ -227,8 +262,8 @@
   .field-control:focus-within {
     border-color: var(--fg);
     box-shadow:
-      0 0 0 1px var(--focus-inner),
-      0 0 0 3px var(--focus-outer);
+      0 0 0 2px var(--focus-inner),
+      0 0 0 4px var(--focus-outer);
   }
   .field-input {
     flex: 1 1 0%;
@@ -365,9 +400,8 @@
     color: var(--fg);
     font-family: var(--font-mono);
     font-size: var(--text-micro);
-    letter-spacing: 0.06em;
+    letter-spacing: 0.02em;
     font-weight: 500;
-    text-transform: uppercase;
     white-space: nowrap;
     cursor: pointer;
     transition:
@@ -387,10 +421,11 @@
     font-variant-numeric: tabular-nums;
     letter-spacing: 0;
   }
+  /* Pilot light: a 6 px square, machined, never a round LED. */
   .chip-dot {
     width: 6px;
     height: 6px;
-    border-radius: var(--radius-full);
+    border-radius: 0;
     background: transparent;
     box-shadow: inset 0 0 0 1px var(--line-strong);
     transition:
@@ -438,6 +473,44 @@
   }
   .chip-remove:hover {
     background: color-mix(in oklab, currentColor 14%, transparent);
+  }
+
+  /* =========================================================== Forced colours (Windows High Contrast) */
+  @media (forced-colors: active) {
+    .field-control:focus-within {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
+    .chip[aria-pressed="true"],
+    .chip[aria-checked="true"],
+    .chip[data-selected="true"] {
+      forced-color-adjust: none;
+      background: Highlight;
+      color: HighlightText;
+      border-color: Highlight;
+    }
+    .chip[aria-pressed="true"] .chip-dot,
+    .chip[aria-checked="true"] .chip-dot,
+    .chip[data-selected="true"] .chip-dot {
+      background: HighlightText;
+    }
+    .spec tbody tr[data-active="true"] {
+      outline: 2px solid Highlight;
+      outline-offset: -2px;
+    }
+  }
+
+  /* =========================================================== Horizontal scroller
+     Edge shadows appear only while there is more to scroll (background-attachment: local). */
+  .scroll-x {
+    position: relative; /* contains absolutely positioned (sr-only) descendants, so they cannot widen the page */
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    background:
+      linear-gradient(to right, var(--bg) 30%, transparent) left / 32px 100% no-repeat local,
+      linear-gradient(to left, var(--bg) 30%, transparent) right / 32px 100% no-repeat local,
+      linear-gradient(to right, rgb(11 13 15 / 0.16), transparent) left / 12px 100% no-repeat scroll,
+      linear-gradient(to left, rgb(11 13 15 / 0.16), transparent) right / 12px 100% no-repeat scroll;
   }
 
   /* =========================================================== Hatching: the state language
@@ -490,9 +563,9 @@
     unicode-bidi: isolate;
   }
   .pcard-family {
-    font-family: var(--font-mono);
     font-size: var(--text-micro);
-    letter-spacing: 0.08em;
+    font-weight: 500;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--fg-muted);
   }
@@ -530,7 +603,9 @@
   .pcard:hover {
     border-color: var(--line-strong);
   }
-  .pcard:hover .pcard-temp,
+  /* The tile's dot heats only when it is active (selected for compare, or holding focus),
+     never on hover: a grid of 40 results must not scatter orange under the pointer. */
+  .pcard[data-selected="true"] .pcard-temp,
   .pcard:focus-within .pcard-temp {
     background: var(--color-glow);
     box-shadow: 0 0 10px 1px rgb(255 90 31 / 0.65);
@@ -538,7 +613,7 @@
   .pcard-temp {
     width: 6px;
     height: 6px;
-    border-radius: var(--radius-full);
+    border-radius: 0;
     box-shadow: inset 0 0 0 1px var(--line-strong);
     transition:
       background-color var(--dur-fast) var(--ease-out),
@@ -591,9 +666,10 @@
     caption-side: top;
     padding-block-end: 12px;
     text-align: start;
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: var(--text-micro);
-    letter-spacing: 0.08em;
+    font-weight: 500;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--fg-muted);
   }
@@ -609,8 +685,10 @@
   }
   .spec thead th {
     height: 32px;
+    font-family: var(--font-sans);
     font-size: var(--text-micro);
-    letter-spacing: 0.08em;
+    font-weight: 500;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--fg-muted);
     border-bottom-color: var(--line-strong);
@@ -633,10 +711,20 @@
   /* Linked highlight from the drawing: the row is "active", so it gets the heat marker. */
   .spec tbody tr[data-active="true"] {
     background: color-mix(in oklab, var(--fg) 6%, transparent);
-    box-shadow: inset 2px 0 0 var(--color-glow);
+    box-shadow:
+      inset 2px 0 0 var(--fg),
+      inset 4px 0 0 var(--color-glow);
+  }
+  .spec tbody tr[data-active="true"] th {
+    color: var(--fg);
   }
   [dir="rtl"] .spec tbody tr[data-active="true"] {
-    box-shadow: inset -2px 0 0 var(--color-glow);
+    box-shadow:
+      inset -2px 0 0 var(--fg),
+      inset -4px 0 0 var(--color-glow);
+  }
+  .spec td:nth-child(3) {
+    padding-inline-start: 8px;
   }
   .spec td.note {
     color: var(--fg-muted);
@@ -696,11 +784,14 @@
   }
   .toast-meta {
     margin-top: 4px;
+    font-size: var(--text-small);
+    line-height: var(--text-small--line-height);
+    color: var(--color-alu-mid);
+  }
+  .toast-meta[data-data="true"] {
     font-family: var(--font-mono);
     font-size: var(--text-micro);
-    letter-spacing: 0.04em;
-    color: var(--color-alu-mid);
-    unicode-bidi: isolate;
+    letter-spacing: 0.02em;
   }
   .toast-actions {
     display: flex;
@@ -765,9 +856,10 @@
       display: none;
     }
   }
+  /* Success is cold: a confirmation is not heat, not an active state and not the CTA. */
   .toast[data-tone="success"] .toast-glyph {
-    border-color: var(--color-glow);
-    color: var(--color-glow);
+    border-color: rgb(236 238 240 / 0.6);
+    color: var(--color-alu-white);
   }
   .toast[data-tone="error"] .toast-glyph {
     background: repeating-linear-gradient(-45deg, transparent 0 3px, rgb(236 238 240 / 0.35) 3px 4px);

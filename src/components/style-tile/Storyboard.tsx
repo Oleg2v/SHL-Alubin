@@ -43,7 +43,7 @@ export function Storyboard() {
         const b = f.shape ? bounds(f.shape) : null;
         return (
           <li key={f.pct} data-surface="press" className="grid grid-rows-[auto_1fr_auto] min-h-80 border border-line">
-            <div className="flex items-baseline justify-between gap-2 border-b border-line px-3 py-2 t-label">
+            <div className="flex items-baseline justify-between gap-2 border-b border-line px-3 py-2 t-data">
               <bdi dir="ltr" className="text-fg">
                 {String(f.pct).padStart(3, "0")} %
               </bdi>
@@ -69,7 +69,7 @@ export function Storyboard() {
             </div>
             <div className="grid gap-1 border-t border-line px-3 py-3">
               <p className="t-small font-medium text-fg">{f.title}</p>
-              <p className="t-label text-fg-muted grid">
+              <p className="t-data text-fg-muted grid">
                 <bdi dir="ltr" className="whitespace-nowrap">
                   Ram {f.ram.toFixed(0)} mm
                 </bdi>

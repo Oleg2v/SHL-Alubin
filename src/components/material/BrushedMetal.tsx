@@ -26,12 +26,12 @@ export type Finish = {
 };
 
 export const FINISHES: Finish[] = [
-  { id: "mill", name: "Mill", note: "Press finish, die lines", hex: "#B7BCC1", rough: 0.42, metal: 1 },
-  { id: "anod-silver", name: "Anodized silver", note: "AA20 · E6 satin", hex: "#C6CACE", rough: 0.68, metal: 0.92 },
-  { id: "anod-black", name: "Anodized black", note: "AA20 · E6 · 2-step", hex: "#2B2D31", rough: 0.62, metal: 0.92 },
-  { id: "ral-9016", name: "Powder RAL 9016", note: "Traffic white · 60 µm", hex: "#EDEEE8", rough: 0.96, metal: 0.04 },
-  { id: "ral-7016", name: "Powder RAL 7016", note: "Anthracite grey · 60 µm", hex: "#383E42", rough: 0.94, metal: 0.04 },
-  { id: "pvdf-bronze", name: "PVDF bronze", note: "Wet paint · 2-coat · mica", hex: "#5E4B3C", rough: 0.82, metal: 0.4 },
+  { id: "mill", name: "Mill", note: "die lines · 6063-T6", hex: "#B7BCC1", rough: 0.42, metal: 1 },
+  { id: "anod-silver", name: "Anodized silver", note: "E6/EV1 · 20 µm", hex: "#C6CACE", rough: 0.68, metal: 0.92 },
+  { id: "anod-black", name: "Anodized black", note: "E6/C-35 · 20 µm", hex: "#2B2D31", rough: 0.62, metal: 0.92 },
+  { id: "ral-9016", name: "Powder RAL 9016", note: "30 GU · ≥ 60 µm", hex: "#EDEEE8", rough: 0.96, metal: 0.04 },
+  { id: "ral-7016", name: "Powder RAL 7016", note: "30 GU · ≥ 60 µm", hex: "#383E42", rough: 0.94, metal: 0.04 },
+  { id: "pvdf-bronze", name: "PVDF bronze", note: "3-coat · ~40 µm · mica", hex: "#5E4B3C", rough: 0.8, metal: 0.4 },
 ];
 
 const VERT = `
@@ -63,24 +63,32 @@ float brush(vec2 uv) {
   for (int i = 0; i < 4; i++) { n += a * noise(p); p *= vec2(2.07, 1.93); a *= 0.5; }
   return n;
 }
+// isotropic orange peel for powder and PVDF: no direction
+float peel(vec2 uv) {
+  vec2 p = uv * u_res * 0.16;
+  return 0.6 * noise(p) + 0.4 * noise(p * 2.3 + 7.1);
+}
 vec3 shade(vec3 base, float rough, float metal, vec2 uv) {
+  float aniso = step(0.5, metal); // metals only: die-line grooves and an anisotropic highlight
   float b = brush(uv);
+  float o = peel(uv);
   vec3 L = normalize(vec3(u_light - uv, 0.55));
   vec3 V = vec3(0.0, 0.0, 1.0);
   vec3 H = normalize(L + V);
+  vec2 pn = mix(vec2(o - 0.5, peel(uv + 0.37) - 0.5) * 0.16, vec2(0.0, (b - 0.5) * 0.35 * (1.0 - rough * 0.5)), aniso);
+  vec3 N = normalize(vec3(pn, 1.0));
   vec3 T = normalize(vec3(1.0, (b - 0.5) * 0.12, 0.0));
-  vec3 N = normalize(vec3(0.0, (b - 0.5) * 0.35 * (1.0 - rough * 0.5), 1.0));
   float TdH = dot(T, H);
-  float sinTH = sqrt(max(0.0, 1.0 - TdH * TdH));
-  float shin = mix(260.0, 14.0, rough);
+  float kk = pow(sqrt(max(0.0, 1.0 - TdH * TdH)), mix(260.0, 14.0, rough));
+  float bp = pow(max(dot(N, H), 0.0), mix(160.0, 6.0, rough));
   float fall = exp(-pow((uv.y - u_light.y) * 1.4, 2.0));
-  float spec = pow(sinTH, shin) * mix(0.18, 1.0, metal) * (0.35 + 0.65 * fall) * (1.0 - rough * 0.55);
+  float spec = mix(bp * 0.35, kk * (0.35 + 0.65 * fall), aniso) * mix(0.25, 1.0, metal) * (1.0 - rough * 0.55);
   float diff = max(dot(N, L), 0.0);
   float env = 0.5 + 0.5 * smoothstep(0.2, 0.0, abs(uv.y - 0.3)) + 0.3 * smoothstep(0.12, 0.0, abs(uv.y - 0.8));
   vec3 metalCol = base * (0.32 + 0.6 * env) + spec * mix(vec3(1.0), base, 0.3);
-  vec3 paintCol = base * (0.58 + 0.42 * diff) + spec * 0.22;
-  vec3 col = mix(paintCol, metalCol, metal);
-  col *= 0.9 + 0.2 * b * (0.35 + 0.65 * (1.0 - rough * 0.6));
+  vec3 paintCol = base * (0.62 + 0.38 * diff) + spec * 0.5;
+  vec3 col = mix(paintCol, metalCol, aniso);
+  col *= mix(0.97 + 0.06 * o, 0.9 + 0.2 * b * (0.35 + 0.65 * (1.0 - rough * 0.6)), aniso);
   return col;
 }
 void main() {

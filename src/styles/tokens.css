@@ -56,10 +56,10 @@
   --text-title-l: clamp(1.875rem, 1.067rem + 3.5911vw, 4.6581rem); /* 30 -> 74.53 px, cap 14 mm */
   --text-title-l--line-height: 1.0;
   --text-title-l--letter-spacing: -0.035em;
-  --text-headline: clamp(2.5rem, 1.2939rem + 5.3605vw, 6.6544rem); /* 40 -> 106.47 px, cap 20 mm */
+  --text-headline: clamp(2.6875rem, 1.5358rem + 5.1185vw, 6.6544rem); /* 43 -> 106.47 px, cap 20 mm */
   --text-headline--line-height: 0.94;
   --text-headline--letter-spacing: -0.045em;
-  --text-display: clamp(4rem, 1.2976rem + 12.0105vw, 13.3081rem); /* 64 -> 212.93 px, cap 40 mm */
+  --text-display: clamp(5.375rem, 3.0718rem + 10.2363vw, 13.3081rem); /* 86 -> 212.93 px, cap 40 mm */
   --text-display--line-height: 0.84;
   --text-display--letter-spacing: -0.055em;
 
@@ -194,6 +194,19 @@
 }
 
 /* Semantic colours as Tailwind utilities: bg-bg, text-fg, border-line, bg-accent ... */
+/* Hebrew: no negative tracking (it breaks letterforms). Set through the tokens, never !important,
+   so a user's own text-spacing stylesheet still wins (WCAG 1.4.12). */
+:lang(he) {
+  --text-micro--letter-spacing: 0;
+  --text-lead--letter-spacing: 0;
+  --text-title-s--letter-spacing: 0;
+  --text-title-m--letter-spacing: 0;
+  --text-title-l--letter-spacing: 0;
+  --text-headline--letter-spacing: 0;
+  --text-display--letter-spacing: 0;
+  --text-body--letter-spacing: 0;
+}
+
 @theme inline {
   --color-bg: var(--bg);
   --color-bg-raised: var(--bg-raised);

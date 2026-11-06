@@ -24,8 +24,8 @@ export const steps = [
   ["title-s", 21, 7],
   ["title-m", 25, 10],
   ["title-l", 30, 14],
-  ["headline", 40, 20],
-  ["display", 64, 40],
+  ["headline", 43, 20], // max/min <= 2.5, so 200 % zoom still enlarges text (WCAG 1.4.4)
+  ["display", 86, 40],
 ].map(([name, min, cap]) => [name, min, capToPx(cap), cap]);
 
 const r = (n, d = 4) => Number(n.toFixed(d));

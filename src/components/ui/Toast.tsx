@@ -7,6 +7,8 @@ export type ToastTone = "success" | "error" | "info";
 export type ToastInput = {
   title: string;
   meta?: string;
+  /** Meta is measured data (IDs, lengths, tonnes): set in Geist Mono. */
+  metaIsData?: boolean;
   tone?: ToastTone;
   action?: { label: string; onAction: () => void };
   /** ms; 0 keeps it until dismissed. Errors default to 0. */
@@ -29,7 +31,18 @@ const LEAVE_MS = 240; // --dur-base
  * Toasts live in one polite live region (role="status"); errors are announced assertively.
  * Timers pause while the toast is hovered or focused, and error toasts never auto-dismiss.
  */
-export function ToastProvider({ children, closeLabel = "Dismiss notification" }: { children: ReactNode; closeLabel?: string }) {
+export function ToastProvider({
+  children,
+  closeLabel = "Dismiss notification",
+  lang,
+  dir,
+}: {
+  children: ReactNode;
+  closeLabel?: string;
+  /** Language and direction of the toasts' text (they render outside the content's own container). */
+  lang?: string;
+  dir?: "ltr" | "rtl";
+}) {
   const [items, setItems] = useState<ToastItem[]>([]);
   const seq = useRef(0);
 
@@ -50,14 +63,14 @@ export function ToastProvider({ children, closeLabel = "Dismiss notification" }:
     <ToastCtx.Provider value={value}>
       {children}
       <div className="toast-region" role="region" aria-label="Notifications">
-        <div role="status" aria-live="polite" aria-atomic="false" className="toast-stack">
+        <div role="status" aria-live="polite" aria-atomic="false" className="toast-stack" lang={lang} dir={dir}>
           {items
             .filter((t) => t.tone !== "error")
             .map((t) => (
               <ToastView key={t.id} item={t} onDismiss={dismiss} closeLabel={closeLabel} />
             ))}
         </div>
-        <div role="alert" aria-live="assertive" className="toast-stack">
+        <div role="alert" aria-live="assertive" className="toast-stack" lang={lang} dir={dir}>
           {items
             .filter((t) => t.tone === "error")
             .map((t) => (
@@ -70,7 +83,9 @@ export function ToastProvider({ children, closeLabel = "Dismiss notification" }:
 }
 
 function ToastView({ item, onDismiss, closeLabel }: { item: ToastItem; onDismiss: (id: number) => void; closeLabel: string }) {
-  const life = item.life ?? (item.tone === "error" ? 0 : 6000);
+  // Errors and toasts that carry an action (Undo, Retry) stay until dismissed: a screen-reader user
+  // in browse mode never moves focus into the toast, so a timer would take the action away (2.2.1).
+  const life = item.life ?? (item.tone === "error" || item.action ? 0 : 6000);
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!life || item.leaving) return;
@@ -145,7 +160,7 @@ export function ToastCard({ item, life, onDismiss, closeLabel, staticSpecimen, r
       <div className="min-w-0">
         <p className="toast-title">{item.title}</p>
         {item.meta ? (
-          <p className="toast-meta" dir="auto">
+          <p className="toast-meta" dir="auto" data-data={item.metaIsData ? "true" : undefined}>
             {item.meta}
           </p>
         ) : null}

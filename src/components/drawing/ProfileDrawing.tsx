@@ -91,7 +91,8 @@ export function ProfileDrawing({
       viewBox={`0 0 ${box} ${box}`}
       className={className}
       role="img"
-      aria-labelledby={`${uid}-t${description ? ` ${uid}-d` : ""}`}
+      aria-labelledby={`${uid}-t`}
+      aria-describedby={description ? `${uid}-d` : undefined}
     >
       <title id={`${uid}-t`}>{title}</title>
       {description ? <desc id={`${uid}-d`}>{description}</desc> : null}
@@ -160,4 +161,16 @@ export function ProfileDrawing({
       ) : null}
     </svg>
   );
+}
+
+/**
+ * CSS width at which a ProfileDrawing renders its part at a true drawing scale (ISO 5455), in CSS
+ * px at the nominal 96 dpi: ratio 2 means 2:1, the part appears twice its real size.
+ */
+export function drawingWidthForScale(shape: ProfileShape, ratio: number, box = 320, margin = 44) {
+  const b = bounds(shape);
+  const inner = box - margin * 2;
+  const scale = Math.min(inner / b.width, inner / b.height); // viewBox px per model mm
+  const pxPerMm = 96 / 25.4;
+  return (ratio * pxPerMm * box) / scale;
 }

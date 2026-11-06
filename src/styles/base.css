@@ -37,13 +37,55 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Hebrew: no negative tracking (it breaks letterforms), a touch more leading,
-     and Plex Hebrew carries the glyphs (see --font-sans). */
-  :lang(he) {
-    letter-spacing: 0 !important;
-  }
+  /* Hebrew: tracking is zeroed in tokens.css; here a touch more leading for the lamed ascender,
+     and labels never below 14 px (12 px gives Hebrew a 7 px letter). */
   :lang(he) :is(h1, h2, h3, .t-headline, .t-display, .t-title-l, .t-title-m) {
     line-height: 1.08;
+  }
+  :lang(he) :is(.t-label, .field-label, .pcard-family, .spec caption, .spec thead th) {
+    font-size: max(var(--text-micro), 0.875rem);
+    letter-spacing: 0;
+  }
+
+  /* Geist Mono's default zero is slashed and reads like the diameter sign. ss09 is its plain zero,
+     as ISO 3098 lettering has it; Ø stays the only slashed glyph. Never set on Geist Sans. */
+  :where(
+      .t-data,
+      .t-mono,
+      .dim,
+      .callout-label,
+      .demo-badge,
+      .field-unit,
+      .field-label-aux,
+      .chip,
+      .pcard-id,
+      .pcard-specs,
+      .spec td,
+      .toast-meta[data-data="true"],
+      .segmented button,
+      .grade,
+      .matrix td,
+      .crosshair-read,
+      .field-input
+    ) {
+    font-feature-settings: "ss09" 1;
+  }
+
+  p,
+  li,
+  dd,
+  figcaption {
+    text-wrap: pretty;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  /* The demo badge is fixed in the inline-end corner: the page always ends above it. */
+  body {
+    padding-block-end: calc(var(--badge-h) + 24px);
   }
 
   ::selection {
@@ -163,20 +205,46 @@
     font-size: var(--text-small);
     line-height: var(--text-small--line-height);
   }
-  /* Mono label: section numbers, specs, annotations. */
+  /* Mono means measured.
+     .t-label: interface chrome (kickers, captions, keys): Geist, uppercase, tracked.
+     .t-data: anything measured or identified (IDs, alloys, °C, mm, kg/m, tokens): Geist Mono,
+     case preserved, because uppercase turns mm into MM (megametres) and kg/m into KG/M. */
   .t-label {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: var(--text-micro);
     line-height: var(--text-micro--line-height);
     letter-spacing: var(--text-micro--letter-spacing);
     font-weight: 500;
     text-transform: uppercase;
     font-variant-numeric: tabular-nums;
+    font-feature-settings: "case" 1;
+  }
+  .t-data {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    line-height: var(--text-micro--line-height);
+    letter-spacing: 0.02em;
+    font-weight: 500;
+    text-transform: none;
+    font-variant-numeric: tabular-nums;
   }
   .t-mono {
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
     letter-spacing: 0;
+  }
+
+  /* Leading on the 4 px grid: each role's line box rounds to a multiple of 4 px (CSS round()). */
+  @supports (line-height: round(nearest, 1em, 4px)) {
+    .t-display { line-height: round(nearest, calc(var(--text-display) * var(--text-display--line-height)), 4px); }
+    .t-headline { line-height: round(nearest, calc(var(--text-headline) * var(--text-headline--line-height)), 4px); }
+    .t-title-l { line-height: round(nearest, calc(var(--text-title-l) * var(--text-title-l--line-height)), 4px); }
+    .t-title-m { line-height: round(nearest, calc(var(--text-title-m) * var(--text-title-m--line-height)), 4px); }
+    .t-title-s { line-height: round(nearest, calc(var(--text-title-s) * var(--text-title-s--line-height)), 4px); }
+    .t-lead { line-height: round(nearest, calc(var(--text-lead) * var(--text-lead--line-height)), 4px); }
+    .t-body { line-height: round(nearest, calc(var(--text-body) * var(--text-body--line-height)), 4px); }
+    .t-small { line-height: round(nearest, calc(var(--text-small) * var(--text-small--line-height)), 4px); }
+    .t-label, .t-data { line-height: round(nearest, calc(var(--text-micro) * var(--text-micro--line-height)), 4px); }
   }
 
   /* ---------- Skip link ---------- */
@@ -317,8 +385,7 @@
     padding-inline-start: 8px;
     font-family: var(--font-mono);
     font-size: var(--text-micro);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    letter-spacing: 0.02em;
     color: var(--fg);
     unicode-bidi: isolate;
   }
@@ -364,10 +431,10 @@
     flex: none;
     width: 6px;
     height: 6px;
-    border-radius: var(--radius-full);
+    border-radius: 0;
     background: var(--color-alu-mid);
   }
-  @media (max-width: 47.99rem) {
+  @media (max-width: 23.99rem) {
     .demo-badge-meta {
       display: none;
     }
@@ -382,7 +449,7 @@
     }
   }
   html {
-    scroll-padding-block-end: calc(var(--badge-h) + 32px);
+    scroll-padding-block: 72px calc(var(--badge-h) + 32px);
   }
 
   /* ---------- Hairline helpers ---------- */

@@ -112,7 +112,7 @@ export function TypeSection() {
       <div className="swiss-grid mt-24">
         <div className="col-span-4 sm:col-span-8 lg:col-span-12 flex items-baseline justify-between gap-4 border-b border-line-strong pb-3 t-label text-fg-muted">
           <span>Step · token · role</span>
-          <span dir="ltr" aria-live="off">
+          <span dir="ltr" aria-live="off" className="t-data">
             Live at {vw ?? "—"} px viewport
           </span>
         </div>
@@ -121,14 +121,14 @@ export function TypeSection() {
         {[...typeScale].reverse().map((s, i) => (
           <li key={s.token} className="col-span-4 sm:col-span-8 lg:col-span-12 grid grid-cols-subgrid scale-row">
             <div className="col-span-4 sm:col-span-3 lg:col-span-3 grid gap-1 content-start">
-              <p className="t-label">
+              <p className="t-data">
                 <span className="text-fg-muted" dir="ltr">
                   {s.step > 0 ? `+${s.step}` : s.step}
                 </span>{" "}
                 · --text-{s.token}
               </p>
               <p className="t-small text-fg-muted">{s.role}</p>
-              <p className="t-label text-fg-muted" dir="ltr">
+              <p className="t-data text-fg-muted" dir="ltr">
                 {s.min} → {s.max} px · now{" "}
                 <span className="text-fg">{sizes[typeScale.length - 1 - i] ? sizes[typeScale.length - 1 - i]!.toFixed(1) : "—"}</span>
                 <br />

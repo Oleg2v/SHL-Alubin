@@ -14,17 +14,19 @@ export function FinishLab() {
           <BrushedMetal finish={finish} />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-4">
             <span className="t-label bg-[var(--color-ink)] px-2 py-1 text-[var(--color-alu-white)]">{finish.name}</span>
-            <span className="t-label bg-[var(--color-ink)] px-2 py-1 text-[var(--color-alu-mid)]" dir="ltr">
+            <span className="t-data bg-[var(--color-ink)] px-2 py-1 text-[var(--color-alu-mid)]" dir="ltr">
               {finish.hex.toUpperCase()}
             </span>
           </div>
         </div>
-        <figcaption id="finish-cap" className="t-label text-fg-muted">
-          WebGL · anisotropic highlight across the brush grooves · move the pointer to move the light · 400 ms dissolve
+        <figcaption id="finish-cap" className="t-small text-fg-muted">
+          WebGL: metals carry die lines and an anisotropic highlight across them; powder and PVDF are isotropic paint
+          films. Move the pointer to move the light; finishes dissolve in 400 ms. Screen approximation: order physical
+          samples.
         </figcaption>
       </figure>
       <fieldset className="lg:col-span-4 grid content-start gap-2">
-        <legend className="t-label text-fg-muted mb-3">Finish</legend>
+        <legend className="t-label text-fg-muted mb-3">Finish · sample coupons</legend>
         {FINISHES.map((f) => (
           <button
             key={f.id}
@@ -33,17 +35,19 @@ export function FinishLab() {
             onClick={() => setId(f.id)}
             className="finish-option"
           >
-            <span className="finish-swatch" style={{ background: f.hex }} aria-hidden="true" />
+            <span className="finish-coupon" style={{ background: f.hex }} aria-hidden="true">
+              <span className="finish-coupon-hole" />
+            </span>
             <span className="grid text-start">
               <span className="t-small font-medium">{f.name}</span>
-              <span className="t-label text-fg-muted">
-                {/* text-transform would turn µm into "MM": keep units in their own case */}
-                {f.note.split(/(µm)/).map((part, i) => (part === "µm" ? <span key={i} className="normal-case">µm</span> : part))}
-              </span>
+              <span className="t-data text-fg-muted">{f.note}</span>
             </span>
             <span className="chip-dot ms-auto" aria-hidden="true" />
           </button>
         ))}
+        <p className="t-small text-fg-muted mt-2">
+          The anodizing line was the first approved by the Standards Institution of Israel.
+        </p>
       </fieldset>
     </div>
   );

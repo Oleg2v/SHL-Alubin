@@ -54,74 +54,86 @@ export function DecisionsSection() {
       </SectionHead>
 
       <div className="swiss-grid gap-y-16">
-        <div className="col-span-4 sm:col-span-8 lg:col-span-6">
-          <h3 className="t-label text-fg-muted mb-6">We commit to</h3>
-          <ol className="border-t border-line">
-            {DECISIONS.map((d, i) => (
-              <li key={d.title} className="grid grid-cols-[48px_1fr] gap-4 border-b border-line py-6">
-                <span className="t-label text-fg-muted pt-1" aria-hidden="true">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div className="grid gap-2">
-                  <p className="t-title-s">{d.title}</p>
-                  <p className="t-small text-fg-muted max-w-[56ch]">{d.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-        <div className="col-span-4 sm:col-span-8 lg:col-span-6">
-          <h3 className="t-label text-fg-muted mb-6">We refuse</h3>
-          <ol className="border-t border-line">
-            {CLICHES.map((d, i) => (
-              <li key={d.cliche} className="grid grid-cols-[48px_1fr] gap-4 border-b border-line py-6">
-                <span className="t-label text-fg-muted pt-1" aria-hidden="true">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div className="grid gap-2">
-                  <p className="t-title-s">
-                    <del className="cliche-strike">{d.cliche}</del>
-                  </p>
-                  <p className="t-small text-fg-muted max-w-[56ch]">
-                    <span className="t-label text-fg">Instead · </span>
-                    {d.instead}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
+        {[
+          { key: "commit", heading: "We commit to", items: DECISIONS.map((d) => ({ title: d.title, body: d.body, strike: false })) },
+          { key: "refuse", heading: "We refuse", items: CLICHES.map((d) => ({ title: d.cliche, body: d.instead, strike: true })) },
+        ].map((col) => (
+          <div key={col.key} className="col-span-4 sm:col-span-8 lg:col-span-6 grid grid-cols-subgrid content-start">
+            <h3 className="col-span-full t-label text-fg-muted mb-6">{col.heading}</h3>
+            <ol className="col-span-full grid grid-cols-subgrid border-t border-line">
+              {col.items.map((d, i) => (
+                <li key={d.title} className="col-span-full grid grid-cols-subgrid border-b border-line py-6">
+                  <span className="col-span-1 t-data text-fg-muted pt-1" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="col-span-3 sm:col-span-7 lg:col-span-5 grid gap-2">
+                    <p className="t-title-s">{d.strike ? <del className="cliche-strike">{d.title}</del> : d.title}</p>
+                    <p className="t-small text-fg-muted max-w-[56ch]">
+                      {d.strike ? <span className="t-label text-fg">Instead · </span> : null}
+                      {d.body}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))}
       </div>
     </section>
   );
 }
 
+/** ISO 7200 title block: the sheet's finale. Varied cell widths, a revision row, drawing number. */
 export function TitleBlock() {
-  const cells = [
-    ["Client", "SHL-Alubin (concept)"],
-    ["Project", "Website, EN · DE · HE"],
-    ["Document", "Style tile"],
-    ["Sheet", "00 of 04"],
-    ["Revision", "A · for approval"],
-    ["Date", "2026-11-06"],
-    ["Drawn", "Kikkey"],
-    ["Scale", "1:1 · 1 px = 0.2646 mm"],
-    ["Grid", "4 px · 80 ms"],
-    ["Standards", "WCAG 2.0 AA · IS 5568"],
-    ["Status", "Unofficial demo · noindex"],
-    ["Next", "Stage 1 · hero lab"],
-  ];
   return (
-    <footer data-surface="sheet" className="px-(--margin) pb-24 pt-16">
-      <p className="t-label text-fg-muted mb-4">Title block</p>
-      <dl className="title-block">
-        {cells.map(([k, v]) => (
-          <div key={k}>
-            <dt className="t-label text-fg-muted">{k}</dt>
-            <dd className="t-small">{v}</dd>
-          </div>
-        ))}
-      </dl>
+    <footer data-surface="sheet" className="px-(--margin) pb-12 pt-16">
+      <div className="iso-block" role="group" aria-label="Title block">
+        <div className="iso-title">
+          <span className="t-label text-fg-muted">Title</span>
+          <span className="t-title-l">Style tile</span>
+          <span className="t-small text-fg-muted">Art direction · Stage 0 of the SHL-Alubin website concept</span>
+        </div>
+        <div className="iso-c1">
+          <span className="t-label text-fg-muted">Client</span>
+          <span className="t-small">SHL-Alubin (concept, unofficial)</span>
+        </div>
+        <div className="iso-c2">
+          <span className="t-label text-fg-muted">Project</span>
+          <span className="t-small">Website · EN · DE · HE</span>
+        </div>
+        <div className="iso-c3">
+          <span className="t-label text-fg-muted">Drawn</span>
+          <span className="t-small">Kikkey</span>
+        </div>
+        <div className="iso-c4">
+          <span className="t-label text-fg-muted">Standards</span>
+          <span className="t-small">WCAG 2.0 AA · IS 5568 · ISO 128 / 129 / 3098</span>
+        </div>
+        <div className="iso-rev">
+          <span className="t-label text-fg-muted">Rev · description · date</span>
+          <bdi className="t-data" dir="ltr">
+            A · for approval · 2026-11-06
+          </bdi>
+        </div>
+        <div className="iso-scale">
+          <span className="t-label text-fg-muted">Scale · grid</span>
+          <bdi className="t-data" dir="ltr">
+            1:1 · 1 px = 0.2646 mm · 4 px · 80 ms
+          </bdi>
+        </div>
+        <div className="iso-dwg">
+          <span className="t-label text-fg-muted">Drawing no.</span>
+          <bdi className="t-title-s t-mono whitespace-nowrap" dir="ltr">
+            SHL-WEB-000
+          </bdi>
+        </div>
+        <div className="iso-sheet">
+          <span className="t-label text-fg-muted">Sheet</span>
+          <bdi className="t-title-s t-mono" dir="ltr">
+            00 / 04
+          </bdi>
+        </div>
+      </div>
     </footer>
   );
 }

@@ -105,7 +105,7 @@ export function RangeField({ label, min, max, step = 1, defaultValue, unit = "mm
           style={{ ["--range-pct" as string]: `${pct}%` }}
         />
       </div>
-      <div className="flex justify-between t-label text-fg-muted" aria-hidden="true">
+      <div className="flex justify-between t-data text-fg-muted" aria-hidden="true">
         <bdi dir="ltr">{min}</bdi>
         <bdi dir="ltr">{max}</bdi>
       </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./style-tile.css";
 import { TopBar } from "@/components/style-tile/Chrome";
 import { Cover, Concept } from "@/components/style-tile/Cover";
+import { CoolingBand } from "@/components/style-tile/CoolingBand";
 import { Palette } from "@/components/style-tile/Palette";
 import { TypeSection } from "@/components/style-tile/TypeScale";
 import { SpaceSection, FormSection } from "@/components/style-tile/SpaceForm";
@@ -21,6 +22,7 @@ export default function StyleTilePage() {
       <TopBar />
       <main id="main" tabIndex={-1} className="outline-none">
         <Cover />
+        <CoolingBand />
         <Concept />
         <Palette />
         <TypeSection />

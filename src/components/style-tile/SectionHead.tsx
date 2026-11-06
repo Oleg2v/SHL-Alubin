@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
+import { MeasuredTitle } from "./MeasuredTitle";
 
-/** Section header on the 12-column grid: index + kicker in cols 1-3, title in 4-12. */
+/** Section header on the 12-column grid: index + kicker in cols 1-3, a dimensioned title in 4-12. */
 export function SectionHead({ n, kicker, id, title, children }: { n: string; kicker: string; id: string; title: ReactNode; children?: ReactNode }) {
   return (
     <div className="swiss-grid st-section-head">
@@ -9,9 +10,9 @@ export function SectionHead({ n, kicker, id, title, children }: { n: string; kic
         <span>{kicker}</span>
       </p>
       <div className="col-span-4 sm:col-span-6 lg:col-span-9 grid gap-6">
-        <h2 id={id} className="t-title-m max-w-[24ch] text-balance">
+        <MeasuredTitle id={id} className="t-title-m max-w-[24ch] text-balance">
           {title}
-        </h2>
+        </MeasuredTitle>
         {children ? <p className="t-lead text-fg-muted max-w-[60ch]">{children}</p> : null}
       </div>
     </div>

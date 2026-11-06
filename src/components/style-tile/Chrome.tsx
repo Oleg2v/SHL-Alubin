@@ -39,8 +39,9 @@ export function TopBar() {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;
       if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
-      if (e.key === "g" || e.key === "G") {
-        if (e.metaKey || e.ctrlKey || e.altKey) return;
+      // Alt+Shift+G: never a bare character key (WCAG 2.1.4); e.code survives keyboard layouts
+      if (e.code === "KeyG" && e.altKey && e.shiftKey && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
         setGrid((g) => !g);
       }
     };
@@ -86,14 +87,11 @@ export function TopBar() {
               className="chip"
               aria-pressed={grid}
               onClick={() => setGrid((g) => !g)}
-              aria-keyshortcuts="G"
-              title="Toggle the 12-column grid (G)"
+              aria-keyshortcuts="Alt+Shift+G"
+              title="Toggle the 12-column grid (Alt+Shift+G)"
             >
               <span className="chip-dot" aria-hidden="true" />
               <span>Grid</span>
-              <kbd className="chip-count hidden sm:inline" aria-hidden="true">
-                G
-              </kbd>
             </button>
           </div>
         </div>

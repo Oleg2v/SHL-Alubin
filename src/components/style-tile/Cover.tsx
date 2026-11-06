@@ -15,7 +15,7 @@ export function Cover() {
           <span>Stage 0 · For approval</span>
         </div>
 
-        <figure className="self-end w-[min(56%,320px)] text-fg" aria-labelledby="cold-cap">
+        <figure className="self-end w-[min(44%,180px)] sm:w-[min(56%,320px)] text-fg" aria-labelledby="cold-cap">
           <ProfileDrawing
             shape={frame}
             title="Cross-section of a three-chamber window frame profile"
@@ -23,7 +23,7 @@ export function Cover() {
             box={300}
             margin={44}
           />
-          <figcaption id="cold-cap" className="mt-2 flex justify-between t-label">
+          <figcaption id="cold-cap" className="mt-2 hidden justify-between t-data sm:flex">
             <span className="text-fg-muted">AL-40217 · 6063 T6</span>
             <span dir="ltr">20 °C</span>
           </figcaption>
@@ -40,23 +40,23 @@ export function Cover() {
 
       {/* HOT: the press */}
       <div data-surface="press" className="st-cover-half">
-        <div className="flex items-start justify-between gap-4 t-label">
+        <div className="flex items-start justify-between gap-4 t-data">
           <span className="text-fg-muted">Billet · 6063 · Ø 254</span>
           <span className="text-accent-text" dir="ltr">
             480 °C
           </span>
         </div>
 
-        <div className="relative grid place-items-center py-6" aria-hidden="true">
-          <div className="relative">
+        <div className="grid place-items-center gap-6 lg:py-6" aria-hidden="true">
+          <div className="billet-wrap">
             <div className="billet" />
-            {/* chain centre lines through the billet */}
+            {/* chain centre lines through the billet's true centre */}
             <svg className="billet-axis" viewBox="0 0 100 100" preserveAspectRatio="none">
               <line x1="0" y1="50" x2="100" y2="50" stroke="currentColor" strokeWidth="1" strokeDasharray="14 3 2 3" vectorEffect="non-scaling-stroke" />
               <line x1="50" y1="0" x2="50" y2="100" stroke="currentColor" strokeWidth="1" strokeDasharray="14 3 2 3" vectorEffect="non-scaling-stroke" />
             </svg>
-            <DimH className="mt-6">Ø 254</DimH>
           </div>
+          <DimH className="w-[var(--d)] [--d:min(36vw,160px)] lg:[--d:min(64vw,400px)]">Ø 254</DimH>
         </div>
 
         <div>

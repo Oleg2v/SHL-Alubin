@@ -30,7 +30,7 @@ function CurvePlot({ e }: { e: readonly number[] }) {
   const S = 120;
   const P = (x: number, y: number) => `${(x * S).toFixed(1)} ${((1 - y) * S).toFixed(1)}`;
   return (
-    <svg viewBox={`-8 -8 ${S + 16} ${S + 16}`} className="w-full max-w-[160px] overflow-visible" aria-hidden="true">
+    <svg viewBox={`-8 -8 ${S + 16} ${S + 16}`} className="w-full max-w-[120px] overflow-visible sm:max-w-[160px]" aria-hidden="true">
       <rect x="0" y="0" width={S} height={S} fill="none" stroke="var(--line)" />
       {[0.25, 0.5, 0.75].map((t) => (
         <g key={t} stroke="var(--line)" strokeWidth="1">
@@ -75,9 +75,13 @@ function RamDemo({ e, dur, label, reduced }: { e: readonly number[]; dur: number
         />
       </div>
       <button type="button" className="btn btn-secondary btn-sm justify-self-start" onClick={() => setRun((r) => !r)}>
+        <span className="btn-skin" aria-hidden="true" />
+        {/* visible label first (one text run, even spacing), context last: "Run · 640 ms, House curve" */}
         <span className="btn-label">
-          {run ? "Return" : "Run"}
-          <span className="sr-only"> {label}</span> · <span dir="ltr">{dur} ms</span>
+          <span>
+            {`${run ? "Return" : "Run"} · ${dur} ms`}
+            <span className="sr-only">, {label}</span>
+          </span>
         </span>
       </button>
     </div>
@@ -126,10 +130,11 @@ function PreloaderSpecimen({ reduced }: { reduced: boolean }) {
         <span className="absolute bottom-0 start-0 h-0.5 bg-[var(--color-glow)]" style={{ width: `${t * 100}%` }} />
       </div>
       <div className="flex items-center justify-between gap-4">
-        <p className="t-label text-fg-muted" dir="ltr">
+        <p className="t-data text-fg-muted" dir="ltr">
           0 → 480 °C · 800 ms + resolve 320 ms = 1120 ms
         </p>
         <button type="button" className="btn btn-secondary btn-sm" onClick={play}>
+          <span className="btn-skin" aria-hidden="true" />
           <span className="btn-label">Replay</span>
         </button>
       </div>
@@ -151,7 +156,7 @@ export function MotionSection() {
       <div className="swiss-grid gap-y-8">
         <h3 className="col-span-4 sm:col-span-8 lg:col-span-3 t-title-s">Durations</h3>
         <figure className="col-span-4 sm:col-span-8 lg:col-span-9" aria-label="Duration tokens on an 80 millisecond grid">
-          <div className="relative h-28" dir="ltr">
+          <div className="relative hidden h-28 sm:block" dir="ltr" aria-hidden="true">
             {/* 80 ms ticks */}
             <div className="absolute inset-x-0 top-0 h-3" style={{ background: `repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px ${(80 / max) * 100}%)` }} aria-hidden="true" />
             <div className="absolute inset-x-0 top-3 h-px bg-[var(--line-strong)]" aria-hidden="true" />
@@ -163,21 +168,24 @@ export function MotionSection() {
               return (
                 <div key={k} className="absolute grid" style={{ left: `${at * 100}%`, top: `${12 + (i % 3) * 30}px`, translate: `${shift} 0` }}>
                   <span className={`block h-3 w-px bg-[var(--fg)] ${tick}`} aria-hidden="true" />
-                  <span className="t-label whitespace-nowrap">
+                  <span className="t-data whitespace-nowrap">
                     {v} <span className="text-fg-muted">{k}</span>
                   </span>
                 </div>
               );
             })}
           </div>
-          <ul className="sr-only">
+          <dl className="grid grid-cols-2 gap-x-(--gutter) border-t border-line sm:sr-only">
             {Object.entries(durations).map(([k, v]) => (
-              <li key={k}>
-                {k}: {v} milliseconds
-              </li>
+              <div key={k} className="flex items-baseline justify-between gap-2 border-b border-line py-2">
+                <dt className="t-label text-fg-muted">{k}</dt>
+                <dd className="t-data">
+                  <bdi dir="ltr">{v} ms</bdi>
+                </dd>
+              </div>
             ))}
-          </ul>
-          <figcaption className="t-label text-fg-muted mt-2">0 → 1200 ms · tick 80 ms · stagger 40 ms</figcaption>
+          </dl>
+          <figcaption className="t-data text-fg-muted mt-2">0 → 1200 ms · tick 80 ms · stagger 40 ms</figcaption>
         </figure>
       </div>
 
@@ -186,19 +194,19 @@ export function MotionSection() {
         <h3 className="col-span-4 sm:col-span-8 lg:col-span-3 t-title-s">Easing</h3>
         <ul className="col-span-4 sm:col-span-8 lg:col-span-9 grid gap-(--gutter) sm:grid-cols-2">
           {CURVES.map((c) => (
-            <li key={c.key} className="grid grid-cols-[minmax(0,140px)_1fr] gap-6 border border-line p-6">
+            <li key={c.key} className="grid grid-cols-1 gap-6 border border-line p-4 sm:grid-cols-[minmax(0,140px)_1fr] sm:p-6">
               <CurvePlot e={c.e} />
               <div className="grid content-start gap-2 min-w-0">
                 <p className="t-small font-medium">{c.label}</p>
-                <p className="t-label text-fg-muted" dir="ltr">
+                <p className="t-data text-fg-muted" dir="ltr">
                   {c.name}
                 </p>
-                <p className="t-label text-fg-muted break-all" dir="ltr">
+                <p className="t-data text-fg-muted" dir="ltr">
                   {cssEase(c.e)}
                 </p>
                 <p className="t-small text-fg-muted">{c.use}</p>
               </div>
-              <div className="col-span-2">
+              <div className="sm:col-span-2">
                 <RamDemo e={c.e} dur={c.dur} label={c.label} reduced={reduced} />
               </div>
             </li>
@@ -227,7 +235,7 @@ export function MotionSection() {
           ))}
         </ul>
         {reduced ? (
-          <p className="col-span-4 sm:col-span-8 lg:col-start-4 lg:col-span-9 t-label text-fg-muted">
+          <p className="col-span-4 sm:col-span-8 lg:col-start-4 lg:col-span-9 t-small text-fg-muted">
             Reduced motion is on: demos jump to their end state.
           </p>
         ) : null}

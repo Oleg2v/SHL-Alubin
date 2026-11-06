@@ -1,6 +1,6 @@
 import { spacing, radii } from "@/design/tokens";
 import { SectionHead } from "./SectionHead";
-import { DimH } from "@/components/drawing/Dim";
+import { GridDiagram } from "./GridDiagram";
 
 export function SpaceSection() {
   return (
@@ -16,7 +16,7 @@ export function SpaceSection() {
           <ol className="grid gap-2" aria-label="Spacing tokens in pixels">
             {spacing.map((px) => (
               <li key={px} className="grid grid-cols-[120px_1fr] items-center gap-4">
-                <span className="t-label" dir="ltr">
+                <span className="t-data" dir="ltr">
                   <span className="text-fg-muted">{String(px / 4).padStart(2, "0")} ·</span> {px} px
                 </span>
                 <span className="block h-3 bg-fg" style={{ width: `min(100%, ${px}px)` }} aria-hidden="true" />
@@ -39,30 +39,23 @@ export function SpaceSection() {
               ["Breaks", "640 · 1024 · 1440"],
               ["Section", "80 · 96 · 112 · 128"],
               ["Hairline", "1 px"],
-            ].map(([k, v]) => (
+            ].map(([k, v = ""]) => (
               <div key={k} className="border-b border-line py-4 pe-4">
                 <dt className="t-label text-fg-muted">{k}</dt>
                 <dd className="t-small mt-1 t-mono" dir="ltr">
-                  {v}
+                  {v.split(" · ").map((part, i, all) => (
+                    <span key={i}>
+                      <span className="whitespace-nowrap">{part}</span>
+                      {i < all.length - 1 ? " · " : ""}
+                    </span>
+                  ))}
                 </dd>
               </div>
             ))}
           </dl>
 
-          {/* Diagram: 12 columns with the margin and gutter dimensioned */}
-          <figure aria-label="Diagram of the 12-column grid with margins and gutters">
-            <div className="relative border border-line px-[6%] py-6">
-              <div className="grid h-40 grid-cols-12 gap-[2%]" aria-hidden="true">
-                {Array.from({ length: 12 }, (_, i) => (
-                  <div key={i} className="bg-bg-sunken border-x border-line" />
-                ))}
-              </div>
-            </div>
-            <div className="mt-3 px-[6%]" aria-hidden="true">
-              <DimH ticks>12 columns · 1344 px at 1440</DimH>
-            </div>
-            <figcaption className="t-label text-fg-muted mt-3">Margin 48 · gutter 24 · column 90 px at 1440</figcaption>
-          </figure>
+          {/* Diagram: the grid at the reader's own viewport, live */}
+          <GridDiagram />
         </div>
       </div>
     </section>
@@ -81,16 +74,16 @@ export function FormSection() {
         <h3 className="col-span-4 sm:col-span-8 lg:col-span-3 t-title-s">Radii</h3>
         <ul className="col-span-4 sm:col-span-8 lg:col-span-9 grid grid-cols-2 sm:grid-cols-4 gap-(--gutter)">
           {radii.map((r) => (
-            <li key={r.token} className="grid gap-4">
+            <li key={r.token} className="grid content-start gap-4">
               <div className="relative pt-8" aria-hidden="true">
-                <span className="absolute top-0 end-0 t-label" dir="ltr">
+                <span className="absolute top-0 end-0 t-data" dir="ltr">
                   {r.px > 100 ? "R ∞" : `R${r.px}`}
                 </span>
                 <span className="absolute top-5 end-1 h-3 w-px bg-[var(--fg-muted)]" />
                 <div className="radius-specimen" style={{ borderRadius: r.px > 100 ? 9999 : r.px * 6 }} />
               </div>
               <div>
-                <p className="t-label" dir="ltr">
+                <p className="t-data" dir="ltr">
                   {r.token}
                 </p>
                 <p className="t-small text-fg-muted mt-1">{r.use}</p>
@@ -98,7 +91,7 @@ export function FormSection() {
             </li>
           ))}
         </ul>
-        <p className="col-span-4 sm:col-span-8 lg:col-start-4 lg:col-span-9 t-label text-fg-muted">
+        <p className="col-span-4 sm:col-span-8 lg:col-start-4 lg:col-span-9 t-small text-fg-muted">
           Specimens drawn at 6:1 so the radius reads; real sizes are 0, 2, 4 px and full.
         </p>
       </div>
@@ -109,15 +102,28 @@ export function FormSection() {
         <ul className="col-span-4 sm:col-span-8 lg:col-span-9 grid gap-0 border-t border-line">
           {[
             ["Outline", "1.25 px continuous", "Visible edges of a section", <line key="a" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="1.25" />],
-            ["Hairline", "1 px continuous, 14% Ink", "UI rules, borders, table rows", <line key="b" x1="0" y1="6" x2="100%" y2="6" stroke="var(--line-strong)" strokeWidth="1" />],
-            ["Dimension", "0.75 px + closed arrowheads", "Dimension and extension lines", <line key="c" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="0.75" />],
+            ["Hairline", "1 px continuous, 14% Ink", "UI rules, borders, table rows", <line key="b" x1="0" y1="6" x2="100%" y2="6" stroke="var(--line)" strokeWidth="1" />],
+            [
+              "Dimension",
+              "0.75 px + closed arrowheads",
+              "Dimension and extension lines",
+              <g key="c">
+                <line x1="0" y1="1" x2="0" y2="11" stroke="currentColor" strokeWidth="0.75" />
+                <line x1="100%" y1="1" x2="100%" y2="11" stroke="currentColor" strokeWidth="0.75" />
+                <line x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="0.75" />
+                <polygon points="0,6 8,3.75 8,8.25" fill="currentColor" />
+                <svg x="100%" y="0" width="1" height="12" overflow="visible">
+                  <polygon points="0,6 -8,3.75 -8,8.25" fill="currentColor" />
+                </svg>
+              </g>,
+            ],
             ["Centre", "0.75 px chain 14·3·2·3", "Axes of symmetry", <line key="d" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="0.75" strokeDasharray="14 3 2 3" />],
             ["Hidden", "0.75 px dashed 6·3", "Edges behind the section plane", <line key="e" x1="0" y1="6" x2="100%" y2="6" stroke="currentColor" strokeWidth="0.75" strokeDasharray="6 3" />],
             ["Active", "2 px Billet Glow", "Active row, selected tile, live state", <line key="f" x1="0" y1="6" x2="100%" y2="6" stroke="var(--color-glow)" strokeWidth="2" />],
           ].map(([name, spec, use, line]) => (
             <li key={name as string} className="grid grid-cols-4 sm:grid-cols-9 gap-x-(--gutter) items-center border-b border-line py-4">
               <span className="col-span-2 sm:col-span-2 t-small">{name}</span>
-              <span className="col-span-2 sm:col-span-2 t-label text-fg-muted">{spec}</span>
+              <span className="col-span-2 sm:col-span-2 t-data text-fg-muted">{spec}</span>
               <svg className="col-span-4 sm:col-span-3 h-3 w-full overflow-visible" aria-hidden="true">
                 {line}
               </svg>
@@ -170,11 +176,13 @@ export function FormSection() {
         <div className="col-span-4 sm:col-span-8 lg:col-span-9 grid gap-(--gutter) sm:grid-cols-2">
           <div className="grid place-items-center gap-4 border border-line p-10">
             <span className="btn btn-secondary focus-demo" aria-hidden="true">
+              <span className="btn-skin" />
               <span className="btn-label">Focused on the sheet</span>
             </span>
           </div>
           <div data-surface="press" className="grid place-items-center gap-4 p-10">
             <span className="btn btn-secondary focus-demo" aria-hidden="true">
+              <span className="btn-skin" />
               <span className="btn-label">Focused on the stage</span>
             </span>
           </div>

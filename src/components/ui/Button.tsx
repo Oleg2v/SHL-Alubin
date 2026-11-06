@@ -22,10 +22,11 @@ type Common = {
 type ButtonProps = Common & Omit<ComponentPropsWithoutRef<"button">, "children" | "className"> & { href?: undefined };
 type LinkProps = Common & Omit<ComponentPropsWithoutRef<typeof Link>, "children" | "className"> & { href: string };
 
-/** Pull strength (fraction of pointer offset) and radius beyond the box, px. */
-const PULL = 0.22;
-const MAX = 8;
-const REACH = 32;
+/** Pull strength (fraction of pointer offset), max travel and reach beyond the box, px.
+ *  One axis only: the skin slides along x like a ram in its guide, never diagonally. */
+const PULL = 0.2;
+const MAX = 6;
+const REACH = 24;
 
 function useMagnet(enabled: boolean) {
   const ref = useRef<HTMLElement | null>(null);
@@ -43,7 +44,6 @@ function useMagnet(enabled: boolean) {
       active = false;
       el.dataset.magnet = "rest";
       el.style.setProperty("--mx", "0px");
-      el.style.setProperty("--my", "0px");
     };
     const onMove = (e: PointerEvent) => {
       cancelAnimationFrame(raf);
@@ -59,7 +59,6 @@ function useMagnet(enabled: boolean) {
         el.dataset.magnet = "active";
         const clamp = (v: number) => Math.max(-MAX, Math.min(MAX, v));
         el.style.setProperty("--mx", `${clamp(dx * PULL).toFixed(2)}px`);
-        el.style.setProperty("--my", `${clamp(dy * PULL).toFixed(2)}px`);
       });
     };
     window.addEventListener("pointermove", onMove, { passive: true });
@@ -85,10 +84,13 @@ export const Button = forwardRef<HTMLElement, ButtonProps | LinkProps>(function 
     else if (forwarded) forwarded.current = node;
   };
   const inner = (
-    <span className="btn-label">
-      <span>{children}</span>
-      {icon}
-    </span>
+    <>
+      <span className="btn-skin" aria-hidden="true" />
+      <span className="btn-label">
+        <span>{children}</span>
+        {icon}
+      </span>
+    </>
   );
 
   if ("href" in rest && typeof rest.href === "string") {

@@ -38,8 +38,8 @@ export const typeScale: TypeStep[] = [
   { step: 2, token: "title-s", role: "Card, step and sub-section titles", min: 21, max: 37.26, capMm: 7, lineHeight: 1.14, tracking: -0.018, weight: 500, family: "sans" },
   { step: 3, token: "title-m", role: "Section titles", min: 25, max: 53.23, capMm: 10, lineHeight: 1.05, tracking: -0.028, weight: 500, family: "sans" },
   { step: 4, token: "title-l", role: "Statements", min: 30, max: 74.53, capMm: 14, lineHeight: 1, tracking: -0.035, weight: 500, family: "sans" },
-  { step: 5, token: "headline", role: "Page headline", min: 40, max: 106.47, capMm: 20, lineHeight: 0.94, tracking: -0.045, weight: 500, family: "sans" },
-  { step: 6, token: "display", role: "Giant numerals", min: 64, max: 212.93, capMm: 40, lineHeight: 0.84, tracking: -0.055, weight: 400, family: "sans" },
+  { step: 5, token: "headline", role: "Page headline", min: 43, max: 106.47, capMm: 20, lineHeight: 0.94, tracking: -0.045, weight: 500, family: "sans" },
+  { step: 6, token: "display", role: "Giant numerals", min: 86, max: 212.93, capMm: 40, lineHeight: 0.84, tracking: -0.055, weight: 400, family: "sans" },
 ];
 
 /** Geist cap height / em, from the font file (sCapHeight 710, unitsPerEm 1000). */

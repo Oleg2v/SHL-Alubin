@@ -20,21 +20,22 @@ const PROFILES: ProfileCardData[] = [
 
 function Cell({ code, title, children, className = "" }: { code: string; title: string; children: ReactNode; className?: string }) {
   return (
-    <section className={`lab-cell ${className}`} aria-label={title}>
-      <header className="lab-cell-head t-label">
-        <span>{title}</span>
-        <span className="text-fg-muted" dir="ltr">
+    <div className={`lab-cell ${className}`}>
+      <div className="lab-cell-head" lang="en">
+        <h3 className="t-label">{title}</h3>
+        <bdi className="t-data text-fg-muted" dir="ltr">
           {code}
-        </span>
-      </header>
+        </bdi>
+      </div>
       <div className="p-4 sm:p-6">{children}</div>
-    </section>
+    </div>
   );
 }
 
 function ToastTrigger({ lang }: { lang: Lang }) {
   const c = specimen[lang];
   const { push } = useToast();
+  const nf = (n: number, d: number) => new Intl.NumberFormat(numberLocale[lang], { minimumFractionDigits: d, maximumFractionDigits: d }).format(n);
   return (
     <Button
       variant="secondary"
@@ -44,7 +45,8 @@ function ToastTrigger({ lang }: { lang: Lang }) {
         push({
           tone: "success",
           title: c.added,
-          meta: `AL-40217 · 6.0 m · 2.4 t`,
+          meta: `AL-40217 · ${nf(6, 1)} m · ${nf(2.4, 1)} t`,
+          metaIsData: true,
           action: { label: c.undo, onAction: () => undefined },
         })
       }
@@ -67,11 +69,11 @@ export function ComponentsLab() {
   const rows = [
     { key: "alloy", label: c.rows.alloy, value: main.alloy, unit: "", note: "EN 573-3" },
     { key: "temper", label: c.rows.temper, value: main.temper, unit: "", note: "EN 515" },
-    { key: "weight", label: c.rows.weight, value: nf(kgPerMetre(main.shape), 3), unit: "kg/m", note: "2.70 g/cm³" },
+    { key: "weight", label: c.rows.weight, value: nf(kgPerMetre(main.shape), 3), unit: "kg/m", note: `${nf(2.7, 2)} g/cm³` },
     { key: "area", label: c.rows.area, value: nf(sectionArea(main.shape), 1), unit: "mm²", note: "" },
-    { key: "width", label: c.rows.width, value: nf(b.width, 1), unit: "mm", note: `±0.25 · ${c.tolerance}` },
-    { key: "height", label: c.rows.height, value: nf(b.height, 1), unit: "mm", note: `±0.25 · ${c.tolerance}` },
-    { key: "wall", label: c.rows.wallRow, value: nf(main.wall, 1), unit: "mm", note: `±0.15 · ${c.tolerance}` },
+    { key: "width", label: c.rows.width, value: nf(b.width, 1), unit: "mm", note: `±${nf(0.25, 2)} · ${c.tolerance}` },
+    { key: "height", label: c.rows.height, value: nf(b.height, 1), unit: "mm", note: `±${nf(0.25, 2)} · ${c.tolerance}` },
+    { key: "wall", label: c.rows.wallRow, value: nf(main.wall, 1), unit: "mm", note: `±${nf(0.15, 2)} · ${c.tolerance}` },
   ];
 
   return (
@@ -88,19 +90,21 @@ export function ComponentsLab() {
           </span>
           <div className="segmented" role="group" aria-labelledby="lang-label">
             {LANGS.map((l) => (
-              <button key={l.code} type="button" aria-pressed={lang === l.code} onClick={() => setLang(l.code)} lang={l.code}>
-                <span aria-hidden="true">{l.label}</span>
-                <span className="sr-only">{l.native}</span>
+              <button key={l.code} type="button" aria-pressed={lang === l.code} onClick={() => setLang(l.code)}>
+                <span>{l.label}</span>
+                <span className="sr-only" lang={l.code}>
+                  , {l.native}
+                </span>
               </button>
             ))}
           </div>
-          <span className="t-label text-fg-muted" dir="ltr">
-            dir="{dir}" · lang="{lang}"
+          <span className="t-data text-fg-muted" dir="ltr">
+            dir=&quot;{dir}&quot; · lang=&quot;{lang}&quot;
           </span>
         </div>
       </div>
 
-      <ToastProvider closeLabel={c.dismiss}>
+      <ToastProvider closeLabel={c.dismiss} lang={lang} dir={dir}>
         <div lang={lang} dir={dir} className="swiss-grid gap-y-(--gutter)">
           {/* C-01 Button */}
           <Cell code="C-01" title="Button" className="col-span-4 sm:col-span-8 lg:col-span-7">
@@ -139,8 +143,8 @@ export function ComponentsLab() {
             </div>
           </Cell>
 
-          {/* C-04 Chip */}
-          <Cell code="C-04" title="Chip" className="col-span-4 sm:col-span-8 lg:col-span-5">
+          {/* C-02 Chip */}
+          <Cell code="C-02" title="Chip" className="col-span-4 sm:col-span-8 lg:col-span-5">
             <div className="grid gap-6">
               <fieldset className="grid gap-3">
                 <legend className="t-label text-fg-muted mb-3">{c.alloy}</legend>
@@ -167,18 +171,18 @@ export function ComponentsLab() {
             </div>
           </Cell>
 
-          {/* C-02 Input */}
-          <Cell code="C-02" title="Input" className="col-span-4 sm:col-span-8 lg:col-span-12">
+          {/* C-03 Input */}
+          <Cell code="C-03" title="Input" className="col-span-4 sm:col-span-8 lg:col-span-12">
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              <TextField label={c.maxWidth} unit="mm" inputMode="decimal" defaultValue={nf(120, 1)} hint={c.widthHint} aux="≤ 250" />
+              <TextField label={c.maxWidth} unit="mm" inputMode="decimal" defaultValue={nf(120, 1)} hint={c.widthHint} aux={`≤ ${nf(250, 0)} mm`} />
               <TextField label={c.wall} unit="mm" inputMode="decimal" defaultValue={nf(0.6, 1)} error={c.wallError} hint={c.wallHint} />
               <RangeField label={c.maxHeight} min={0} max={200} defaultValue={80} format={(v) => nf(v, 0)} />
               <TextField label="kg/m" unit="kg/m" inputMode="decimal" defaultValue={nf(1.284, 3)} disabled hint={c.unavailable} />
             </div>
           </Cell>
 
-          {/* C-03 Card */}
-          <Cell code="C-03" title="Card" className="col-span-4 sm:col-span-8 lg:col-span-12">
+          {/* C-04 Card */}
+          <Cell code="C-04" title="Card" className="col-span-4 sm:col-span-8 lg:col-span-12">
             <ul className="grid gap-(--gutter) sm:grid-cols-2 xl:grid-cols-4">
               {PROFILES.map((p) => {
                 const on = compare.includes(p.id);
@@ -203,7 +207,7 @@ export function ComponentsLab() {
                           onClick={() => setCompare((xs) => (on ? xs.filter((x) => x !== p.id) : xs.length >= 3 ? xs : [...xs, p.id]))}
                         >
                           <Compare width={12} height={12} aria-hidden="true" />
-                          <span>{on ? c.comparing : c.compare}</span>
+                          <span>{c.compare}</span>
                           <span className="sr-only"> {p.id}</span>
                         </button>
                       }
@@ -231,7 +235,7 @@ export function ComponentsLab() {
                 staticSpecimen
                 life={6000}
                 closeLabel={c.dismiss}
-                item={{ tone: "success", title: c.added, meta: "AL-40217 · 6.0 m · 2.4 t", action: { label: c.undo, onAction: () => undefined } }}
+                item={{ tone: "success", title: c.added, meta: `AL-40217 · ${nf(6, 1)} m · ${nf(2.4, 1)} t`, metaIsData: true, action: { label: c.undo, onAction: () => undefined } }}
               />
               <ToastCard
                 staticSpecimen

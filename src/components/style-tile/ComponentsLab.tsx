@@ -108,7 +108,8 @@ export function ComponentsLab() {
           <Cell code="C-01" title="Button" className="col-span-4 sm:col-span-8 lg:col-span-7">
             <div className="grid gap-6">
               <p className="t-small text-fg-muted" lang="en">
-                States, not a layout: a real screen carries one primary action.
+                One primary action per screen, this specimen included: the press row shows the cold variants, and a
+                busy button hands its heat to the ram.
               </p>
               <div className="flex flex-wrap items-center gap-4">
                 <Button variant="primary" size="lg" icon={<ArrowRight className="btn-icon" data-nudge="" />}>
@@ -133,9 +134,6 @@ export function ComponentsLab() {
                 </Button>
               </div>
               <div data-surface="press" className="-mx-4 -mb-4 sm:-mx-6 sm:-mb-6 flex flex-wrap items-center gap-4 p-4 sm:p-6">
-                <Button variant="primary" icon={<ArrowRight className="btn-icon" data-nudge="" />}>
-                  {c.quote}
-                </Button>
                 <Button variant="secondary">{c.find}</Button>
                 <Button variant="ghost" icon={<Download className="btn-icon" />}>
                   {c.dxf}
@@ -204,10 +202,10 @@ export function ComponentsLab() {
           {/* C-03 Input */}
           <Cell code="C-03" title="Input" className="col-span-4 sm:col-span-8 lg:col-span-12">
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              <TextField label={c.maxWidth} unit="mm" inputMode="decimal" defaultValue={nf(120, 1)} hint={c.widthHint} aux={`≤ ${nf(250, 0)} mm`} />
-              <TextField label={c.wall} unit="mm" inputMode="decimal" defaultValue={nf(0.6, 1)} error={c.wallError} hint={c.wallHint} />
+              <TextField label={c.maxWidth} unit="mm" unitName={c.mmName} inputMode="decimal" defaultValue={nf(120, 1)} hint={c.widthHint} aux={`≤ ${nf(250, 0)} mm`} />
+              <TextField label={c.wall} unit="mm" unitName={c.mmName} inputMode="decimal" defaultValue={nf(0.6, 1)} error={c.wallError} hint={c.wallHint} />
               <RangeField label={c.maxHeight} min={0} max={200} defaultValue={80} unitName={c.mmName} format={(v) => nf(v, 0)} />
-              <TextField label={c.rows.weight} unit="kg/m" inputMode="decimal" defaultValue={nf(1.284, 3)} disabled hint={c.unavailable} />
+              <TextField label={c.rows.weight} unit="kg/m" unitName={c.kgmName} inputMode="decimal" defaultValue={nf(1.284, 3)} disabled hint={c.unavailable} />
             </div>
           </Cell>
 

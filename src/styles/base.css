@@ -39,30 +39,6 @@
 
   /* Hebrew type overrides live unlayered in tokens.css (:lang(he)), so they beat these layers. */
 
-  /* Geist Mono's default zero is slashed and reads like the diameter sign. ss09 is its plain zero,
-     as ISO 3098 lettering has it; Ø stays the only slashed glyph. Never set on Geist Sans. */
-  :where(
-      .t-data,
-      .t-mono,
-      .dim,
-      .callout-label,
-      .demo-badge,
-      .field-unit,
-      .field-label-aux,
-      .chip,
-      .pcard-id,
-      .pcard-specs,
-      .spec td,
-      .toast-meta[data-data="true"],
-      .segmented button,
-      .grade,
-      .matrix td,
-      .crosshair-read,
-      .field-input
-    ) {
-    font-feature-settings: "ss09" 1;
-  }
-
   p,
   li,
   dd,
@@ -149,6 +125,32 @@
 }
 
 @layer components {
+  /* Geist Mono's default zero is slashed and reads like the diameter sign. ss09 is its plain zero,
+     as ISO 3098 lettering has it; Ø stays the only slashed glyph. Mono contexts only: on Geist Sans
+     ss09 also swaps the one. In this layer, not base, so the form reset (button, input
+     { font: inherit }) cannot undo it. */
+  :where(
+      .t-data,
+      .t-mono,
+      .dim,
+      .callout-label,
+      .demo-badge,
+      .field-unit,
+      .field-label-aux,
+      .chip,
+      .pcard-id,
+      .pcard-specs,
+      .spec td,
+      .toast-meta[data-data="true"],
+      .segmented button,
+      .grade,
+      .matrix td,
+      .crosshair-read,
+      .grid-overlay .col-n
+    ) {
+    font-feature-settings: "ss09" 1;
+  }
+
   /* ---------- Typographic roles (utility shorthands that also set weight) ---------- */
   .t-display {
     font-size: var(--text-display);
@@ -195,6 +197,7 @@
   .t-small {
     font-size: var(--text-small);
     line-height: var(--text-small--line-height);
+    letter-spacing: var(--text-small--letter-spacing);
   }
   /* Mono means measured.
      .t-label: interface chrome (kickers, captions, keys): Geist, uppercase, tracked.

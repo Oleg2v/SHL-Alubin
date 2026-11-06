@@ -171,6 +171,15 @@
   .btn[aria-busy="true"] {
     cursor: progress;
   }
+  /* A busy primary is no longer the action on offer, so it gives up the fill: it turns to the
+     surface's ink and the heat moves into the ram (the process is what is hot now). */
+  .btn-primary[aria-busy="true"] {
+    --btn-bg: var(--fg);
+    --btn-fg: var(--bg);
+  }
+  .btn.btn-primary[aria-busy="true"]::after {
+    background: var(--accent);
+  }
   /* Busy: a 2 px track with a solid ram that strokes out and back, linear, like the press. */
   .btn[aria-busy="true"]::before,
   .btn[aria-busy="true"]::after {

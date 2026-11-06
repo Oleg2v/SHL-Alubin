@@ -3,7 +3,7 @@ import { SectionHead } from "./SectionHead";
 export const DECISIONS = [
   {
     title: "Colour is temperature",
-    body: "Billet Glow is a reading, not an accent. It appears only where something is hot, live or the one primary action, every hot element carries its °C, and it never covers more than 2% of a screen.",
+    body: "Billet Glow is a reading, not an accent. It appears only where something is hot, live or the one primary action. Every hot element carries its °C, a screen holds one primary action at most, and all other interface heat stays under 2% of it.",
   },
   {
     title: "Type set in lettering heights",

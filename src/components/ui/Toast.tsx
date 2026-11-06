@@ -224,15 +224,19 @@ export function ToastCard({ item, life, onDismiss, closeLabel, staticSpecimen, r
       </span>
       <div className="min-w-0">
         <p className="toast-title">{item.title}</p>
-        {item.meta ? (
-          <p className="toast-meta" data-data={item.metaIsData ? "true" : undefined}>
+        {item.meta && item.metaIsData ? (
+          // data: each value stays whole and isolated; the dot is held to the value before it
+          <p className="toast-meta" data-data="true">
             {item.meta.split(" · ").map((part, i, all) => (
               <span key={i}>
                 <bdi className="whitespace-nowrap">{part}</bdi>
-                {i < all.length - 1 ? " · " : ""}
+                {i < all.length - 1 ? "\u00a0· " : ""}
               </span>
             ))}
           </p>
+        ) : item.meta ? (
+          // prose wraps like prose
+          <p className="toast-meta">{item.meta}</p>
         ) : null}
       </div>
       <div className="toast-actions">

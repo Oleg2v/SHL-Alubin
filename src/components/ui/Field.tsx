@@ -11,6 +11,8 @@ type FieldProps = {
   error?: ReactNode;
   /** Unit suffix rendered inside the control, e.g. "mm" or "kg/m". */
   unit?: string;
+  /** The unit as a word for screen readers, in the field's language ("Millimeter"). */
+  unitName?: string;
   className?: string;
 } & Omit<ComponentPropsWithoutRef<"input">, "className">;
 
@@ -18,7 +20,7 @@ type FieldProps = {
  * Text field. The label is always visible (no placeholder-as-label), hint and error are
  * wired with aria-describedby, and the error never relies on colour.
  */
-export function TextField({ label, aux, hint, error, unit, className, id, disabled, ...input }: FieldProps) {
+export function TextField({ label, aux, hint, error, unit, unitName, className, id, disabled, ...input }: FieldProps) {
   const auto = useId();
   const inputId = id ?? `f${auto}`;
   const hintId = hint ? `${inputId}-hint` : undefined;
@@ -44,8 +46,12 @@ export function TextField({ label, aux, hint, error, unit, className, id, disabl
           aria-describedby={[unitId, errId, hintId, input["aria-describedby"]].filter(Boolean).join(" ") || undefined}
         />
         {unit ? (
+          // the symbol is seen, the word is heard: "mm" read as letters in German or Hebrew helps no one
           <span id={unitId} className="field-unit">
-            <bdi dir="ltr">{unit}</bdi>
+            <bdi dir="ltr" aria-hidden="true">
+              {unit}
+            </bdi>
+            <span className="sr-only">{unitName ?? unit}</span>
           </span>
         ) : null}
       </div>

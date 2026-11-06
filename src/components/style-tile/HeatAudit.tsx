@@ -5,8 +5,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 /**
  * Heat audit: proves "colour is temperature" on the live page. Every element painted in Billet
  * Glow is found from its computed style (or a data-heat tag for rendered heat such as the billet),
- * outlined with its reason, and the Glow share of the viewport is measured every 80 ms.
- * Budgets: 2 % for interface heat, 12 % for a process scene (the billet, the cooling band).
+ * outlined with its reason, and measured every 80 ms. Budgets: one primary action in view (counted,
+ * not measured: one large button alone is 4 % of a phone), 2 % of the screen for all other
+ * interface heat, 12 % for a process scene (the billet).
  */
 
 /** The token, as the rgb() string computed styles report (read from CSS, never typed here). */
@@ -35,7 +36,7 @@ function reasonFor(el: Element, cs: CSSStyleDeclaration, GLOW: string): string |
 export function HeatAudit() {
   const [on, setOn] = useState(false);
   const [hits, setHits] = useState<Hit[]>([]);
-  const [share, setShare] = useState({ ui: 0, process: 0 });
+  const [share, setShare] = useState({ cta: 0, ui: 0, process: 0 });
   const timer = useRef(0);
 
   const scan = useCallback(() => {
@@ -45,6 +46,7 @@ export function HeatAudit() {
     const out: Hit[] = [];
     let ui = 0;
     let proc = 0;
+    const ctas = new Set<Element>();
     // everything on the page: content, chrome, the badge and the toast stack
     const els = document.querySelectorAll("body *");
     for (const el of els) {
@@ -65,12 +67,14 @@ export function HeatAudit() {
       // text readings count their glyph box at ~50 % ink; round faces (the billet) count as circles
       const round = cs.borderRadius === "50%" || cs.borderTopLeftRadius === "50%";
       const area = w * hh * (reason === "reading" ? 0.5 : round ? Math.PI / 4 : 1);
-      if (reason.startsWith("process")) proc += area;
+      const cta = reason === "cta" ? el.closest(".btn-primary") : null;
+      if (cta) ctas.add(cta);
+      else if (reason.startsWith("process")) proc += area;
       else ui += area;
       out.push({ x, y, w, h: hh, reason });
     }
     setHits(out);
-    setShare({ ui: (ui / (vw * vh)) * 100, process: (proc / (vw * vh)) * 100 });
+    setShare({ cta: ctas.size, ui: (ui / (vw * vh)) * 100, process: (proc / (vw * vh)) * 100 });
   }, []);
 
   useEffect(() => {
@@ -91,11 +95,16 @@ export function HeatAudit() {
     };
   }, [on, scan]);
 
+  const over = share.cta > 1 || share.ui > 2 || share.process > 12;
+
   return (
     <>
       <button type="button" className="chip" aria-pressed={on} onClick={() => setOn((v) => !v)} title="Outline every use of Billet Glow and measure its share of the view">
         <span className="chip-dot" aria-hidden="true" />
-        <span>Heat audit</span>
+        {/* "Heat" alone where the bar is tight (64-90rem); the name stays "Heat audit" */}
+        <span>
+          Heat<span className="lg:max-hd:sr-only"> audit</span>
+        </span>
       </button>
       {on ? (
         <div className="heat-audit-layer" aria-hidden="true">
@@ -109,12 +118,15 @@ export function HeatAudit() {
       {on ? (
         <div className="heat-audit-meter t-data" role="status" aria-live="polite">
           <span>
-            Glow in view · interface <bdi dir="ltr">{share.ui.toFixed(1)} %</bdi> / 2 %
+            Glow in view · primary action <bdi dir="ltr">{share.cta} / 1</bdi>
           </span>
-          <span className={share.ui > 2 ? "heat-audit-over" : "text-fg-muted"}>{share.ui > 2 ? "over budget" : "within budget"}</span>
+          <span>
+            other interface <bdi dir="ltr">{share.ui.toFixed(1)} %</bdi> / 2 %
+          </span>
           <span>
             process <bdi dir="ltr">{share.process.toFixed(1)} %</bdi> / 12 %
           </span>
+          <span className={over ? "heat-audit-over" : "text-fg-muted"}>{over ? "over budget" : "within budget"}</span>
         </div>
       ) : null}
     </>

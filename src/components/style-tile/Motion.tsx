@@ -158,7 +158,7 @@ export function MotionSection() {
               const shift = at < 0.12 ? "0%" : at > 0.84 ? "-100%" : "-50%";
               const tick = at < 0.12 ? "justify-self-start" : at > 0.84 ? "justify-self-end" : "justify-self-center";
               return (
-                <div key={k} className="absolute grid" style={{ left: `${at * 100}%`, top: `${12 + (i % 3) * 30}px`, translate: `${shift} 0` }}>
+                <div key={k} className="absolute grid" style={{ left: `${at * 100}%`, top: `${12 + (i % 3) * 32}px`, translate: `${shift} 0` }}>
                   <span className={`block h-3 w-px bg-[var(--fg)] ${tick}`} aria-hidden="true" />
                   <span className="t-data whitespace-nowrap">
                     {v} <span className="text-fg-muted">{k}</span>

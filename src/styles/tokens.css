@@ -109,14 +109,11 @@
   --margin: 16px;
   --gutter: 12px;
   --section: 80px;
-  --hairline: 1px;
 
   /* Layers */
-  --z-raised: 10;
   --z-sticky: 100;
   --z-overlay: 1000;
   --z-toast: 1100;
-  --z-cursor: 1200;
   --z-badge: 1300;
 
   /* Pilot lights and halos: the only two Glow effects outside a fill. */
@@ -166,6 +163,9 @@
   --accent-text: var(--color-ink); /* Glow can't be text on light (2.68:1) */
   --focus-inner: var(--color-ink);
   --focus-outer: var(--color-glow);
+  /* re-declared on every surface: a var() inside a custom property resolves where it is declared,
+     so a single :root value would draw the sheet's Ink hairline on the dark stage */
+  --shadow-hairline: 0 0 0 1px var(--line);
   color-scheme: light;
 }
 
@@ -184,6 +184,7 @@
   --accent-text: var(--color-glow); /* 6.24:1 on Ink, 5.66:1 on Graphite */
   --focus-inner: var(--color-ink);
   --focus-outer: var(--color-glow);
+  --shadow-hairline: 0 0 0 1px var(--line);
   color-scheme: dark;
 }
 
@@ -226,11 +227,9 @@
   --color-bg-sunken: var(--bg-sunken);
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
-  --color-fg-disabled: var(--fg-disabled);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
   --color-accent: var(--accent);
-  --color-on-accent: var(--on-accent);
   --color-accent-text: var(--accent-text);
 }
 

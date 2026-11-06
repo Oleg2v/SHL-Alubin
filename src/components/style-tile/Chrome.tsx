@@ -67,22 +67,25 @@ export function TopBar() {
     <>
       <header className="st-bar" data-surface="sheet">
         <div className="swiss-grid st-bar-row">
-          <div className="col-span-3 sm:col-span-6 lg:col-span-2 flex items-center gap-4 min-w-0">
-            <Wordmark />
+          <div className="col-span-3 sm:col-span-5 lg:col-span-2 flex items-center gap-4 min-w-0">
+            {/* the wordmark returns to the top of the sheet, so the nav starts at section 01 */}
+            <a href="#top" className="wordmark-link" aria-label="SHL-ALUBIN, top of the sheet">
+              <Wordmark />
+            </a>
             <span className="t-label text-fg-muted hidden sm:inline lg:hidden">Style tile · Sheet 00</span>
           </div>
-          <nav aria-label="Style tile sections" className="st-nav hidden hd:flex col-span-8 items-center justify-between t-label">
-            {SECTIONS.map((s) => (
-              <a key={s.id} href={`#${s.id}`} aria-current={current === s.id ? "true" : undefined}>
+          {/* one link per column (cols 3-10), each pilot light on its column edge: the number alone on
+              laptops, the name from 90rem; the accessible name always carries both */}
+          <nav aria-label="Style tile sections" className="st-nav hidden lg:grid lg:col-span-8 grid-cols-subgrid items-center t-label">
+            {SECTIONS.filter((s) => s.n !== "00").map((s) => (
+              <a key={s.id} href={`#${s.id}`} aria-current={current === s.id ? "true" : undefined} aria-label={`${s.n} ${s.label}`}>
                 <span className="st-nav-dot" aria-hidden="true" />
-                <span className="text-fg-muted" aria-hidden="true">
-                  {s.n}
-                </span>
-                {s.label}
+                <span className="hd:hidden">{s.n}</span>
+                <span className="hidden hd:inline">{s.label}</span>
               </a>
             ))}
           </nav>
-          <div className="col-span-1 sm:col-span-2 lg:col-span-10 hd:col-span-2 flex justify-end gap-2">
+          <div className="st-actions col-span-1 sm:col-span-3 lg:col-span-2 flex justify-end gap-2">
             <span className="hidden sm:inline-flex">
               <HeatAudit />
             </span>

@@ -52,6 +52,33 @@ for (const file of walk(root)) {
   if (/255[ ,]+90[ ,]+31|#ff5a1f/i.test(text)) errors.push(`raw Billet Glow in ${file.replace(root, "src/")}: use var(--color-glow) or a --glow-* token`);
 }
 
+// No dead tokens: every custom property declared in tokens.css is consumed somewhere in src, by a
+// var() or Tailwind arbitrary value, a theme utility (bg-alu-white, rounded-xs, hd:), or for the
+// few below, through tokens.ts (the motion and radius specimens read the mirror).
+const READ_ELSEWHERE = new Set([
+  "--spacing", // Tailwind's spacing base: every p-4 and gap-6
+  "--color-transparent", // keyword colours kept after the --color-* reset
+  "--color-current",
+  "--radius-none", // radii specimen (tokens.ts radii)
+  "--dur-preload", // preloader (tokens.ts durations.preload)
+  "--stagger", // motion specimen (tokens.ts stagger)
+]);
+const source = walk(root)
+  .filter((f) => /\.(css|tsx?)$/.test(f) && !/styles\/tokens\.css$/.test(f))
+  .map((f) => readFileSync(f, "utf8"))
+  .join("\n") + css.replace(/(--[a-z0-9-]+)\s*:/g, ":"); // tokens.css may consume its own tokens
+const UTIL = { "--color-": "(?:bg|text|border|fill|stroke|outline|ring|decoration|accent|caret|divide|from|via|to)", "--radius-": "rounded(?:-[sebt]{1,2})?", "--shadow-": "shadow", "--ease-": "ease", "--font-": "font", "--text-": "text", "--tracking-": "tracking", "--leading-": "leading" };
+const declared = [...new Set([...css.matchAll(/(--[a-z0-9-]+)\s*:/g)].map((m) => m[1]))].filter((n) => !n.endsWith("-") && !READ_ELSEWHERE.has(n));
+for (const name of declared) {
+  if (new RegExp(`var\\(${name}[\\s,)]|\\(${name}\\)`).test(source)) continue;
+  const sub = name.match(/^(--text-[a-z-]+?)--/); // --text-small--line-height rides on text-small
+  const base = sub ? sub[1] : name;
+  const ns = Object.keys(UTIL).find((p) => base.startsWith(p));
+  if (ns && new RegExp(`[\\s"'\`:]${UTIL[ns]}-${base.slice(ns.length)}(?![\\w-])`).test(source)) continue;
+  if (name.startsWith("--breakpoint-") && new RegExp(`\\b${name.slice(13)}:`).test(source)) continue;
+  errors.push(`${name} is declared in tokens.css but never used`);
+}
+
 if (errors.length) {
   console.error("Token drift:\n- " + errors.join("\n- "));
   process.exit(1);

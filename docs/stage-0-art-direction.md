@@ -15,8 +15,9 @@ Live specimen: `/style-tile/` (run `npm run dev`, or open `out/style-tile/index.
 ## Five bold decisions we commit to
 
 1. **Colour is temperature.** Billet Glow is a reading, not an accent. It appears only where something is
-   hot, live or the one primary action, every hot element carries its °C, and it never covers more than
-   2% of a screen.
+   hot, live or the one primary action. Every hot element carries its °C, a screen holds one primary
+   action at most, and all other interface heat stays under 2% of it (12% for a process scene such as
+   the billet). The style tile's Heat audit measures this live.
 2. **Type set in lettering heights.** The nine sizes are drawing-office lettering heights, from 2.5 mm
    dimension text to 40 mm numerals (cap height at 1600 px; the ISO 3098 series plus one 3 mm ANSI step),
    and every dimension line on the sheet measures something real, live, in millimetres.

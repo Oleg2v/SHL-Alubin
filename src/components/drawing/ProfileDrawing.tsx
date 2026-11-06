@@ -138,7 +138,7 @@ export function ProfileDrawing({
             stroke="none"
             direction="ltr"
             unicodeBidi="isolate"
-            style={{ font: "500 11px var(--font-mono)", letterSpacing: "0.02em" }}
+            style={{ font: "500 11px var(--font-mono)", fontFeatureSettings: '"ss09" 1', letterSpacing: "0.02em" }}
           >
             {fmt(b.width)}
           </text>
@@ -157,7 +157,7 @@ export function ProfileDrawing({
             direction="ltr"
             unicodeBidi="isolate"
             transform={`rotate(-90 ${f(dimX - 5)} ${f(cy)})`}
-            style={{ font: "500 11px var(--font-mono)", letterSpacing: "0.02em" }}
+            style={{ font: "500 11px var(--font-mono)", fontFeatureSettings: '"ss09" 1', letterSpacing: "0.02em" }}
           >
             {fmt(b.height)}
           </text>

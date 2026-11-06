@@ -64,8 +64,8 @@ export function Palette() {
   return (
     <section id="palette" aria-labelledby="palette-title" data-surface="sheet" className="st-section">
       <SectionHead n="01" kicker="Palette" id="palette-title" title="Four cold neutrals. One colour, rationed like heat.">
-        Billet Glow covers at most two percent of the interface; the billet is the one licensed exception. A screen
-        with no heat, no active state and no primary action has no orange at all.
+        One primary action per screen, and all other interface heat under two percent of it; the billet is the one
+        licensed exception. A screen with no heat, no active state and no primary action has no orange at all.
       </SectionHead>
 
       {/* Usage proportion: the palette drawn at the share of a screen it is allowed */}

@@ -172,7 +172,7 @@ export function FormSection() {
           <div data-surface="press" className="grid grid-cols-3 gap-4 p-6">
             {[
               ["press", "var(--shadow-press)", "var(--color-graphite)"],
-              ["hairline", "0 0 0 1px var(--line-strong)", "var(--color-ink)"],
+              ["hairline", "var(--shadow-hairline)", "var(--color-ink)"],
               ["heat", "var(--shadow-heat)", "var(--color-glow)"],
             ].map(([n, v, bg]) => (
               <figure key={n} className="grid gap-3">

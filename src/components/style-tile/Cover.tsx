@@ -56,7 +56,7 @@ export function Cover() {
               <line x1="50" y1="0" x2="50" y2="100" stroke="currentColor" strokeWidth="1" strokeDasharray="14 3 2 3" vectorEffect="non-scaling-stroke" />
             </svg>
           </div>
-          <DimH className="w-[var(--d)] [--d:min(36vw,160px)] lg:[--d:min(64vw,400px)]">Ø 254</DimH>
+          <DimH className="w-(--billet-d)">Ø 254</DimH>
         </div>
 
         <div>

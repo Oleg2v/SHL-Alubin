@@ -183,9 +183,6 @@
     inset-inline: 4px;
     background: color-mix(in oklab, currentColor 22%, transparent);
   }
-  .btn[aria-busy="true"] {
-    container-type: inline-size;
-  }
   .btn[aria-busy="true"]::after {
     inset-inline-start: 4px;
     width: 24%;
@@ -195,14 +192,15 @@
   .btn[aria-busy="true"]:dir(rtl)::after {
     animation-name: ram-stroke-rtl;
   }
+  /* travel = (100 % - 24 % - 8 px) of the button = 316.67 % of the ram's own width - 8 px */
   @keyframes ram-stroke {
     to {
-      translate: calc(76cqi - 8px) 0;
+      translate: calc(316.67% - 8px) 0;
     }
   }
   @keyframes ram-stroke-rtl {
     to {
-      translate: calc(-76cqi + 8px) 0;
+      translate: calc(-316.67% + 8px) 0;
     }
   }
 

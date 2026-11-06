@@ -126,9 +126,8 @@
 
   /* Long German compounds: hyphenate body copy, never headlines mid-syllable on small screens
      without a soft-hyphen opportunity. */
-  :lang(de) p,
-  :lang(de) li,
-  :lang(de) dd {
+  /* German: hyphenate running text only, never display sizes */
+  :lang(de) :is(p, li, dd):not(.t-title-s, .t-title-m, .t-title-l, .t-headline, .t-display) {
     hyphens: auto;
     -webkit-hyphens: auto;
   }

@@ -68,13 +68,13 @@
 
   /* ---------- Radii: machined, not friendly ---------- */
   --radius-*: initial;
+  --radius-none: 0px; /* surfaces, cards, tiles, drawings */
   --radius-xs: 2px; /* inputs, buttons, chips */
   --radius-sm: 4px; /* toasts, popovers */
   --radius-full: 9999px; /* status dots, switches only */
 
   /* ---------- Shadows: elevation is mostly hairlines; heat is the only glow ---------- */
   --shadow-*: initial;
-  --shadow-hairline: 0 0 0 1px var(--line);
   --shadow-lift: 0 1px 0 0 rgb(11 13 15 / 0.04), 0 12px 24px -16px rgb(11 13 15 / 0.32);
   --shadow-float: 0 0 0 1px rgb(11 13 15 / 0.06), 0 24px 48px -20px rgb(11 13 15 / 0.48);
   --shadow-press: inset 0 1px 0 0 rgb(236 238 240 / 0.06), 0 0 0 1px rgb(236 238 240 / 0.08);
@@ -85,10 +85,9 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* house curve: entrances, settles, magnet return */
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); /* state to state: dissolves, morphs, toggles */
   --ease-in: cubic-bezier(0.55, 0, 1, 0.45); /* exits only */
+  --ease-linear: linear; /* the ram: scroll-bound and constant-speed motion */
 
   --animate-*: initial;
-  --animate-flicker: flicker 2.4s steps(1, end) infinite;
-  --animate-spin: spin 1.2s linear infinite;
 
   /* ---------- Breakpoints: defaults kept (4 cols < 40rem, 8 < 64rem, 12 from 64rem) plus the
      1440 sheet width where margins reach 48 px ---------- */
@@ -104,7 +103,7 @@
   --dur-slow: 640ms; /* reveals, panels, magnet return */
   --dur-travel: 960ms; /* page transitions, long strokes */
   --dur-preload: 1120ms; /* preloader budget, < 1.2 s */
-  --stagger: 40ms;
+  --stagger: 40ms; /* a half-step of the 80 ms grid, for line-by-line reveals */
 
   /* Layout: stepped, not fluid, so every margin and gutter stays on the 4 px grid. */
   --margin: 16px;
@@ -120,9 +119,9 @@
   --z-cursor: 1200;
   --z-badge: 1300;
 
-  /* Heat ramp: 480 C billet to 20 C profile. Used by the cooling shader and specimens. */
-  --heat-480: var(--color-glow);
-  --heat-20: var(--color-alu-mid);
+  /* Pilot lights and halos: the only two Glow effects outside a fill. */
+  --glow-pilot: 0 0 8px 1px color-mix(in oklab, var(--color-glow) 60%, transparent);
+  --glow-halo: 0 0 32px color-mix(in oklab, var(--color-glow) 30%, transparent);
 }
 
 @media (min-width: 40rem) {
@@ -220,6 +219,8 @@
 }
 
 @theme inline {
+  /* resolved per surface (inline), so the hairline is Ink on the sheet and Alu White on the stage */
+  --shadow-hairline: 0 0 0 1px var(--line);
   --color-bg: var(--bg);
   --color-bg-raised: var(--bg-raised);
   --color-bg-sunken: var(--bg-sunken);
@@ -233,16 +234,4 @@
   --color-accent-text: var(--accent-text);
 }
 
-@keyframes flicker {
-  0% { opacity: 1; }
-  12% { opacity: 0.94; }
-  13% { opacity: 1; }
-  47% { opacity: 0.97; }
-  48% { opacity: 1; }
-  81% { opacity: 0.92; }
-  82% { opacity: 1; }
-}
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}

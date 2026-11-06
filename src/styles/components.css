@@ -77,7 +77,7 @@
   }
   .btn[data-magnet="active"] .btn-skin {
     transition:
-      translate var(--dur-fast) linear,
+      translate var(--dur-fast) var(--ease-linear),
       background-color var(--dur-fast) var(--ease-out),
       box-shadow var(--dur-base) var(--ease-out);
   }
@@ -100,7 +100,7 @@
     transition: translate var(--dur-slow) var(--ease-out);
   }
   .btn[data-magnet="active"] .btn-label {
-    transition: translate var(--dur-fast) linear;
+    transition: translate var(--dur-fast) var(--ease-linear);
   }
   /* Press feedback: the control strokes 1 px along the block axis, like a ram. No scale, ever. */
   .btn:active:not(:disabled, [aria-disabled="true"]) {
@@ -135,14 +135,14 @@
     content: "";
     position: absolute;
     inset-inline: 0;
-    bottom: -6px;
+    bottom: -8px;
     height: 1px;
     background: currentColor;
     transform-origin: var(--origin-start, left);
     scale: 0.32 1;
     transition: scale var(--dur-slow) var(--ease-out);
   }
-  [dir="rtl"] .btn-ghost .btn-label::after {
+  .btn-ghost:dir(rtl) .btn-label::after {
     --origin-start: right;
   }
   .btn-ghost:hover .btn-label::after,
@@ -152,15 +152,16 @@
 
   /* Unavailable: the ISO 128 hidden line (dashed). Never 40 % opacity, never hatching:
      on this site hatching means cut metal and nothing else. */
+  /* busy buttons are aria-disabled too, but keep their live look (the ram on the track) */
   .btn:disabled,
-  .btn[aria-disabled="true"] {
+  .btn[aria-disabled="true"]:not([aria-busy="true"]) {
     --btn-bg: transparent;
     --btn-border: transparent;
     --btn-fg: var(--fg-disabled);
     cursor: not-allowed;
   }
   .btn:disabled .btn-skin,
-  .btn[aria-disabled="true"] .btn-skin {
+  .btn[aria-disabled="true"]:not([aria-busy="true"]) .btn-skin {
     background: transparent;
     box-shadow: none;
     outline: 1px dashed var(--line-strong);
@@ -182,15 +183,26 @@
     inset-inline: 4px;
     background: color-mix(in oklab, currentColor 22%, transparent);
   }
+  .btn[aria-busy="true"] {
+    container-type: inline-size;
+  }
   .btn[aria-busy="true"]::after {
     inset-inline-start: 4px;
     width: 24%;
     background: currentColor;
-    animation: ram-stroke var(--dur-travel) linear infinite alternate;
+    animation: ram-stroke var(--dur-travel) var(--ease-linear) infinite alternate;
+  }
+  .btn[aria-busy="true"]:dir(rtl)::after {
+    animation-name: ram-stroke-rtl;
   }
   @keyframes ram-stroke {
     to {
-      inset-inline-start: calc(100% - 24% - 4px);
+      translate: calc(76cqi - 8px) 0;
+    }
+  }
+  @keyframes ram-stroke-rtl {
+    to {
+      translate: calc(-76cqi + 8px) 0;
     }
   }
 
@@ -203,10 +215,10 @@
   .btn:hover .btn-icon[data-nudge] {
     translate: 4px 0;
   }
-  [dir="rtl"] .btn-icon[data-flip] {
+  .btn-icon[data-flip]:dir(rtl) {
     scale: -1 1;
   }
-  [dir="rtl"] .btn:hover .btn-icon[data-nudge] {
+  .btn:hover .btn-icon[data-nudge]:dir(rtl) {
     translate: -4px 0;
   }
   @media (forced-colors: active) {
@@ -344,7 +356,7 @@
       repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px calc(100% / 20)) 0 calc(50% + 8px) / 100% 6px no-repeat;
     cursor: pointer;
   }
-  [dir="rtl"] .range {
+  .range:dir(rtl) {
     background:
       linear-gradient(var(--fg), var(--fg)) 100% 50% / var(--range-pct) 2px no-repeat,
       linear-gradient(var(--line-strong), var(--line-strong)) 0 50% / 100% 1px no-repeat,
@@ -383,7 +395,7 @@
     position: relative;
     border-radius: var(--radius-xs);
   }
-  .range-wrap:focus-within {
+  .range-wrap:has(:focus-visible) {
     box-shadow:
       0 0 0 2px var(--focus-inner),
       0 0 0 4px var(--focus-outer);
@@ -451,7 +463,7 @@
   .chip[aria-checked="true"] .chip-dot,
   .chip[data-selected="true"] .chip-dot {
     background: var(--color-glow);
-    box-shadow: 0 0 8px 1px rgb(255 90 31 / 0.6);
+    box-shadow: var(--glow-pilot);
   }
   .chip:disabled,
   .chip[aria-disabled="true"] {
@@ -459,6 +471,9 @@
     border-style: dashed;
     border-color: var(--line-strong);
     color: var(--fg-disabled);
+  }
+  .chip-static {
+    cursor: default;
   }
   .chip-remove {
     display: inline-grid;
@@ -474,6 +489,45 @@
   }
   .chip-remove:hover {
     background: color-mix(in oklab, currentColor 14%, transparent);
+  }
+
+  /* =========================================================== Segmented control (radiogroup) */
+  .segmented {
+    display: inline-flex;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-xs);
+    padding: 2px;
+    gap: 2px;
+  }
+  .segmented button {
+    height: 28px;
+    min-width: 44px;
+    padding-inline: 12px;
+    border: 0;
+    border-radius: var(--radius-xs);
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    color: var(--fg-muted);
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  .segmented button:hover {
+    color: var(--fg);
+  }
+  .segmented button[aria-checked="true"] {
+    background: var(--fg);
+    color: var(--bg);
+  }
+  @media (forced-colors: active) {
+    .segmented button[aria-checked="true"] {
+      forced-color-adjust: none;
+      background: Highlight;
+      color: HighlightText;
+    }
   }
 
   /* =========================================================== Forced colours (Windows High Contrast) */
@@ -600,7 +654,6 @@
     width: 100%;
     max-width: 280px;
     height: auto;
-    transition: color var(--dur-base) var(--ease-out);
   }
   .pcard-specs {
     display: flex;
@@ -624,7 +677,7 @@
   .pcard[data-selected="true"] .pcard-temp,
   .pcard:focus-within .pcard-temp {
     background: var(--color-glow);
-    box-shadow: 0 0 10px 1px rgb(255 90 31 / 0.65);
+    box-shadow: var(--glow-pilot);
   }
   .pcard-temp {
     width: 6px;
@@ -653,14 +706,27 @@
     background-repeat: no-repeat;
     animation: ram-sweep var(--dur-travel) var(--ease-in-out) infinite;
   }
-  [dir="rtl"] .pcard[aria-busy="true"]::before {
+  .pcard[aria-busy="true"]:dir(rtl)::before {
     animation-direction: reverse;
   }
+  /* the ID is the link; its ::after stretches over the whole tile */
   .pcard-link {
+    color: inherit;
+    text-decoration: none;
+  }
+  .pcard-link::after {
+    content: "";
     position: absolute;
     inset: 0;
     z-index: 1;
-    border-radius: 0;
+  }
+  .pcard-link:focus-visible {
+    box-shadow: none;
+  }
+  .pcard:has(.pcard-link:focus-visible) {
+    box-shadow:
+      0 0 0 2px var(--focus-inner),
+      0 0 0 4px var(--focus-outer);
   }
   .pcard-compare {
     position: relative;
@@ -689,7 +755,7 @@
   .spec th,
   .spec td {
     height: 44px;
-    padding-block: 10px;
+    padding-block: 12px;
     padding-inline: 0 16px;
     border-bottom: 1px solid var(--line);
     text-align: start;
@@ -744,10 +810,10 @@
     background-repeat: no-repeat;
     background-position: left;
   }
-  [dir="rtl"] .spec tbody tr[data-active="true"] > :first-child {
+  .spec tbody tr[data-active="true"] > :first-child:dir(rtl) {
     background-position: right;
   }
-  .spec td:nth-child(3) {
+  .spec td.unit {
     padding-inline-start: 8px;
   }
   .spec td.note {
@@ -882,9 +948,9 @@
     height: 2px;
     background: rgb(236 238 240 / 0.5);
     transform-origin: var(--origin-start, left);
-    animation: toast-life var(--toast-life) linear both;
+    animation: toast-life var(--toast-life) var(--ease-linear) both;
   }
-  [dir="rtl"] .toast-life {
+  .toast-life:dir(rtl) {
     --origin-start: right;
   }
   .toast:hover .toast-life,
@@ -903,7 +969,8 @@
     color: var(--color-alu-white);
   }
   .toast[data-tone="error"] .toast-glyph {
-    background: repeating-linear-gradient(-45deg, transparent 0 3px, rgb(236 238 240 / 0.35) 3px 4px);
+    border: 0;
+    box-shadow: inset 0 0 0 2px var(--color-alu-white);
   }
   .toast[data-static="true"] {
     animation: none;

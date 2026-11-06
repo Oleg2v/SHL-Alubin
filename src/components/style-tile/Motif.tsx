@@ -63,8 +63,8 @@ export function MotifSection() {
   return (
     <section id="motif" aria-labelledby="motif-title" data-surface="sheet" className="st-section">
       <SectionHead n="07" kicker="Motif & material" id="motif-title" title="The page is a drawing sheet. The metal is the only texture.">
-        Dimension lines, leaders and section hatching annotate the interface itself. Finishes are the client&apos;s real
-        finishes, and the only other colours that ever appear.
+        Dimension lines and leaders annotate the interface itself; section hatching marks cut metal and nothing else.
+        Finishes are the client&apos;s real finishes, and the only other colours that ever appear.
       </SectionHead>
 
       <div className="swiss-grid gap-y-16">

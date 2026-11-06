@@ -3,20 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { durations, easings, cssEase } from "@/design/tokens";
 import { SectionHead } from "./SectionHead";
+import { useReducedMotion } from "@/lib/useReducedMotion";
+import { easeFrom } from "@/lib/ease";
 import { Wordmark } from "./Chrome";
 import { Storyboard } from "./Storyboard";
-
-function useReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const m = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const on = () => setReduced(m.matches);
-    on();
-    m.addEventListener("change", on);
-    return () => m.removeEventListener("change", on);
-  }, []);
-  return reduced;
-}
 
 const CURVES = [
   { key: "out", name: "--ease-out", label: "House curve", use: "Entrances, settles, the magnet's return. The brief's cubic-bezier(0.22, 1, 0.36, 1).", e: easings.out, dur: durations.slow },
@@ -88,6 +78,8 @@ function RamDemo({ e, dur, label, reduced }: { e: readonly number[]; dur: number
   );
 }
 
+const houseOut = easeFrom(easings.out);
+
 /** The preloader, in miniature: 0 -> 480 C in 800 ms, then resolves into the wordmark by 1120 ms. */
 function PreloaderSpecimen({ reduced }: { reduced: boolean }) {
   const [t, setT] = useState(0);
@@ -110,7 +102,7 @@ function PreloaderSpecimen({ reduced }: { reduced: boolean }) {
   }, [k, reduced]);
   const countEnd = 800 / durations.preload;
   const cp = Math.min(1, t / countEnd);
-  const eased = 1 - Math.pow(1 - cp, 3);
+  const eased = houseOut(cp);
   const temp = Math.round(eased * 480);
   const resolve = Math.max(0, (t - countEnd) / (1 - countEnd));
   return (

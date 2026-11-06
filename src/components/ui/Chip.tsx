@@ -26,15 +26,16 @@ export function ToggleChip({ label, count, countLabel = "profiles", defaultPress
     <button
       type="button"
       className="chip"
+      {...rest}
       aria-pressed={on}
       aria-disabled={disabled || empty || undefined}
-      onClick={() => {
-        if (disabled || empty) return;
+      onClick={(e) => {
+        rest.onClick?.(e);
+        if (e.defaultPrevented || disabled || empty) return;
         const v = !on;
         setInner(v);
         onPressedChange?.(v);
       }}
-      {...rest}
     >
       <span className="chip-dot" aria-hidden="true" />
       <span>{label}</span>
@@ -50,9 +51,18 @@ export function ToggleChip({ label, count, countLabel = "profiles", defaultPress
 }
 
 /** Applied-filter chip with a remove button (its own focus stop with a full label). */
-export function RemovableChip({ label, onRemove, removeLabel }: { label: string; onRemove?: () => void; removeLabel?: string }) {
+export function RemovableChip({
+  label,
+  onRemove,
+  removeLabel,
+}: {
+  label: string;
+  /** Required: a remove button that does nothing is a trap. Move focus in the handler. */
+  onRemove: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  removeLabel?: string;
+}) {
   return (
-    <span className="chip" data-selected="true" style={{ cursor: "default" }}>
+    <span className="chip chip-static" data-selected="true">
       <span className="chip-dot" aria-hidden="true" />
       <span>{label}</span>
       <button type="button" className="chip-remove" aria-label={removeLabel ?? `Remove filter ${label}`} onClick={onRemove}>

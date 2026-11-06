@@ -52,9 +52,15 @@ export function ProfileCard({ profile, href, selected, action, labels = EN, clas
       <header className="pcard-head">
         <span className="flex items-center gap-2">
           <span className="pcard-temp" aria-hidden="true" />
-          <bdi className="pcard-id" dir="ltr">
-            {profile.id}
-          </bdi>
+          {href ? (
+            <a className="pcard-id pcard-link" href={href} aria-label={`${profile.id}, ${profile.family}, ${labels.formatDims ? labels.formatDims(b.width, b.height) : `${w} × ${h}`} mm`}>
+              <bdi dir="ltr">{profile.id}</bdi>
+            </a>
+          ) : (
+            <bdi className="pcard-id" dir="ltr">
+              {profile.id}
+            </bdi>
+          )}
         </span>
         <span className="pcard-family">{profile.family}</span>
       </header>
@@ -85,11 +91,6 @@ export function ProfileCard({ profile, href, selected, action, labels = EN, clas
         </p>
         {action ? <div className="pcard-compare">{action}</div> : null}
       </footer>
-      {href ? (
-        <a className="pcard-link" href={href}>
-          <span className="sr-only">{profile.id}</span>
-        </a>
-      ) : null}
     </article>
   );
 }
@@ -97,8 +98,7 @@ export function ProfileCard({ profile, href, selected, action, labels = EN, clas
 /** Loading state: the same anatomy drawn in phantom lines. Announced once by the result list. */
 export function ProfileCardSkeleton({ label = "Loading profile" }: { label?: string }) {
   return (
-    <article data-surface="press" className="pcard" aria-busy="true">
-      <span className="sr-only">{label}</span>
+    <article data-surface="press" className="pcard" aria-busy="true" aria-hidden="true" data-label={label}>
       <header className="pcard-head" aria-hidden="true">
         <Phantom className="h-3 w-24" />
         <Phantom className="h-3 w-16" />

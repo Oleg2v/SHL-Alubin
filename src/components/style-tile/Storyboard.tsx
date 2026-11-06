@@ -30,7 +30,7 @@ const heatColor = (tC: number) => {
   return {
     w,
     color: `color-mix(in oklab, var(--color-glow) ${(w * 100).toFixed(1)}%, var(--color-alu-mid))`,
-    filter: w > 0.02 ? `drop-shadow(0 0 ${(6 * w).toFixed(1)}px rgb(255 90 31 / ${(0.65 * w).toFixed(2)}))` : undefined,
+    filter: w > 0.02 ? `drop-shadow(0 0 ${(6 * w).toFixed(1)}px color-mix(in oklab, var(--color-glow) ${(65 * w).toFixed(0)}%, transparent))` : undefined,
   };
 };
 

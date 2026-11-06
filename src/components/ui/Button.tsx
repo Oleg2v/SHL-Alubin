@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { forwardRef, useEffect, useRef, type ComponentPropsWithoutRef, type ReactNode } from "react";
+import { forwardRef, useEffect, useRef, type ComponentPropsWithoutRef, type MouseEvent, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 
 type Variant = "primary" | "secondary" | "ghost";
 type Size = "sm" | "md" | "lg";
@@ -14,7 +15,9 @@ type Common = {
   magnetic?: boolean;
   /** Trailing icon (pass an Icons.* element). */
   icon?: ReactNode;
+  /** In flight: the button stays focusable but inert (aria-disabled) and announces busyLabel. */
   busy?: boolean;
+  busyLabel?: string;
   children: ReactNode;
   className?: string;
 };
@@ -30,12 +33,12 @@ const REACH = 24;
 
 function useMagnet(enabled: boolean) {
   const ref = useRef<HTMLElement | null>(null);
+  const reduced = useReducedMotion();
   useEffect(() => {
     const el = ref.current;
-    if (!el || !enabled) return;
+    if (!el || !enabled || reduced) return;
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const calm = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (!fine.matches || calm.matches) return;
+    if (!fine.matches) return;
 
     let raf = 0;
     let active = false;
@@ -67,15 +70,17 @@ function useMagnet(enabled: boolean) {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onMove);
+      el.dataset.magnet = "rest";
+      el.style.setProperty("--mx", "0px");
       window.removeEventListener("blur", reset);
       document.removeEventListener("pointerleave", reset);
     };
-  }, [enabled]);
+  }, [enabled, reduced]);
   return ref;
 }
 
 export const Button = forwardRef<HTMLElement, ButtonProps | LinkProps>(function Button(props, forwarded) {
-  const { variant = "primary", size = "md", magnetic, icon, busy, children, className, ...rest } = props;
+  const { variant = "primary", size = "md", magnetic, icon, busy, busyLabel = "Sending", children, className, ...rest } = props;
   const magnet = useMagnet(magnetic ?? variant === "primary");
   const classes = cn("btn", `btn-${variant}`, size !== "md" && `btn-${size}`, className);
   const setRef = (node: HTMLElement | null) => {
@@ -90,25 +95,54 @@ export const Button = forwardRef<HTMLElement, ButtonProps | LinkProps>(function 
         <span>{children}</span>
         {icon}
       </span>
+      {busy ? (
+        <span className="sr-only" role="status">
+          {busyLabel}
+        </span>
+      ) : null}
     </>
   );
 
   if ("href" in rest && typeof rest.href === "string") {
-    const { href, ...linkRest } = rest as Omit<LinkProps, keyof Common>;
+    const { href, onClick, ...linkRest } = rest as Omit<LinkProps, keyof Common>;
+    const inert = busy || linkRest["aria-disabled"] === true || linkRest["aria-disabled"] === "true";
     return (
-      <Link ref={setRef as (n: HTMLAnchorElement | null) => void} href={href} className={classes} {...linkRest}>
+      <Link
+        ref={setRef as (n: HTMLAnchorElement | null) => void}
+        href={href}
+        className={classes}
+        {...linkRest}
+        aria-disabled={inert || undefined}
+        aria-busy={busy || undefined}
+        onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+          if (inert) {
+            e.preventDefault();
+            return;
+          }
+          onClick?.(e);
+        }}
+      >
         {inner}
       </Link>
     );
   }
-  const { type = "button", ...buttonRest } = rest as Omit<ButtonProps, keyof Common>;
+  const { type = "button", onClick, ...buttonRest } = rest as Omit<ButtonProps, keyof Common>;
   return (
     <button
       ref={setRef as (n: HTMLButtonElement | null) => void}
       type={type}
       className={classes}
-      aria-busy={busy || undefined}
       {...buttonRest}
+      aria-busy={busy || undefined}
+      aria-disabled={busy || buttonRest["aria-disabled"] || undefined}
+      onClick={(e: MouseEvent<HTMLButtonElement>) => {
+        // busy: no double submit
+        if (busy) {
+          e.preventDefault();
+          return;
+        }
+        onClick?.(e);
+      }}
     >
       {inner}
     </button>

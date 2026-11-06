@@ -30,7 +30,7 @@ export function HeatLaw() {
           {`Glow share against temperature: 480 °C is 1.00, 400 °C is ${wThr.toFixed(2)}, 300 °C is ${heatWeight(300).toFixed(2)}, 200 °C is ${heatWeight(200).toFixed(2)}. The flat interface renders Glow only at 400 °C and above.`}
         </title>
         {/* zones: HOT (Glow), WARM (reading only), COLD */}
-        <rect x={x(thr)} y={P.t} width={x(480) - x(thr)} height={H - P.t - P.b} fill="rgb(255 90 31 / 0.14)" />
+        <rect x={x(thr)} y={P.t} width={x(480) - x(thr)} height={H - P.t - P.b} fill="color-mix(in oklab, var(--color-glow) 14%, transparent)" />
         <rect x={x(150)} y={P.t} width={x(thr) - x(150)} height={H - P.t - P.b} fill="rgb(236 238 240 / 0.05)" />
         <g stroke="var(--line-strong)" strokeWidth="1">
           <line x1={P.l} y1={H - P.b} x2={W - P.r} y2={H - P.b} />

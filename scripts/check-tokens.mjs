@@ -31,6 +31,26 @@ for (const [k, v] of Object.entries(durs)) {
 }
 
 if (!css.includes("--ease-out: cubic-bezier(0.22, 1, 0.36, 1)")) errors.push("house ease drifted");
+for (const e of ["--ease-in-out: cubic-bezier(0.65, 0, 0.35, 1)", "--ease-in: cubic-bezier(0.55, 0, 1, 0.45)", "--ease-linear: linear"]) {
+  if (!css.includes(e)) errors.push(`easing drifted: ${e}`);
+}
+for (const r of ["--radius-none: 0px", "--radius-xs: 2px", "--radius-sm: 4px", "--radius-full: 9999px"]) {
+  if (!css.includes(r)) errors.push(`radius drifted: ${r}`);
+}
+for (const f of ["--font-sans: var(--font-plex-hebrew)", "--font-mono: var(--font-plex-hebrew)"]) {
+  if (!css.includes(f)) errors.push(`${f.split(":")[0]} must start with Plex Hebrew (Hebrew-only unicode-range)`);
+}
+
+// Billet Glow may only be named through tokens: a raw value anywhere else fails.
+import { readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
+const walk = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : [join(d, f)]));
+const root = new URL("../src/", import.meta.url).pathname;
+for (const file of walk(root)) {
+  if (!/\.(css|tsx?|mjs)$/.test(file) || /styles\/tokens\.css$|design\/tokens\.ts$/.test(file)) continue;
+  const text = readFileSync(file, "utf8");
+  if (/255[ ,]+90[ ,]+31|#ff5a1f/i.test(text)) errors.push(`raw Billet Glow in ${file.replace(root, "src/")}: use var(--color-glow) or a --glow-* token`);
+}
 
 if (errors.length) {
   console.error("Token drift:\n- " + errors.join("\n- "));

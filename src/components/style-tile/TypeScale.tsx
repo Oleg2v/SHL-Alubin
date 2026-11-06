@@ -6,7 +6,7 @@ import { SectionHead } from "./SectionHead";
 import { DimH } from "@/components/drawing/Dim";
 
 const SAMPLE: Record<string, string> = {
-  micro: "AL-40217 · 6063 T6 · 1.284 KG/M · ±0.20",
+  micro: "AL-40217 · 6063 T6 · 1.284 kg/m · ±0.20",
   small: "Max width 120 mm · 42 profiles match",
   body: "An own casthouse turns raw material and scrap into billets for three presses.",
   lead: "6,000+ profile types, 1,000 to 1,200 tonnes a month.",
@@ -168,7 +168,7 @@ export function TypeSection() {
               ref={(el) => {
                 refs.current[typeScale.length - 1 - i] = el;
               }}
-              className={`col-span-4 sm:col-span-5 lg:col-span-9 scale-sample t-${s.token === "micro" ? "label" : s.token}`}
+              className={`col-span-4 sm:col-span-5 lg:col-span-9 scale-sample t-${s.token === "micro" ? "data" : s.token}`}
             >
               {SAMPLE[s.token]}
             </p>

@@ -9,11 +9,16 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * Budgets: 2 % for interface heat, 12 % for a process scene (the billet, the cooling band).
  */
 
-const GLOW = "rgb(255, 90, 31)";
+/** The token, as the rgb() string computed styles report (read from CSS, never typed here). */
+function glowRgb() {
+  const hex = getComputedStyle(document.documentElement).getPropertyValue("--color-glow").trim();
+  const n = parseInt(hex.replace("#", ""), 16);
+  return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`;
+}
 
 type Hit = { x: number; y: number; w: number; h: number; reason: string };
 
-function reasonFor(el: Element, cs: CSSStyleDeclaration): string | null {
+function reasonFor(el: Element, cs: CSSStyleDeclaration, GLOW: string): string | null {
   const tag = el.getAttribute("data-heat");
   if (tag) {
     const t = el.getAttribute("data-heat-temp");
@@ -36,6 +41,7 @@ export function HeatAudit() {
   const scan = useCallback(() => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
+    const GLOW = glowRgb();
     const out: Hit[] = [];
     let ui = 0;
     let proc = 0;
@@ -47,7 +53,7 @@ export function HeatAudit() {
       if (r.width < 1 || r.height < 1 || r.bottom < 0 || r.top > vh || r.right < 0 || r.left > vw) continue;
       const cs = getComputedStyle(el);
       if (cs.visibility === "hidden" || cs.display === "none") continue;
-      const reason = reasonFor(el, cs);
+      const reason = reasonFor(el, cs, GLOW);
       if (!reason) continue;
       const x = Math.max(0, r.left);
       const y = Math.max(0, r.top);

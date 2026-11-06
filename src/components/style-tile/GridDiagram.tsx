@@ -14,7 +14,9 @@ export function GridDiagram() {
       const margin = parseFloat(cs.getPropertyValue("--margin")) || 16;
       const gutter = parseFloat(cs.getPropertyValue("--gutter")) || 12;
       const vw = document.documentElement.clientWidth;
-      const cols = vw >= 1024 ? 12 : vw >= 640 ? 8 : 4;
+      const probe = document.querySelector(".st-section .swiss-grid");
+      const tracks = probe ? getComputedStyle(probe).gridTemplateColumns.split(" ").filter(Boolean).length : 0;
+      const cols = tracks || (vw >= 1024 ? 12 : vw >= 640 ? 8 : 4);
       setG({ vw, cols, margin, gutter });
     };
     read();

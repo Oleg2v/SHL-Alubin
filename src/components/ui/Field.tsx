@@ -39,9 +39,9 @@ export function TextField({ label, aux, hint, error, unit, className, id, disabl
           id={inputId}
           className="field-input"
           disabled={disabled}
-          aria-invalid={error ? true : undefined}
-          aria-describedby={[unitId, errId, hintId].filter(Boolean).join(" ") || undefined}
           {...input}
+          aria-invalid={error ? true : input["aria-invalid"]}
+          aria-describedby={[unitId, errId, hintId, input["aria-describedby"]].filter(Boolean).join(" ") || undefined}
         />
         {unit ? (
           <span id={unitId} className="field-unit">
@@ -69,7 +69,11 @@ type RangeProps = {
   min: number;
   max: number;
   step?: number;
-  defaultValue: number;
+  /** Controlled value; omit and use defaultValue for uncontrolled. */
+  value?: number;
+  defaultValue?: number;
+  onValueChange?: (v: number) => void;
+  name?: string;
   unit?: string;
   /** Spoken unit for assistive tech, e.g. "millimetres" / "Millimeter" / "מילימטר". */
   unitName?: string;
@@ -77,25 +81,43 @@ type RangeProps = {
   className?: string;
 };
 
-/** A single-thumb mm slider. Native range input: arrow keys, Page Up/Down, Home/End all work. */
-export function RangeField({ label, min, max, step = 1, defaultValue, unit = "mm", unitName, format, className }: RangeProps) {
+/**
+ * A single-thumb mm slider (a native range input: arrows, Page Up/Down, Home/End). The two-thumb
+ * min-max caliper for the Finder builds on the same parts in Stage 2.
+ */
+export function RangeField({
+  label,
+  min,
+  max,
+  step = 1,
+  value: controlled,
+  defaultValue = min,
+  onValueChange,
+  name,
+  unit = "mm",
+  unitName,
+  format,
+  className,
+}: RangeProps) {
   const id = useId();
-  const [value, setValue] = useState(defaultValue);
+  const [inner, setInner] = useState(defaultValue);
+  const value = controlled ?? inner;
   const pct = ((value - min) / (max - min)) * 100;
   const shown = format ? format(value) : String(value);
   return (
     <div className={`field ${className ?? ""}`}>
-      <label className="field-label" htmlFor={id}>
-        <span>{label}</span>
+      <div className="field-label">
+        <label htmlFor={id}>{label}</label>
         <output htmlFor={id} className="field-label-aux" aria-live="off">
           <bdi dir="ltr">
             {"≤"} {shown} {unit}
           </bdi>
         </output>
-      </label>
+      </div>
       <div className="range-wrap">
         <input
           id={id}
+          name={name}
           type="range"
           className="range"
           min={min}
@@ -103,7 +125,11 @@ export function RangeField({ label, min, max, step = 1, defaultValue, unit = "mm
           step={step}
           value={value}
           aria-valuetext={`${shown} ${unitName ?? unit}`}
-          onChange={(e) => setValue(Number(e.currentTarget.value))}
+          onChange={(e) => {
+            const v = Number(e.currentTarget.value);
+            if (controlled === undefined) setInner(v);
+            onValueChange?.(v);
+          }}
           style={{ ["--range-pct" as string]: `${pct}%` }}
         />
       </div>

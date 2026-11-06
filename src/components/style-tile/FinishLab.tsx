@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { BrushedMetal, FINISHES } from "@/components/material/BrushedMetal";
+import { Segmented } from "@/components/ui/Segmented";
 
 /** Material specimen: one WebGL surface, six real finishes, the Finish lab's 400 ms dissolve. */
 export function FinishLab() {
@@ -25,30 +26,35 @@ export function FinishLab() {
           samples.
         </figcaption>
       </figure>
-      <fieldset className="lg:col-span-4 grid content-start gap-2">
-        <legend className="t-label text-fg-muted mb-3">Finish · sample coupons</legend>
-        {FINISHES.map((f) => (
-          <button
-            key={f.id}
-            type="button"
-            aria-pressed={id === f.id}
-            onClick={() => setId(f.id)}
-            className="finish-option"
-          >
-            <span className="finish-coupon" style={{ background: f.hex }} aria-hidden="true">
-              <span className="finish-coupon-hole" />
-            </span>
-            <span className="grid text-start">
-              <span className="t-small font-medium">{f.name}</span>
-              <span className="t-data text-fg-muted">{f.note}</span>
-            </span>
-            <span className="chip-dot ms-auto" aria-hidden="true" />
-          </button>
-        ))}
-        <p className="t-small text-fg-muted mt-2">
-          The anodizing line was the first approved by the Standards Institution of Israel.
+      <div className="lg:col-span-4 grid content-start gap-2">
+        <p id="finish-label" className="t-label text-fg-muted mb-1">
+          Finish · sample coupons
         </p>
-      </fieldset>
+        <Segmented
+          labelledBy="finish-label"
+          className="grid gap-2"
+          optionClassName="finish-option"
+          value={id}
+          onChange={setId}
+          options={FINISHES.map((f) => ({ value: f.id, label: f.name }))}
+          renderOption={(o) => {
+            const f = FINISHES.find((x) => x.id === o.value)!;
+            return (
+              <>
+                <span className="finish-coupon" style={{ background: f.hex }} aria-hidden="true">
+                  <span className="finish-coupon-hole" />
+                </span>
+                <span className="grid text-start">
+                  <span className="t-small font-medium">{f.name}</span>
+                  <span className="t-data text-fg-muted">{f.note}</span>
+                </span>
+                <span className="chip-dot ms-auto" aria-hidden="true" />
+              </>
+            );
+          }}
+        />
+        <p className="t-small text-fg-muted mt-2">The anodizing line was the first approved by the Standards Institution of Israel.</p>
+      </div>
     </div>
   );
 }

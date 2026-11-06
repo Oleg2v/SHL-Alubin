@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { durations, easings } from "@/design/tokens";
 import { easeFrom } from "@/lib/ease";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 
 /**
  * Brushed aluminium, shaded in WebGL: a Kajiya-Kay anisotropic highlight across horizontal
@@ -117,6 +118,7 @@ export function BrushedMetal({ finish, className = "" }: { finish: Finish; class
   const state = useRef({ from: finish, to: finish, t0: 0, light: [0.62, 0.42], target: [0.62, 0.42], dirty: true });
   const api = useRef<{ kick: () => void } | null>(null);
   const [fallback, setFallback] = useState(false);
+  const reducedPref = useReducedMotion();
 
   // finish change -> start a dissolve
   useEffect(() => {
@@ -137,7 +139,7 @@ export function BrushedMetal({ finish, className = "" }: { finish: Finish; class
       setFallback(true);
       return;
     }
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = reducedPref;
     const compile = (type: number, src: string) => {
       const sh = gl.createShader(type)!;
       gl.shaderSource(sh, src);
@@ -273,7 +275,7 @@ export function BrushedMetal({ finish, className = "" }: { finish: Finish; class
       api.current = null;
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
-  }, []);
+  }, [reducedPref]);
 
   if (fallback) {
     return <div className={`brushed ${className}`} data-matte={finish.rough > 0.8 || undefined} style={{ ["--finish" as string]: finish.hex }} aria-hidden="true" />;

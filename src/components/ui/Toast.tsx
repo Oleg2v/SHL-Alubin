@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Alert, Check, Close } from "@/components/icons/Icons";
+import { durations } from "@/design/tokens";
 
 export type ToastTone = "success" | "error" | "info";
 export type ToastInput = {
@@ -25,7 +26,11 @@ export function useToast() {
   return ctx;
 }
 
-const LEAVE_MS = 240; // --dur-base
+const LEAVE_MS = durations.base;
+const MAX_VISIBLE = 3;
+
+/** Toasts that never time out: errors and anything carrying an action (Undo, Retry). */
+const persistent = (t: ToastInput) => t.tone === "error" || !!t.action || t.life === 0;
 
 /**
  * Toasts live in one polite live region (role="status"); errors are announced assertively.
@@ -55,7 +60,16 @@ export function ToastProvider({
 
   const push = useCallback((t: ToastInput) => {
     const id = ++seq.current;
-    setItems((xs) => [...xs.slice(-2), { ...t, id }]);
+    setItems((xs) => {
+      const next = [...xs, { ...t, id }];
+      // over the cap, drop the oldest auto-dismissing toast only: an error or an Undo is never lost
+      while (next.length > MAX_VISIBLE) {
+        const i = next.findIndex((x) => !persistent(x));
+        if (i < 0) break;
+        next.splice(i, 1);
+      }
+      return next;
+    });
     return id;
   }, []);
 
@@ -157,7 +171,7 @@ export function ToastCard({ item, life, onDismiss, closeLabel, staticSpecimen, r
       style={life ? ({ ["--toast-life" as string]: `${life}ms` } as React.CSSProperties) : undefined}
     >
       <span className="toast-glyph" aria-hidden="true">
-        {tone === "error" ? <Alert width={14} height={14} /> : <Check width={14} height={14} />}
+        {tone === "error" ? <Alert width={14} height={14} /> : tone === "info" ? <Info /> : <Check width={14} height={14} />}
       </span>
       <div className="min-w-0">
         <p className="toast-title">{item.title}</p>
@@ -184,5 +198,14 @@ export function ToastCard({ item, life, onDismiss, closeLabel, staticSpecimen, r
       </div>
       {life ? <span className="toast-life" aria-hidden="true" /> : null}
     </div>
+  );
+}
+
+/** Info: a reading, not an alarm. */
+function Info() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" aria-hidden="true">
+      <path d="M8 7v5M8 4.25v.5" />
+    </svg>
   );
 }

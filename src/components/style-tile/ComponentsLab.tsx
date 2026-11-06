@@ -11,6 +11,7 @@ import { ArrowRight, Download, Plus, Compare } from "@/components/icons/Icons";
 import { LANGS, numberLocale, specimen, type Lang } from "@/content/specimen-copy";
 import { heatSink, chamberFrame, tSlotRail, kgPerMetre, sectionArea, bounds } from "@/lib/geometry/profile";
 import { SectionHead } from "./SectionHead";
+import { Segmented } from "@/components/ui/Segmented";
 
 const PROFILES: ProfileCardData[] = [
   { id: "AL-40217", family: "frame", alloy: "6063", temper: "T6", wall: 1.8, shape: chamberFrame(64, 46, 1.8, 3, 9) },
@@ -59,6 +60,7 @@ function ToastTrigger({ lang }: { lang: Lang }) {
 export function ComponentsLab() {
   const [lang, setLang] = useState<Lang>("en");
   const [compare, setCompare] = useState<string[]>(["AL-40217"]);
+  const [applied, setApplied] = useState<string[]>(["anodized", "6063", "T6"]);
   const c = specimen[lang];
   const dir = LANGS.find((l) => l.code === lang)!.dir;
   const nf = (n: number, d: number) => new Intl.NumberFormat(numberLocale[lang], { minimumFractionDigits: d, maximumFractionDigits: d }).format(n);
@@ -88,16 +90,12 @@ export function ComponentsLab() {
           <span className="t-label text-fg-muted" id="lang-label">
             Specimen language
           </span>
-          <div className="segmented" role="group" aria-labelledby="lang-label">
-            {LANGS.map((l) => (
-              <button key={l.code} type="button" aria-pressed={lang === l.code} onClick={() => setLang(l.code)}>
-                <span>{l.label}</span>
-                <span className="sr-only" lang={l.code}>
-                  , {l.native}
-                </span>
-              </button>
-            ))}
-          </div>
+          <Segmented
+            labelledBy="lang-label"
+            value={lang}
+            onChange={setLang}
+            options={LANGS.map((l) => ({ value: l.code, label: l.label, note: l.native, lang: l.code }))}
+          />
           <span className="t-data text-fg-muted" dir="ltr">
             dir=&quot;{dir}&quot; · lang=&quot;{lang}&quot;
           </span>
@@ -109,6 +107,9 @@ export function ComponentsLab() {
           {/* C-01 Button */}
           <Cell code="C-01" title="Button" className="col-span-4 sm:col-span-8 lg:col-span-7">
             <div className="grid gap-6">
+              <p className="t-small text-fg-muted" lang="en">
+                States, not a layout: a real screen carries one primary action.
+              </p>
               <div className="flex flex-wrap items-center gap-4">
                 <Button variant="primary" size="lg" icon={<ArrowRight className="btn-icon" data-nudge="" />}>
                   {c.quote}
@@ -121,7 +122,7 @@ export function ComponentsLab() {
                 </Button>
               </div>
               <div className="flex flex-wrap items-center gap-4">
-                <Button variant="primary" size="sm" busy>
+                <Button variant="primary" size="sm" busy busyLabel={c.sending}>
                   {c.sending}
                 </Button>
                 <Button variant="primary" size="sm" disabled>
@@ -171,10 +172,31 @@ export function ComponentsLab() {
                   <ToggleChip label={c.powder} count={44} countLabel={c.profiles} />
                 </div>
               </fieldset>
-              <div className="flex flex-wrap gap-2 border-t border-line pt-4">
-                <RemovableChip label={c.anodized} removeLabel={c.remove(c.anodized)} />
-                <RemovableChip label="6063" removeLabel={c.remove("6063")} />
-                <RemovableChip label="T6" removeLabel={c.remove("T6")} />
+              <div className="flex flex-wrap items-center gap-2 border-t border-line pt-4" role="group" aria-label={c.applied}>
+                {applied.map((key, i) => {
+                  const text = key === "anodized" ? c.anodized : key;
+                  return (
+                    <RemovableChip
+                      key={key}
+                      label={text}
+                      removeLabel={c.remove(text)}
+                      onRemove={(e) => {
+                        // focus the next chip's remove button, or the reset control when none is left
+                        const group = e.currentTarget.closest('[role="group"]');
+                        setApplied((xs) => xs.filter((x) => x !== key));
+                        requestAnimationFrame(() => {
+                          const btns = group?.querySelectorAll<HTMLButtonElement>(".chip-remove, .chip-reset");
+                          btns?.[Math.min(i, btns.length - 1)]?.focus();
+                        });
+                      }}
+                    />
+                  );
+                })}
+                {applied.length < 3 ? (
+                  <button type="button" className="chip chip-reset" onClick={() => setApplied(["anodized", "6063", "T6"])}>
+                    {c.reset}
+                  </button>
+                ) : null}
               </div>
             </div>
           </Cell>
@@ -226,6 +248,9 @@ export function ComponentsLab() {
               })}
               <li>
                 <ProfileCardSkeleton label={c.loading} />
+                <span className="sr-only" role="status">
+                  {c.loading}
+                </span>
               </li>
             </ul>
           </Cell>

@@ -233,10 +233,10 @@
     .t-title-l { line-height: round(nearest, calc(var(--text-title-l) * var(--text-title-l--line-height)), 4px); }
     .t-title-m { line-height: round(nearest, calc(var(--text-title-m) * var(--text-title-m--line-height)), 4px); }
     .t-title-s { line-height: round(nearest, calc(var(--text-title-s) * var(--text-title-s--line-height)), 4px); }
-    .t-lead { line-height: round(nearest, calc(var(--text-lead) * var(--text-lead--line-height)), 4px); }
-    .t-body { line-height: round(nearest, calc(var(--text-body) * var(--text-body--line-height)), 4px); }
-    .t-small { line-height: round(nearest, calc(var(--text-small) * var(--text-small--line-height)), 4px); }
-    .t-label, .t-data { line-height: round(nearest, calc(var(--text-micro) * var(--text-micro--line-height)), 4px); }
+    .t-lead { line-height: round(up, calc(var(--text-lead) * var(--text-lead--line-height)), 4px); }
+    .t-body { line-height: round(up, calc(var(--text-body) * var(--text-body--line-height)), 4px); }
+    .t-small { line-height: round(up, calc(var(--text-small) * var(--text-small--line-height)), 4px); }
+    .t-label, .t-data { line-height: round(up, calc(var(--text-micro) * var(--text-micro--line-height)), 4px); }
   }
 
   /* ---------- Skip link ---------- */
@@ -337,10 +337,10 @@
     translate: 0 -50%;
     clip-path: polygon(100% 50%, 0 0, 0 100%);
   }
-  [dir="rtl"] .dim-h .dim-line:first-child::before {
+  .dim-h:dir(rtl) .dim-line:first-child::before {
     clip-path: polygon(100% 50%, 0 0, 0 100%);
   }
-  [dir="rtl"] .dim-h .dim-line:last-child::before {
+  .dim-h:dir(rtl) .dim-line:last-child::before {
     clip-path: polygon(0 50%, 100% 0, 100% 100%);
   }
   .dim-v .dim-line:first-child::before {

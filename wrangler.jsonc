@@ -4,7 +4,7 @@
   // directly. Same setup as the other Kikkey concepts: one Worker, one <name>.kikkey.com.
   "name": "shl-alubin",
   "account_id": "be9447e281c6e9198712ade2d0241029",
-  "compatibility_date": "2026-11-07",
+  "compatibility_date": "2026-10-26", // newest the pinned wrangler's local runtime supports
   "assets": {
     "directory": "./out",
     "not_found_handling": "404-page",

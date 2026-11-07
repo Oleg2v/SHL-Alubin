@@ -747,3 +747,17 @@
 .heat-audit-over {
   color: var(--color-glow);
 }
+
+/* ------------------------------------------------------------ busy specimens (WCAG 2.2.2)
+   In the product a busy state lasts as long as its request, and the motion is essential. On the
+   sheet the specimens would loop for ever, so they stroke four times (3.84 s, ending at rest) when
+   their cell scrolls into view, and are reset out of view. */
+.lab-cell .btn[aria-busy="true"]::after,
+.lab-cell .pcard[aria-busy="true"]::before {
+  animation-iteration-count: 4;
+  animation-fill-mode: forwards;
+}
+.lab-cell:not([data-inview="true"]) .btn[aria-busy="true"]::after,
+.lab-cell:not([data-inview="true"]) .pcard[aria-busy="true"]::before {
+  animation: none;
+}

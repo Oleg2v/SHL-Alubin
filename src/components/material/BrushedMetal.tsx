@@ -177,8 +177,18 @@ export function BrushedMetal({ finish, className = "" }: { finish: Finish; class
     let visible = false;
     let running = false;
     let pointerActive = false;
-    let lastInput = performance.now();
-    const IDLE_MS = 6000; // the light drifts for a moment, then settles: no endless render loop
+    // Automatic motion is bounded (WCAG 2.2.2): each time the surface scrolls into view the light
+    // drifts once, for DRIFT_MS, decelerating to a stop; after that only the pointer moves it.
+    const DRIFT_MS = 4000;
+    let driftStart = -1;
+    let driftBase: [number, number] = [0.5, 0.45];
+    let lastNow = 0;
+    const clamp = (v: number) => Math.min(0.92, Math.max(0.08, v));
+    const startDrift = (now: number) => {
+      if (reduced || pointerActive) return;
+      driftStart = now;
+      driftBase = [s.light[0]!, s.light[1]!];
+    };
     const s = state.current;
 
     const resize = () => {
@@ -197,12 +207,17 @@ export function BrushedMetal({ finish, className = "" }: { finish: Finish; class
     const frame = (now: number) => {
       running = false;
       if (!visible) return;
-      // idle drift of the light, unless reduced motion
-      if (!reduced && !pointerActive) {
-        const t = now / 1000;
-        s.target = [0.5 + Math.sin(t * 0.35) * 0.32, 0.45 + Math.cos(t * 0.23) * 0.18];
+      const dt = lastNow ? Math.min(64, now - lastNow) : 16;
+      lastNow = now;
+      // the bounded drift: starts where the light is (no jump), its clock eases out to zero speed
+      if (driftStart >= 0 && !pointerActive) {
+        const e = Math.min(1, (now - driftStart) / DRIFT_MS);
+        const phase = Math.PI * 0.9 * (1 - (1 - e) * (1 - e));
+        s.target = [clamp(driftBase[0] + Math.sin(phase) * 0.28), clamp(driftBase[1] + (1 - Math.cos(phase)) * 0.1)];
+        if (e >= 1) driftStart = -1;
       }
-      const k = reduced ? 1 : 0.12;
+      // frame-rate independent easing (about 120 ms to close two thirds of the gap)
+      const k = reduced ? 1 : 1 - Math.exp(-dt / 120);
       const lx = s.light[0]! + (s.target[0]! - s.light[0]!) * k;
       const ly = s.light[1]! + (s.target[1]! - s.light[1]!) * k;
       const moved = Math.abs(lx - s.light[0]!) + Math.abs(ly - s.light[1]!) > 1e-4;
@@ -224,8 +239,8 @@ export function BrushedMetal({ finish, className = "" }: { finish: Finish; class
         s.dirty = false;
       }
       if (p >= 1) s.from = s.to;
-      const idle = !pointerActive && now - lastInput > IDLE_MS;
-      if ((!reduced && !idle) || moved || p < 1) schedule();
+      if (moved || driftStart >= 0 || p < 1) schedule();
+      else lastNow = 0; // at rest: the next frame starts a fresh clock
     };
     const schedule = () => {
       if (running || !visible) return;
@@ -237,13 +252,13 @@ export function BrushedMetal({ finish, className = "" }: { finish: Finish; class
     const onMove = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
       pointerActive = true;
-      lastInput = performance.now();
+      driftStart = -1;
       s.target = [(e.clientX - r.left) / r.width, 1 - (e.clientY - r.top) / r.height];
       schedule();
     };
     const onLeave = () => {
+      // the light stays where the pointer left it: no automatic motion resumes
       pointerActive = false;
-      lastInput = performance.now();
       schedule();
     };
     el.addEventListener("pointermove", onMove);
@@ -253,7 +268,7 @@ export function BrushedMetal({ finish, className = "" }: { finish: Finish; class
       visible = !!entry?.isIntersecting;
       if (visible) {
         s.dirty = true;
-        lastInput = performance.now();
+        startDrift(performance.now());
         schedule();
       }
     });

@@ -41,7 +41,8 @@ export function HeatLaw() {
             <g key={t}>
               <line x1={x(t)} y1={H - P.b} x2={x(t)} y2={H - P.b + 4} stroke="var(--line-strong)" />
               <text x={x(t)} y={H - P.b + 18} textAnchor={t === 480 ? "end" : t === 20 ? "start" : "middle"}>
-                {t} °C
+                {/* narrow: the unit once, on the first tick, so 400 and 480 never collide (9 px apart at 280) */}
+                {W < 480 && t !== 20 ? t : `${t}\u00a0°C`}
               </text>
             </g>
           ))}

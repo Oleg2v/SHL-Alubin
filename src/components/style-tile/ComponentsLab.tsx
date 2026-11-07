@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { TextField, RangeField } from "@/components/ui/Field";
 import { ToggleChip, RemovableChip } from "@/components/ui/Chip";
@@ -65,6 +65,18 @@ export function ComponentsLab() {
   const dir = LANGS.find((l) => l.code === lang)!.dir;
   const nf = (n: number, d: number) => new Intl.NumberFormat(numberLocale[lang], { minimumFractionDigits: d, maximumFractionDigits: d }).format(n);
   const fam: Record<string, string> = { frame: c.frame, heatSink: c.heatSink, rail: c.rail };
+
+  // WCAG 2.2.2: the busy specimens run for under 5 s each time their cell comes into view (the CSS
+  // caps the iterations) and rest out of view, so they replay when the reader scrolls back.
+  useEffect(() => {
+    const cells = document.querySelectorAll<HTMLElement>("#components .lab-cell");
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => ((e.target as HTMLElement).dataset.inview = e.isIntersecting ? "true" : "false")),
+      { threshold: 0.25 },
+    );
+    cells.forEach((cell) => io.observe(cell));
+    return () => io.disconnect();
+  }, []);
 
   const main = PROFILES[0]!;
   const b = bounds(main.shape);

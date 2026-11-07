@@ -14,3 +14,7 @@ next-env.d.ts
 *.log
 .env*
 !.env.example
+
+# Wrangler
+.wrangler
+.dev.vars*

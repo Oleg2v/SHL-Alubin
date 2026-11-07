@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Static export only (next build -> ./out): no Worker script, Cloudflare serves the files
+  // directly. Same setup as the other Kikkey concepts: one Worker, one <name>.kikkey.com.
+  "name": "shl-alubin",
+  "account_id": "be9447e281c6e9198712ade2d0241029",
+  "compatibility_date": "2026-11-07",
+  "assets": {
+    "directory": "./out",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  },
+  // Unlisted concept: served only on its custom domain, never on workers.dev or preview URLs.
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "shl-alubin.kikkey.com", "custom_domain": true }]
+}

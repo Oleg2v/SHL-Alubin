@@ -11,7 +11,7 @@ page and response is `noindex`.
 
 | Stage | Scope | State |
 | --- | --- | --- |
-| 0 | Art direction: `/style-tile` (tokens, type, motion, six components, motif, decisions) | **for approval** |
+| 0 | Art direction: `/style-tile` (tokens, type, motion, six components, motif, decisions) | **for approval**, live at https://shl-alubin.kikkey.com/style-tile/ |
 | 1 | Signature moment in isolation: `/hero-lab` (R3F extrusion hero + fallbacks) | not started |
 | 2 | App flows: Home, Profile Finder, Profile page, Quote, Custom profile, EN/DE/HE | not started |
 | 3 | Polish pass: grid snap, motion unification, page transitions, favicon, OG image | not started |
@@ -24,10 +24,13 @@ npm install
 npm run dev          # http://localhost:3000/style-tile/
 npm run build        # static export to ./out
 npm run check:tokens # fails if tokens.css and tokens.ts drift apart
+npm run deploy       # build, then deploy to Cloudflare (needs CLOUDFLARE_API_TOKEN)
 ```
 
-The build is a static export (`output: "export"`, trailing slashes), deployable as plain files to
-Cloudflare Pages (`public/_headers`) or Vercel (`vercel.json`); both send `X-Robots-Tag: noindex`.
+The build is a static export (`output: "export"`, trailing slashes). It is deployed as a static-assets-only
+Cloudflare Worker, `shl-alubin` (`wrangler.jsonc`), on the unlisted custom domain `shl-alubin.kikkey.com`,
+with no `workers.dev` or preview URLs. `public/_headers` sends `X-Robots-Tag: noindex` on every response
+and caches the fingerprinted `/_next/static/*` files for a year; `vercel.json` mirrors the same headers.
 
 ## Design system
 

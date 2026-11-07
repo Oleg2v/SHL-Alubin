@@ -8,7 +8,8 @@
     "build": "node scripts/check-tokens.mjs && next build",
     "start": "npx serve@14 out -l 3000",
     "typecheck": "tsc --noEmit",
-    "check:tokens": "node scripts/check-tokens.mjs"
+    "check:tokens": "node scripts/check-tokens.mjs",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "geist": "1.9.2",
@@ -25,7 +26,8 @@
     "@types/react-dom": "19.2.7",
     "postcss": "8.5.32",
     "tailwindcss": "4.3.5",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "wrangler": "4.152.0"
   },
   "engines": {
     "node": ">=20.9"

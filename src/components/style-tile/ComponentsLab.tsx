@@ -219,7 +219,7 @@ export function ComponentsLab() {
               <TextField label={c.maxWidth} unit="mm" unitName={c.mmName} inputMode="decimal" defaultValue={nf(120, 1)} hint={c.widthHint} aux={`≤ ${nf(250, 0)} mm`} />
               <TextField label={c.wall} unit="mm" unitName={c.mmName} inputMode="decimal" defaultValue={nf(0.6, 1)} error={c.wallError} hint={c.wallHint} />
               <RangeField label={c.maxHeight} min={0} max={200} defaultValue={80} unitName={c.mmName} format={(v) => nf(v, 0)} />
-              <TextField label={c.rows.weight} unit="kg/m" unitName={c.kgmName} inputMode="decimal" defaultValue={nf(1.284, 3)} disabled hint={c.unavailable} />
+              <TextField label={c.rows.weight} unit="kg/m" unitName={c.kgmName} inputMode="decimal" defaultValue={nf(kgPerMetre(main.shape), 3)} disabled hint={c.unavailable} />
             </div>
           </Cell>
 

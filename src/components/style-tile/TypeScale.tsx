@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { typeScale, MM_PER_PX, CAP_RATIO } from "@/design/tokens";
 import { SectionHead } from "./SectionHead";
 import { DimH } from "@/components/drawing/Dim";
+import { AL_40217_KGM } from "@/content/demo-profiles";
 
 const SAMPLE: Record<string, string> = {
-  micro: "AL-40217 · 6063 T6 · 1.284 kg/m · ±0.20",
+  micro: `AL-40217 · 6063 T6 · ${AL_40217_KGM}\u00a0kg/m · ±0.20`,
   small: "Max width 120 mm · 42 profiles match",
   body: "An own casthouse turns raw material and scrap into billets for three presses.",
   lead: "6,000+ profile types, 1,000 to 1,200 tonnes a month.",
@@ -112,7 +113,7 @@ export function TypeSection() {
           <p className="t-title-m t-mono" aria-hidden="true" dir="ltr">
             Ø 254 ±0.20
             <br />
-            1.284 kg/m
+            {AL_40217_KGM}&nbsp;kg/m
           </p>
           <p className="t-small text-fg-muted">
             The drawing-sheet voice: IDs, alloys, tempers, kg/m, every dimension. Always an isolated LTR run, also inside
@@ -220,7 +221,7 @@ export function TypeSection() {
             <figcaption className="t-label text-fg-muted">HE</figcaption>
             <p className="t-title-l">6,000 פרופילים. במרחק לחיצה.</p>
             <p className="t-small text-fg-muted">
-              סגסוגת <span dir="ltr">6063 T6</span>, משקל <span dir="ltr">1.284 kg/m</span>, סבולת לפי{" "}
+              סגסוגת <span dir="ltr">6063 T6</span>, משקל <span dir="ltr">{AL_40217_KGM}&nbsp;kg/m</span>, סבולת לפי{" "}
               <span dir="ltr">EN 755-9</span>.
             </p>
           </figure>
